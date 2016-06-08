@@ -34,6 +34,10 @@
   remotes = remote -v  
   ri = rebase --interactive
   p = push origin
+  br = branch
+  ch = checkout
+  chm = checkout master
+  chb = checkout -b
 [core]
 	excludesfile = ~/.gitignore
 	editor = subl -w
