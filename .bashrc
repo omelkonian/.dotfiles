@@ -18,6 +18,7 @@ alias upd='sudo apt-get update'
 alias inst='sudo apt-get install'
 alias rem='sudo apt-get remove'
 alias pur='sudo apt-get purge'
+alias auto='sudo apt-get autoremove'
 
 # adhoc
 alias fixKeyboard="ibus-daemon -rd"
