@@ -1,20 +1,26 @@
+# navigation
 PS1='> '
 function cd {
   builtin cd "$@" && ls
 }
+function mkcdir {
+  mkdir -p -- "$1" &&
+  cd -P -- "$1"
+}
+
+# compression
 function untar {
   tar xvzf "$@"
 }
-function mkcdir {
-  mkdir -p -- "$1" &&
-  cd -P -- "$1"
-}
+
+# apt
+alias upd='sudo apt-get update'
+alias inst='sudo apt-get install'
+alias rem='sudo apt-get remove'
+alias pur='sudo apt-get purge'
+
+# adhoc
 alias fixKeyboard="ibus-daemon -rd"
-alias inst="sudo apt-get install"
-function mkcdir {
-  mkdir -p -- "$1" &&
-  cd -P -- "$1"
-}
 
 # JAVA
 export PATH=/home/orestis/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/
