@@ -27,11 +27,11 @@
   can = commit --amend --no-edit
   csa = commit -s --amend
   a = add
-  A = add -A
+  all = add -A
   l = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
   ll = log --stat --abbrev-commit
   d = diff --color-words
-  remotes = remote -v  
+  remotes = remote -v
   ri = rebase --interactive
   p = push origin
   br = branch
