@@ -1,0 +1,13 @@
+{
+	"auto_complete": true,
+	"color_scheme": "Packages/Color Scheme - Default/Eiffel.tmTheme",
+	"font_size": 9,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"sublimelinter": true,
+	"tab_size": 4,
+	"word_wrap": true,	
+  "rulers": [50, 72, 80]
+}
