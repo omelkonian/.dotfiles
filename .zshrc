@@ -56,8 +56,10 @@ function mkcdir {
 export PATH=/home/orestis/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/:/usr/lib/jvm/java-8-oracle:/home/ookrestis/EclipseCLP/eclipse_basic/bin/x86_64_linux
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib
-alias fixKeyboard="ibus-daemon -rd"
 
+# Fixes
+alias fixKeyboard="ibus-daemon -rd"
+alias fixSound="pactl exit"
 alias restart_sound="pulseaudio -k && sudo alsa force-reload"
 
 # ssh to okeanos

@@ -1,6 +1,7 @@
 {
 	"extensions":
 	[
-		"cassius"
+		"cassius",
+        "lucius"
 	]
 }
