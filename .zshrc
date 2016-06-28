@@ -73,3 +73,6 @@ export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
 
 # kwalitee binary file
 export PATH=$PATH:~/.local/bin
+
+# Play framework
+export PATH=$PATH:~/Activator/bin/
