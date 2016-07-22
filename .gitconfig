@@ -42,3 +42,5 @@
 	excludesfile = ~/.gitignore
 	editor = subl -w
 	pager = less -r
+[push]
+	default = simple
