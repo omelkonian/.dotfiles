@@ -100,3 +100,18 @@ add_to_path ~/Activator/bin/
 
 # EclipseCLP
 add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
+
+# CDS
+cds_del() {
+	yes | cds db destroy
+	yes | cds index destroy
+}
+
+cds_reset() {	
+	$(cds_del)
+	cds db init
+	cds db create
+	cds index init
+	cds fixtures cds
+	cds fixtures files
+}
