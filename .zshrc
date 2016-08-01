@@ -65,6 +65,10 @@ add_to_path /sbin
 add_to_path /bin
 add_to_path ~/bin
 
+# Noglobs
+alias git="noglob git"
+alias pip="noglob pip"
+
 # ROS
 # source /opt/ros/indigo/setup.bash
 export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
@@ -107,7 +111,7 @@ cds_del() {
 	yes | cds index destroy
 }
 
-cds_reset() {	
+cds_reset() {
 	$(cds_del)
 	cds db init
 	cds db create
