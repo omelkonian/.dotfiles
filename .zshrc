@@ -8,7 +8,7 @@ ENABLE_CORRECTION="true"
 plugins=(git)
 
 # User configuration
-  export PATH="~/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/:/usr/lib/jvm/java-8-oracle:~/EclipseCLP/eclipse_basic/bin/x86_64_linux"
+  export PATH="~/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -104,6 +104,9 @@ add_to_path ~/Activator/bin/
 
 # EclipseCLP
 add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
+
+# Intellij
+add_to_path /opt/intellij15/bin
 
 # CDS
 cds_del() {
