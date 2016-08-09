@@ -7,18 +7,25 @@
   ui = auto # covers diff = true, status = auto, branch = auto
   interactive = auto
 [alias]
-	alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
-	ignore = update-index --assume-unchanged
-	unignore = update-index --no-assume-unchanged
-	ignored = !git ls-files -v | grep "^[[:lower:]]"
-	# Switch to PR
+  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
+
+  # Ignore
+  ignore = update-index --assume-unchanged
+  unignore = update-index --no-assume-unchanged
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
+
+  # Switch to PR
   copr = "!f(){ \
-              if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
-                  git fetch origin refs/pull/$1/head:pr/$1 && \
-                  git checkout pr/$1; \
-              fi \
-          }; f"
+        if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+          git fetch origin refs/pull/$1/head:pr/$1 && \
+          git checkout pr/$1; \
+        fi \
+      }; f"
+
+  # General
   s = status
+
+  # Commits
   c = commit
   cm = commit -m
   cs = commit -s
@@ -26,15 +33,32 @@
   ca = commit --amend
   can = commit --amend --no-edit
   csa = commit -s --amend
+
+  # Add
   a = add
   all = add -A
-  l = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+
+  # Logging
+  l = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
   ll = log --stat --abbrev-commit
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  lg2 = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+
+  # Diff
   d = diff --color-words
+
+  # Branches
   remotes = remote -v
-  ri = rebase --interactive
-  p = push origin
   br = branch
+
+  # Push
+  p = push origin
+  pf = push -f origin
+
+  # Rebase
+  ri = rebase --interactive
+
+  # Checkout
   ch = checkout
   chm = checkout master
   chb = checkout -b
