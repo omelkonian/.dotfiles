@@ -108,6 +108,9 @@ add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
 # Intellij
 add_to_path /opt/intellij15/bin
 
+# DroidCam
+alias droid_connect="sudo droidcam-cli 192.168.0.27 4747"
+
 # CDS
 cds_del() {
 	yes | cds db destroy
