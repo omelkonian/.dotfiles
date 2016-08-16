@@ -29,7 +29,7 @@
   c = commit
   cm = commit -m
   cs = commit -s
-  cms = commit -ms
+  csm = commit -sm
   ca = commit --amend
   can = commit --amend --no-edit
   csa = commit -s --amend
