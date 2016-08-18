@@ -112,16 +112,49 @@ add_to_path /opt/intellij15/bin
 alias droid_connect="sudo droidcam-cli 192.168.0.27 4747"
 
 # CDS
+cds_install() {
+    python -O -m compileall .
+    cds npm
+    cdvirtualenv var/instance/static
+    npm install
+    cds collect -v
+    cds assets build
+}
+
+cds_init() {
+    cdvirtualenv src/cds
+    cds db init
+    cds db create
+    cds users create test@test.ch -a
+    cds index init
+}
+
+cds_fixtures() {
+    cds fixtures cds
+    cds fixtures files
+}
+
+cds_all() {
+    cdvirtualenv src/cds
+    $(cds_install)
+    $(cds_init)
+    $(cds_fixtures)
+}
+
+cds_run() {
+    cds --debug run
+}
+
 cds_del() {
-	yes | cds db destroy
-	yes | cds index destroy
+    yes | cds db destroy
+    yes | cds index destroy
 }
 
 cds_reset() {
-	$(cds_del)
-	cds db init
-	cds db create
-	cds index init
-	cds fixtures cds
-	cds fixtures files
+    $(cds_del)
+    cds db init
+    cds db create
+    cds index init
+    cds fixtures cds
+    cds fixtures files
 }
