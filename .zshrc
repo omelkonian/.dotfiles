@@ -142,7 +142,7 @@ cds_all() {
 }
 
 cds_run() {
-    cds --debug run
+    cds run --debugger
 }
 
 cds_del() {
