@@ -111,6 +111,12 @@ add_to_path /opt/intellij15/bin
 # DroidCam
 alias droid_connect="sudo droidcam-cli 192.168.0.27 4747"
 
+# cabal
+add_to_path ~/.cabal/bin
+
+# idris
+add_to_path ~/Idris/.cabal-sandbox/bin
+
 # CDS
 cds_install() {
     python -O -m compileall .
