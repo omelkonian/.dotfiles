@@ -1,0 +1,21 @@
+# Idris
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-a': 'language-idris:add-clause'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-c': 'language-idris:case-split'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-d': 'language-idris:docs-for'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-enter': 'language-idris:open-repl'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-l': 'language-idris:make-lemma'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-m': 'language-idris:make-case'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-r': 'language-idris:typecheck'
+'atom-text-editor':
+  'ctrl-alt-p': 'language-idris:proof-search'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-w': 'language-idris:make-with'
+'atom-text-editor[data-grammar~="idris"]':
+  'ctrl-alt-g': 'language-idris:type-of'
