@@ -122,6 +122,14 @@ get_ip() {
     ip route get 8.8.8.8 | awk '{print $NF; exit}'
 }
 
+# Haskell
+add_to_path ~/.local/bin
+
+# stack autocompletion
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+eval "$(stack --bash-completion-script stack)"
+
 # CDS
 cds_install() {
     python -O -m compileall .
