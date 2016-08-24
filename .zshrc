@@ -117,6 +117,11 @@ add_to_path ~/.cabal/bin
 # idris
 add_to_path ~/Idris/.cabal-sandbox/bin
 
+# IP
+get_ip() {
+    ip route get 8.8.8.8 | awk '{print $NF; exit}'
+}
+
 # CDS
 cds_install() {
     python -O -m compileall .
