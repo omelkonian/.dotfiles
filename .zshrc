@@ -122,53 +122,65 @@ get_ip() {
     ip route get 8.8.8.8 | awk '{print $NF; exit}'
 }
 
+# Haskell
+add_to_path ~/.local/bin
+
+# stack autocompletion
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+eval "$(stack --bash-completion-script stack)"
+
 # CDS
-cds_install() {
+cds_cd() {
     cdvirtualenv src/cds
+}
+cds_install() {
+    $(cds_cd)
     python -O -m compileall .
     cds npm
     cdvirtualenv var/instance/static
     npm install
     cds collect -v
     cds assets build
+    $(cds_cd)
 }
-
 cds_init() {
-    cdvirtualenv src/cds
+    $(cds_cd)
     cds db init
     cds db create
     cds users create test@test.ch -a
     cds index init
 }
-
 cds_fixtures() {
-    cdvirtualenv src/cds
+    $(cds_cd)
     cds fixtures cds
     cds fixtures files
 }
-
 cds_all() {
-    cdvirtualenv src/cds
+    $(cds_cd)
     $(cds_install)
     $(cds_init)
     $(cds_fixtures)
 }
-
 cds_run() {
+    cdvirtualenv src/cds/cds
     cds run --debugger
 }
-
 cds_del() {
-    cdvirtualenv src/cds
+    $(cds_cd)
     yes | cds db destroy
     yes | cds index destroy
 }
-
 cds_reset() {
+    $(cds_cd)
     $(cds_del)
     cds db init
     cds db create
     cds index init
     cds fixtures cds
     cds fixtures files
+}
+cds_celery() {
+    cdvirtualenv src/cds/cds
+    celery -A cds.celery worker -l info
 }

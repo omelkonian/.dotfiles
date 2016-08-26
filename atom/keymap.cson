@@ -19,3 +19,52 @@
   'ctrl-alt-w': 'language-idris:make-with'
 'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-g': 'language-idris:type-of'
+
+# Haskell: IDE
+'atom-text-editor[data-grammar~="haskell"]':
+  'escape': 'ide-haskell:close-tooltip' #this is set by default
+  '':'ide-haskell:prettify-file'
+  '':'ide-haskell:next-error'
+  '':'ide-haskell:prev-error'
+
+'atom-text-editor[data-grammar~="cabal"]':
+  '': 'ide-haskell:prettify-file'
+
+'atom-workspace':
+  '': 'ide-haskell:toggle-output'
+
+# Haskell: Hoogle
+'atom-text-editor[data-grammar~="haskell"]':
+  '': 'haskell-hoogle:lookup'
+
+# Haskell: GHC-mod
+'atom-text-editor[data-grammar~="haskell"]':
+  'ctrl-alt-r': 'haskell-ghc-mod:check-file'
+  '': 'haskell-ghc-mod:lint-file'
+  'ctrl-alt-g': 'haskell-ghc-mod:show-type' #this is an example binding
+  'ctrl-alt-i': 'haskell-ghc-mod:show-info' #this is an example binding
+  'ctrl-alt-T': 'haskell-ghc-mod:insert-type' #this is an example binding
+  'ctrl-alt-c': 'haskell-ghc-mod:case-split'
+  '': 'haskell-ghc-mod:sig-fill'
+  '': 'haskell-ghc-mod:show-info-fallback-to-type'
+  '': 'haskell-ghc-mod:show-type-fallback-to-info'
+  '': 'haskell-ghc-mod:show-type-and-info'
+  '': 'haskell-ghc-mod:insert-import'
+  'ctrl-alt-b': 'haskell-ghc-mod:go-to-declaration'
+
+'atom-workspace':
+  '': 'haskell-ghc-mod:shutdown-backend'
+
+# Haskell: REPL
+"atom-text-editor.ide-haskell-repl":
+  'ctrl-alt-enter': 'ide-haskell-repl:exec-command'
+  # 'ctrl-up': 'ide-haskell-repl:history-back'
+  # 'ctrl-down': 'ide-haskell-repl:history-forward'
+  'ctrl-alt-r': 'ide-haskell-repl:ghci-reload'
+
+# Haskell: Cabal
+'atom-workspace':
+  'ctrl-b': 'ide-haskell-cabal:build'
+  '': 'ide-haskell-cabal:set-build-target'
+  'ctrl-alt-c': 'ide-haskell-cabal:clean'
+  'ctrl-t': 'ide-haskell-cabal:test'
