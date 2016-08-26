@@ -124,6 +124,7 @@ get_ip() {
 
 # CDS
 cds_install() {
+    cdvirtualenv src/cds
     python -O -m compileall .
     cds npm
     cdvirtualenv var/instance/static
@@ -141,6 +142,7 @@ cds_init() {
 }
 
 cds_fixtures() {
+    cdvirtualenv src/cds
     cds fixtures cds
     cds fixtures files
 }
@@ -157,6 +159,7 @@ cds_run() {
 }
 
 cds_del() {
+    cdvirtualenv src/cds
     yes | cds db destroy
     yes | cds index destroy
 }
