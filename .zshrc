@@ -119,7 +119,7 @@ add_to_path ~/Idris/.cabal-sandbox/bin
 
 # IP
 get_ip() {
-    ip route get 8.8.8.8 | awk '{print $NF; exit}'
+  ip route get 8.8.8.8 | awk '{print $NF; exit}'
 }
 
 # Haskell
@@ -131,56 +131,61 @@ autoload -U +X bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script stack)"
 
 # CDS
+cds_setup() {
+  export FLASK_DEBUG=1
+  export SQLALCHEMY_DATABASE_URI="mysql+pymysql://root:123456@localhost:3306/invenio"
+}
 cds_cd() {
-    cdvirtualenv src/cds
+  cdvirtualenv src/cds
+  $(cds_setup_db)
 }
 cds_install() {
-    $(cds_cd)
-    python -O -m compileall .
-    cds npm
-    cdvirtualenv var/instance/static
-    npm install
-    cds collect -v
-    cds assets build
-    $(cds_cd)
+  $(cds_cd)
+  python -O -m compileall .
+  cds npm
+  cdvirtualenv var/instance/static
+  npm install
+  cds collect -v
+  cds assets build
+  $(cds_cd)
 }
 cds_init() {
-    $(cds_cd)
-    cds db init
-    cds db create
-    cds users create test@test.ch -a
-    cds index init
+  $(cds_cd)
+  cds db init
+  cds db create
+  cds users create test@test.ch -a
+  cds index init
 }
 cds_fixtures() {
-    $(cds_cd)
-    cds fixtures cds
-    cds fixtures files
+  $(cds_cd)
+  cds fixtures cds
+  cds fixtures files
 }
 cds_all() {
-    $(cds_cd)
-    $(cds_install)
-    $(cds_init)
-    $(cds_fixtures)
-}
-cds_run() {
-    cdvirtualenv src/cds/cds
-    cds run --debugger
+  $(cds_cd)
+  $(cds_install)
+  $(cds_init)
+  $(cds_fixtures)
 }
 cds_del() {
-    $(cds_cd)
-    yes | cds db destroy
-    yes | cds index destroy
+  $(cds_cd)
+  yes | cds db destroy
+  yes | cds index destroy
 }
 cds_reset() {
-    $(cds_cd)
-    $(cds_del)
-    cds db init
-    cds db create
-    cds index init
-    cds fixtures cds
-    cds fixtures files
+  $(cds_cd)
+  $(cds_del)
+  cds db init
+  cds db create
+  cds index init
+  cds fixtures cds
+  cds fixtures files
+}
+cds_run() {
+  $(cds_cd)
+  cds run --debugger
 }
 cds_celery() {
-    cdvirtualenv src/cds/cds
-    celery -A cds.celery worker -l info
+  $(cds_cd)
+  celery -A cds.celery worker -l info
 }
