@@ -65,6 +65,10 @@ add_to_path /sbin
 add_to_path /bin
 add_to_path ~/bin
 
+# C++
+alias g++="g++ --std=c++11"
+alias gpp="gpp --std=c++11"
+
 # Noglobs
 alias git="noglob git"
 alias pip="noglob pip"
