@@ -141,7 +141,6 @@ cds_setup() {
 }
 cds_cd() {
   cdvirtualenv src/cds
-  $(cds_setup_db)
 }
 cds_install() {
   $(cds_cd)
@@ -154,30 +153,25 @@ cds_install() {
   $(cds_cd)
 }
 cds_init() {
-  $(cds_cd)
   cds db init
   cds db create
   cds users create test@test.ch -a
   cds index init
 }
 cds_fixtures() {
-  $(cds_cd)
   cds fixtures cds
   cds fixtures files
 }
 cds_all() {
-  $(cds_cd)
   $(cds_install)
   $(cds_init)
   $(cds_fixtures)
 }
 cds_del() {
-  $(cds_cd)
   yes | cds db destroy
   yes | cds index destroy
 }
 cds_reset() {
-  $(cds_cd)
   $(cds_del)
   cds db init
   cds db create
@@ -185,11 +179,5 @@ cds_reset() {
   cds fixtures cds
   cds fixtures files
 }
-cds_run() {
-  $(cds_cd)
-  cds run --debugger
-}
-cds_celery() {
-  $(cds_cd)
-  celery -A cds.celery worker -l info
-}
+alias cds_run="cds run --debugger"
+alias cds_celery="celery -A cds.celery worker -l info --autoreload --include=cds.modules.webhooks.tasks"
