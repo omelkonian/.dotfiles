@@ -34,7 +34,7 @@
   '': 'ide-haskell:toggle-output'
 
 # Haskell: Hoogle
-# 'atom-text-editor[data-grammar~="haskell"]':  
+# 'atom-text-editor[data-grammar~="haskell"]':
 
 # Haskell: GHC-mod
 'atom-text-editor[data-grammar~="haskell"]':
@@ -68,3 +68,10 @@
   '': 'ide-haskell-cabal:set-build-target'
   'ctrl-alt-c': 'ide-haskell-cabal:clean'
   'ctrl-t': 'ide-haskell-cabal:test'
+
+# Multiple panels
+'body':
+  'alt-9': 'window:focus-pane-on-left'
+  'alt-0': 'window:focus-pane-on-right'
+  'ctrl-alt-2': 'pane:split-right'
+  'ctrl-alt-3': 'pane:split-down'
