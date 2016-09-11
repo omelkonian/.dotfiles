@@ -1,7 +1,7 @@
 {
 	"auto_close_tags": true,
 	"auto_complete": true,
-	"auto_complete_commit_on_tab": true,
+	"auto_complete_commit_on_tab": false,
 	"auto_complete_delay": 50,
 	"auto_indent": true,
 	"auto_match_enabled": true,
