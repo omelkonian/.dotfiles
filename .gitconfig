@@ -33,6 +33,7 @@
   ca = commit --amend
   can = commit --amend --no-edit
   csa = commit -s --amend
+  cf = "!f(){ git commit --fixup=\"$1\" && git rebase -i --autosquash \"$1\"^;};f"
 
   # Add
   a = add
@@ -62,7 +63,8 @@
   ch = checkout
   chm = checkout master
   chb = checkout -b
-	undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
+  undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
+
 [core]
 	excludesfile = ~/.gitignore
 	editor = subl -w
