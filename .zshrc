@@ -3,9 +3,10 @@ export ZSH=~/.oh-my-zsh
 
 CASE_SENSITIVE="true"
 ENABLE_CORRECTION="true"
-# COMPLETION_WAITING  _DOTS="true"
+# COMPLETION_WAITING_DOTS="true"
 
-plugins=(git zsh-syntax-highlighting)
+plugins=(git zsh-syntax-highlighting colored-man-pages colorize extract history
+         cabal pip)
 
 # User configuration
   export PATH="~/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/"
