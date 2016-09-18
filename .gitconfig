@@ -52,6 +52,9 @@
   remotes = remote -v
   br = branch
 
+  # Pull
+  pp = pull
+
   # Push
   p = push origin
   pf = push -f origin
