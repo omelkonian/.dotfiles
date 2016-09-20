@@ -97,6 +97,10 @@ alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
 
 # virtualenv
 . /usr/local/bin/virtualenvwrapper.sh
+work() {
+    workon "$1"
+    cdvirtualenv src/"$1"
+}
 
 # sqlite
 export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
