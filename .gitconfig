@@ -49,12 +49,18 @@
   d = diff --color-words
 
   # Branches
-  remotes = remote -v
+  rs = remote -v
   br = branch
+	rrm = remote rm
+	rad = "!f() { git remote add origin https://github.com/"$1"/"$2".git; }; f"
+
+  # Pull
+  pp = pull
 
   # Push
   p = push origin
   pf = push -f origin
+	pu = push -u origin master
 
   # Rebase
   ri = rebase --interactive

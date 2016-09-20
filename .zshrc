@@ -56,6 +56,7 @@ function mkcdir {
 function add_to_path {
     export PATH=$PATH:"$1"
 }
+alias lt="ll -tr"
 
 # General
 add_to_path /usr/local/sbin
