@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#
-# GENERAL INITIALIZATION
-#
-
 # Identify the home of our gtkrc file, important for setting styles of
 # gtk-based applications
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
@@ -17,23 +13,17 @@ xrdb -merge .Xresources
 # transparency support.
 xcompmgr -n &
 
-
-#
-# SCREEN CONFIGURATION
-#
-
-# Activate primary screen
-xrandr --output LVDS-1 --auto --primary
-
 # Disable primary laptop screen, when docked
-xrandr | grep 'VGA1 connected' | ifne xrandr --auto --output VGA1 --mode 1280x1024 --right-of HDMI1
+EXTERNAL_OUTPUT="VGA1"
+INTERNAL_OUTPUT="LVDS1"
+xrandr |grep $EXTERNAL_OUTPUT | grep " connected "
+if [ $? -eq 0 ]; then
+    xrandr --output $INTERNAL_OUTPUT --off --output $EXTERNAL_OUTPUT --auto --right-of HDMI1
+else
+    xrandr --output $INTERNAL_OUTPUT --auto
+fi
 
-
-#
-# LOAD SCREEN BACKGROUNDS
-#
-
-# To set your backgrounds, run nitrogren /path/to/images
+# Wallpaper
 nitrogen --restore &
 
 

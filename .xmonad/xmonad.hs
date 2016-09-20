@@ -29,9 +29,6 @@ myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 2              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
-myIMRosterTitle      = "Buddy List"   -- title of roster on IM workspace
-                                      -- use "Buddy List" for Pidgin, but
-                                      -- "Contact List" for Empathy
 
 
 {-
@@ -73,9 +70,9 @@ myUrgentWSRight = "}"
 
 myWorkspaces =
   [
-    "7:Chat",   "8:Movies",  "9:Music",
+    "7:Chat",   "8:Video",  "9:Music",
     "4:Term",   "5:Dev",     "6:Web",
-    "1:Mail",   "2:Files",   "3:Editor",
+    "1:Mail",   "2:Files",   "3:Edit",
     "0:???",    "Extr1",     "Extr2"
   ]
 
@@ -132,23 +129,8 @@ defaultLayouts = smartBorders(avoidStruts(
   -- Master window is at top left.
   ||| Grid))
 
-
--- Here we define some layouts which will be assigned to specific
--- workspaces based on the functionality of that workspace.
-
--- The chat layout uses the "IM" layout. We have a roster which takes
--- up 1/8 of the screen vertically, and the remaining space contains
--- chat windows which are tiled using the grid layout. The roster is
--- identified using the myIMRosterTitle variable, and by default is
--- configured for Pidgin, so if you're using something else you
--- will want to modify that variable.
-chatLayout = avoidStruts(withIM (1%7) (Title myIMRosterTitle) Grid)
-
--- Here we combine our default layouts with our specific, workspace-locked
--- layouts.
 myLayouts =
-  onWorkspace "7:Chat" chatLayout
-  $ defaultLayouts
+  {-onWorkspace "7:Chat" chatLayout $-} defaultLayouts
 
 
 {-
@@ -236,10 +218,6 @@ myManagementHooks :: [ManageHook]
 myManagementHooks = [
   resource =? "synapse" --> doIgnore
   , resource =? "stalonetray" --> doIgnore
-  --, (className =? "Komodo IDE") --> doF (W.shift "5:Dev")
-  --, (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
-  --, (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
-  --, (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
   , (className =? "skype") --> doF (W.shift "7:Chat")
   , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
   , (className =? "nautilus") --> doF (W.shift "2:Files")
@@ -248,7 +226,6 @@ myManagementHooks = [
   , (className =? "terminator") --> doF (W.shift "4:Term")
   , (className =? "sublime_text") --> doF (W.shift "3:Editor")
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
-  , (className =? "Empathy") --> doF (W.shift "7:Chat")
   ]
 
 
@@ -275,14 +252,6 @@ numPadKeys =
     , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
   ]
 
-numKeys =
-  [
-    xK_7, xK_8, xK_9
-    , xK_4, xK_5, xK_6
-    , xK_1, xK_2, xK_3
-    , xK_0, xK_minus, xK_equal
-  ]
-
 -- Here, some magic occurs that I once grokked but has since
 -- fallen out of my head. Essentially what is happening is
 -- that we are telling xmonad how to navigate workspaces,
@@ -294,16 +263,11 @@ myKeys = myKeyBindings ++
        | (i, k) <- zip myWorkspaces numPadKeys
        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
   ] ++
-  --[
-  --  ((m .|. myModMask, k), windows $ f i)
-  --     | (i, k) <- zip myWorkspaces numKeys
-  --     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  --] ++
   M.toList (planeKeys myModMask (Lines 4) Finite) ++
   [
     ((m .|. myModMask, key), screenWorkspace sc
       >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_e, xK_w, xK_r] [1,0,2]
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
   ]
 

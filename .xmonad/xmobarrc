@@ -5,15 +5,12 @@
 -- changes immediately by recompiling xmonad using "super-q".
 --
 -- There's a lot you can do here. Refer to "man xmobar".
---
--- Author: David Brewer
--- Repository: https://github.com/davidbrewer/xmonad-ubuntu-conf
 
 
 Config {
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
-  font = "xft:Ubuntu Mono-14",
+  font = "xft:Ubuntu Mono-12",
   bgColor = "black",
   fgColor = "white",
 
@@ -22,7 +19,7 @@ Config {
   -- of your screen to make it play nicely with stalonetray, which we
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
-  position = TopW L 95,
+  position = TopW L 92,
 
   -- list of commands which gather information about your system for
   -- presentation in the bar.
@@ -73,5 +70,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %myvolume%    <fc=#e6744c>%date%</fc>     "
+   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %myvolume%  <fc=#e6744c>%date%</fc>   "
 }
