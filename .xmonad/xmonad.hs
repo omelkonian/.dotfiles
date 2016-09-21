@@ -168,6 +168,7 @@ myKeyBindings =
     , ((myModMask, xK_F10), spawn "amixer -q set Master toggle")
     , ((myModMask, xK_Page_Down), spawn "amixer -q set Master 2%-")
     , ((myModMask, xK_Page_Up), spawn "amixer -q set Master 2%+")
+    , ((myModMask .|. shiftMask, xK_l), spawn "slock")
   ]
 
 

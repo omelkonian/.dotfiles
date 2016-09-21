@@ -14,13 +14,18 @@ xrdb -merge .Xresources
 xcompmgr -n &
 
 # Disable primary laptop screen, when docked
-EXTERNAL_OUTPUT="VGA1"
-INTERNAL_OUTPUT="LVDS1"
-xrandr |grep $EXTERNAL_OUTPUT | grep " connected "
-if [ $? -eq 0 ]; then
-    xrandr --output $INTERNAL_OUTPUT --off --output $EXTERNAL_OUTPUT --auto --right-of HDMI1
-else
-    xrandr --output $INTERNAL_OUTPUT --auto
+EXTERNAL_HOME="VGA1"
+EXTERNAL_WORK="DP2"
+LAPTOP="LVDS1"
+WORK=$(xrandr |grep $EXTERNAL_WORK | grep " connected ")
+DOCKED=$(xrandr |grep $EXTERNAL_HOME | grep " connected ")
+
+if [ WORK -eq 0 ]; then
+  if [ DOCKED -eq 0 ]; then
+    xrandr --output $LAPTOP --off --output $EXTERNAL_HOME --auto --right-of HDMI1
+  else
+    xrandr --output $LAPTOP --auto
+  fi
 fi
 
 # Wallpaper
