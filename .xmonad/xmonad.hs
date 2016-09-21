@@ -309,3 +309,4 @@ main = do
     }
   }
     `additionalKeys` myKeys
+    `removeKeys` [(myModMask, n) | n <- [xK_1 .. xK_9]]
