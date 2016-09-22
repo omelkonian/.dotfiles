@@ -21,3 +21,15 @@ start "skype"
 
 # Thunderbird
 start "thunderbird"
+
+# Multiple screens setup
+if [ -n "$(xrandr | grep "VGA1" | grep " connected ")" ]; then
+    # Docked laptop
+    xrandr --output LVDS1 --off --output VGA1 --auto --right-of HDMI1 --auto
+elif [ -n "$(xrandr | grep "DP2" | grep " connected ")" ]; then
+    # Work setup
+    xrandr --output VIRTUAL1 --off --output DP3 --off --output DP2 --primary --mode 1920x1200 --pos 1920x0 --rotate normal --output DP1 --off --output HDMI3 --mode 1920x1080 --pos 3840x0 --rotate normal --output HDMI2 --off --output HDMI1 --mode 1920x1080 --pos 0x40 --rotate normal --output VGA1 --off
+else
+    # Undocked laptop
+    xrandr --output LVDS1 --auto
+fi
