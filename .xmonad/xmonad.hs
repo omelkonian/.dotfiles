@@ -14,6 +14,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ICCCMFocus
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -273,14 +274,35 @@ myKeys = myKeyBindings ++
   ]
 
 
-{-
-  Here we actually stitch together all the configuration settings
-  and run xmonad. We also spawn an instance of xmobar and pipe
-  content into it via the logHook.
--}
+-- Loghook
+myBitmapsDir = "/home/orestis/.xmonad/dzen2"
+myLogHook h = dynamicLogWithPP $ defaultPP
+    {
+        ppCurrent           =   dzenColor "#ebac54" "#1B1D1E" . pad
+      , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
+      , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
+      , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
+      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad
+      , ppWsSep             =   " "
+      , ppSep               =   "  |  "
+      , ppLayout            =   dzenColor "#ebac54" "#1B1D1E" .
+                                (\x -> case x of
+                                    "ResizableTall" -> "^i(" ++ myBitmapsDir ++ "/tall.xbm)"
+                                    "Mirror ResizableTall" -> "^i(" ++ myBitmapsDir ++ "/mtall.xbm)"
+                                    "Full" -> "^i(" ++ myBitmapsDir ++ "/full.xbm)"
+                                    "Simple Float" -> "~"
+                                    _ -> x
+                                )
+      , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
+      , ppOutput            =   hPutStrLn h
+    }
+
+myXmonadBar = "dzen2 -p -xs 1 -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
+myStatusBar = "conky -c /home/orestis/.xmonad/.conky_dzen | dzen2 -p -xs 2 -ta 'r' -fg '#FFFFFF' -bg '#1B1D1E'"
 
 main = do
-  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobarrc"
+  dzenLeftBar <- spawnPipe myXmonadBar
+  dzenRightBar <- spawnPipe myStatusBar
   xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
     focusedBorderColor = myFocusedBorderColor
   , normalBorderColor = myNormalBorderColor
@@ -297,16 +319,7 @@ main = do
   , manageHook = manageHook defaultConfig
       <+> composeAll myManagementHooks
       <+> manageDocks
-  , logHook = takeTopFocus <+> dynamicLogWithPP xmobarPP {
-      ppOutput = hPutStrLn xmproc
-      , ppTitle = xmobarColor myTitleColor "" . shorten myTitleLength
-      , ppCurrent = xmobarColor myCurrentWSColor ""
-        . wrap myCurrentWSLeft myCurrentWSRight
-      , ppVisible = xmobarColor myVisibleWSColor ""
-        . wrap myVisibleWSLeft myVisibleWSRight
-      , ppUrgent = xmobarColor myUrgentWSColor ""
-        . wrap myUrgentWSLeft myUrgentWSRight
-    }
+  , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
   }
     `additionalKeys` myKeys
     `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9]] ++
