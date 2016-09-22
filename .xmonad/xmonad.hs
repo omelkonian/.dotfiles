@@ -309,4 +309,5 @@ main = do
     }
   }
     `additionalKeys` myKeys
-    `removeKeys` [(myModMask, n) | n <- [xK_1 .. xK_9]]
+    `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9]] ++
+                 [(myModMask, xK_Left), (myModMask, xK_Right)])
