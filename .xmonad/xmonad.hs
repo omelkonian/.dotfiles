@@ -170,6 +170,7 @@ myKeyBindings =
     , ((myModMask, xK_Page_Down), spawn "amixer -q set Master 2%-")
     , ((myModMask, xK_Page_Up), spawn "amixer -q set Master 2%+")
     , ((myModMask .|. shiftMask, xK_l), spawn "slock")
+    , ((myModMask .|. shiftMask, xK_s), spawn "systemctl poweroff")
   ]
 
 
