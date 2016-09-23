@@ -319,8 +319,7 @@ main = do
   , manageHook = manageHook defaultConfig
       <+> composeAll myManagementHooks
       <+> manageDocks
-  , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+  , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
   }
     `additionalKeys` myKeys
-    `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9]] ++
-                 [(myModMask, xK_Left), (myModMask, xK_Right)])
+    `removeKeys` [(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
