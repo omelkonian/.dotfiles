@@ -21,6 +21,7 @@ start "skype"
 
 # Thunderbird
 start "thunderbird"
+
 echo "Apps started"
 
 # Multiple screens setup
