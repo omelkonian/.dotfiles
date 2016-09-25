@@ -74,7 +74,7 @@ myWorkspaces =
     "7:Chat",   "8:Video",  "9:Music",
     "4:Term",   "5:Dev",     "6:Web",
     "1:Mail",   "2:Files",   "3:Edit",
-    "0:???",    "Extr1",     "Extr2"
+    "0:PDF",    "Extr1",     "Extr2"
   ]
 
 startupWorkspace = "5:Web"  -- which workspace do you want to be on after launch?
@@ -230,6 +230,7 @@ myManagementHooks = [
   , (className =? "terminator") --> doF (W.shift "4:Term")
   , (className =? "sublime_text") --> doF (W.shift "3:Editor")
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
+  , (className =? "evince") --> doF (W.shift "0:PDF")
   ]
 
 
