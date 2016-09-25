@@ -21,6 +21,7 @@ start "skype"
 
 # Thunderbird
 start "thunderbird"
+echo "Apps started"
 
 # Multiple screens setup
 if [ -n "$(xrandr | grep "VGA1" | grep " connected ")" ]; then
@@ -33,10 +34,11 @@ else
     # Undocked laptop
     xrandr --output LVDS1 --auto
 fi
+echo "Monitors configured"
 
 # Set up an icon tray
-trayer --edge top --align left --SetDockType true --SetPartialStrut true --tint 0x191970 \
-    --width 50 --height 24 \
-    # --widthtype request \
-    # --monitor "primary" \
-    --expand true --transparent true &
+if [ -n "$(pgrep trayer)" ] ; then
+    kill $(pgrep trayer)
+fi
+trayer --edge top --align left --monitor 1 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
+echo "Icon tray spawned"
