@@ -24,22 +24,24 @@ start "thunderbird"
 
 echo "Apps started"
 
+# Icon tray and monitor setup
+if [ -n "$(pgrep trayer)" ] ; then
+    kill $(pgrep trayer)
+fi
+
 # Multiple screens setup
 if [ -n "$(xrandr | grep "VGA1" | grep " connected ")" ]; then
     # Docked laptop
     xrandr --output LVDS1 --off --output HDMI1 --mode 1280x1024 --pos 0x0 --output VGA1 --mode 1280x1024 --pos 1320x0
+    trayer --edge top --align left --monitor 1 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 elif [ -n "$(xrandr | grep "DP2" | grep " connected ")" ]; then
     # Work setup
     xrandr --output VIRTUAL1 --off --output DP3 --off --output DP2 --primary --mode 1920x1200 --pos 1920x0 --rotate normal --output DP1 --off --output HDMI3 --mode 1920x1080 --pos 3840x0 --rotate normal --output HDMI2 --off --output HDMI1 --mode 1920x1080 --pos 0x40 --rotate normal --output VGA1 --off
+    trayer --edge top --align left --monitor 0 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 else
     # Undocked laptop
     xrandr --output LVDS1 --auto
+    trayer --edge top --align left --monitor primary --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 fi
 echo "Monitors configured"
-
-# Set up an icon tray
-if [ -n "$(pgrep trayer)" ] ; then
-    kill $(pgrep trayer)
-fi
-trayer --edge top --align left --monitor 1 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 echo "Icon tray spawned"
