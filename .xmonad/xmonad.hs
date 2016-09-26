@@ -13,6 +13,7 @@ import XMonad.Util.Run
 import XMonad.Util.NamedWindows
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
+import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.SpawnOn (spawnOn)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
@@ -60,7 +61,28 @@ defaultLayouts = smartBorders(avoidStruts(
 myLayouts =
   {-onWorkspace "7:Chat" chatLayout $-} defaultLayouts
 
-myKeyBindings =
+myManagementHooks :: [ManageHook]
+myManagementHooks = [
+  resource =? "synapse" --> doIgnore
+  , resource =? "stalonetray" --> doIgnore
+  , (className =? "skype") --> doF (W.shift "7:Chat")
+  , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
+  , (className =? "Nautilus") --> doF (W.shift "2:Files")
+  , (className =? "totem") --> doF (W.shift "9:Music")
+  , (className =? "sublime_text") --> doF (W.shift "3:Edit")
+  , (className =? "google-chrome") --> doF (W.shift "6:Web")
+  , (className =? "Evince") --> doF (W.shift "0:PDF")
+  ]
+
+numPadKeys =
+  [
+    xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
+    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
+    , xK_KP_End, xK_KP_Down, xK_KP_Page_Down
+    , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
+  ]
+
+myKeys =
   [
     ((myModMask, xK_b), sendMessage ToggleStruts)
     , ((myModMask, xK_a), sendMessage MirrorShrink)
@@ -78,30 +100,7 @@ myKeyBindings =
     , ((myModMask, xK_Escape), spawn "/home/orestis/.xmonad/lang_switch.sh")
     , ((myModMask, xK_c), kill)
   ]
-
-
-myManagementHooks :: [ManageHook]
-myManagementHooks = [
-  resource =? "synapse" --> doIgnore
-  , resource =? "stalonetray" --> doIgnore
-  , (className =? "skype") --> doF (W.shift "7:Chat")
-  , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
-  , (className =? "Nautilus") --> doF (W.shift "2:Files")
-  , (className =? "totem") --> doF (W.shift "9:Music")
-  , (className =? "sublime_text") --> doF (W.shift "3:Edit")
-  , (className =? "google-chrome") --> doF (W.shift "6:Web")
-  , (className =? "evince") --> doF (W.shift "0:PDF")
-  ]
-
-numPadKeys =
-  [
-    xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
-    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
-    , xK_KP_End, xK_KP_Down, xK_KP_Page_Down
-    , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
-  ]
-
-myKeys = myKeyBindings ++
+  ++
   [
     ((m .|. myModMask, k), windows $ f i)
        | (i, k) <- zip myWorkspaces numPadKeys
@@ -111,10 +110,9 @@ myKeys = myKeyBindings ++
   [
     ((m .|. myModMask, key), screenWorkspace sc
       >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2]
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0, 1, 2]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
   ]
-
 
 -- Loghook
 myBitmapsDir = "/home/orestis/.xmonad/dzen2"
