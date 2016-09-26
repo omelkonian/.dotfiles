@@ -1,0 +1,25 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Elm Language Support",
+		"GitGutter",
+		"JSX",
+		"Markdown Preview",
+		"Package Control",
+		"PackageResourceViewer",
+		"rsub",
+		"SideBarEnhancements",
+		"SublimeLinter-pep8",
+		"SublimeLinter-pylint",
+		"SublimeREPL",
+		"Theme - Flatland",
+		"Theme - Soda",
+		"Travis YML Lint",
+		"Travis-CI",
+		"Vintageous"
+	]
+}
