@@ -14,6 +14,7 @@ import XMonad.Util.NamedWindows
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
 import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.CycleWS (nextWS, prevWS, nextScreen, prevScreen)
 import XMonad.Actions.SpawnOn (spawnOn)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
@@ -88,7 +89,6 @@ myKeys =
     , ((myModMask, xK_a), sendMessage MirrorShrink)
     , ((myModMask, xK_z), sendMessage MirrorExpand)
     , ((myModMask, xK_p), spawn "synapse")
-    , ((myModMask, xK_space), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
     , ((myModMask .|. shiftMask, xK_P), spawnOn "9:Music" "google-chrome --new-window play.spotify.com")
     , ((myModMask, xK_F10), spawn "amixer -q set Master toggle")
@@ -98,6 +98,8 @@ myKeys =
     , ((myModMask .|. shiftMask, xK_F11), spawn "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now")
     , ((myModMask .|. shiftMask, xK_F12), spawn "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now")
     , ((myModMask, xK_Escape), spawn "/home/orestis/.xmonad/lang_switch.sh")
+    , ((myModMask, xK_space), nextWS)
+    , ((myModMask .|. shiftMask, xK_space), prevWS)
     , ((myModMask, xK_c), kill)
   ]
   ++
