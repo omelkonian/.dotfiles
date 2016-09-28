@@ -169,4 +169,5 @@ main = do
   , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
   }
     `additionalKeys` myKeys
-    `removeKeys` [(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
+    `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
+                  ++ [(myModMask, xK_Return)])
