@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"Elm Language Support",
+		"Git Config",
 		"GitGutter",
 		"JSX",
 		"Markdown Preview",
