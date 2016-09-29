@@ -36,7 +36,7 @@ if [ -n "$(xrandr | grep "VGA1" | grep " connected ")" ]; then
     trayer --edge top --align left --monitor 1 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 elif [ -n "$(xrandr | grep "DP2" | grep " connected ")" ]; then
     # Work setup
-    xrandr --output HDMI1 --auto --output DP2 --auto --output HDMI3 --auto
+    xrandr --output VIRTUAL1 --off --output DP3 --off --output DP2 --primary --mode 1920x1200 --pos 1920x0 --rotate normal --output DP1 --off --output HDMI3 --mode 1920x1080 --pos 3840x0 --rotate normal --output HDMI2 --off --output HDMI1 --mode 1920x1080 --pos 0x40 --rotate normal --output VGA1 --off
     trayer --edge top --align left --monitor 0 --widthtype percent --width 50 --height 20 --transparent true --alpha 0 --tint 0x1b1d1e &
 else
     # Undocked laptop

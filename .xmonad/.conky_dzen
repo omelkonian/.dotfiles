@@ -6,4 +6,8 @@ own_window no
 update_interval 1
 
 TEXT
-^i(/home/orestis/.xmonad/dzen2/cpu.xbm) ^fg(\#FFFFFF)${cpu}% ^i(/home/orestis/.xmonad/dzen2/mem.xbm) ^fg(\#FFFFFF)${memperc}% ^fg(\#ebac54) ^i(/home/orestis/.xmonad/dzen2/volume.xbm) ^fg(\#00ffff)${exec /home/orestis/.xmonad/get-volume} ^fg(\#ebac54) ^i(/home/orestis/.xmonad/dzen2/clock.xbm) ^fg(\#FFFFFF) ${time %d %m %Y} ^fg(\#ebac54) ${time %R}
+^i(/home/orestis/.xmonad/dzen2/cpu.xbm) ^fg(\#FFFFFF)${cpu}% \
+^i(/home/orestis/.xmonad/dzen2/mem.xbm) ^fg(\#FFFFFF)${memperc}% \
+^fg(\#ebac54) ^i(/home/orestis/.xmonad/dzen2/volume.xbm) ^fg(\#00ffff)${exec /home/orestis/.xmonad/get-volume} \
+^fg(\#ebac54) ^i(/home/orestis/.xmonad/dzen2/clock.xbm) ^fg(\#FFFFFF) ${time %d %m %Y} \
+^fg(\#ebac54) ${time %R}
