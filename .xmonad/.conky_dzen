@@ -3,12 +3,13 @@ out_to_console yes
 out_to_x no
 own_window no
 # Update interval in seconds
-update_interval 1
+update_interval 0.5
 
 TEXT
-^i(/home/orestis/.xmonad/dzen2/cpu.xbm) ${cpu}% \
-^i(/home/orestis/.xmonad/dzen2/mem.xbm) ${memperc}% \
-^i(/home/orestis/.xmonad/dzen2/volume.xbm) ${exec /home/orestis/.xmonad/volume.sh} \
-^i(/home/orestis/.xmonad/dzen2/battery.xbm) ${exec acpi --battery | grep -o '..%'} \
-^i(/home/orestis/.xmonad/dzen2/clock.xbm) ${time %d %m %Y} \
-${time %R}
+^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/cpu.xbm)^fg(\#ffffff) ${cpu}%   \
+^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/mem.xbm)^fg(\#ffffff) ${memperc}%   \
+^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/volume.xbm)^fg(\#ffffff) ${exec /home/orestis/.xmonad/volume.sh}   \
+^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/battery.xbm)^fg(\#ffffff) ${exec acpi --battery | grep -o '[0-9]*%'}   \
+^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/clock.xbm)^fg(\#ffffff) ${time %d %m %Y}  \
+[${time %T}] \
+
