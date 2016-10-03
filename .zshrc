@@ -75,6 +75,9 @@ alias gpp="gpp --std=c++11"
 alias git="noglob git"
 alias pip="noglob pip"
 
+# Python
+alias pipall="pip list | awk '{print $1}' | xargs pip uninstall -y"
+
 # ROS
 # source /opt/ros/indigo/setup.bash
 export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
