@@ -70,7 +70,7 @@ myManagementHooks = [
   , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
   , (className =? "Nautilus") --> doF (W.shift "2:Files")
   , (className =? "totem") --> doF (W.shift "9:Music")
-  , (className =? "sublime_text") --> doF (W.shift "3:Edit")
+  , (className =? "Sublime_text") --> doF (W.shift "3:Edit")
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
   , (className =? "Evince") --> doF (W.shift "0:PDF")
   ]
@@ -140,7 +140,7 @@ myLogHook h = dynamicLogWithPP $ defaultPP
     }
 
 -- Status bars
-myXmonadBar = "dzen2 -p -xs 2 -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
+myXmonadBar = "dzen2 -p -xs 0 -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
 myStatusBar = "conky -c /home/orestis/.xmonad/.conky_dzen | dzen2 -p -xs 1 -ta 'r' -fg '#FFFFFF' -bg '#1B1D1E'"
 
 -- Notifications
@@ -148,8 +148,8 @@ myUrgencyHook = NoUrgencyHook -- dzenUrgencyHook { args = ["-bg", "darkgreen", "
 
 -- Glue all them up.
 main = do
-  dzenLeftBar <- spawnPipe myXmonadBar
-  dzenRightBar <- spawnPipe myStatusBar
+  dzenLeftBar <- spawnPipe myStatusBar-- myXmonadBar
+  -- dzenRightBar <- spawnPipe myStatusBar
   xmonad $ withUrgencyHook myUrgencyHook $ defaultConfig {
     focusedBorderColor = myFocusedBorderColor
   , normalBorderColor = myNormalBorderColor
