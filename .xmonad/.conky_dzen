@@ -6,10 +6,9 @@ own_window no
 update_interval 0.5
 
 TEXT
-^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/cpu.xbm)^fg(\#ffffff) ${cpu}%   \
-^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/mem.xbm)^fg(\#ffffff) ${memperc}%   \
-^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/volume.xbm)^fg(\#ffffff) ${exec /home/orestis/.xmonad/volume.sh}   \
-^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/battery.xbm)^fg(\#ffffff) ${exec acpi --battery | grep -o '[0-9]*%'}   \
-^fg(\#ebac54)^i(/home/orestis/.xmonad/dzen2/clock.xbm)^fg(\#ffffff) ${time %d %m %Y}  \
-[${time %T}] \
+^fg(\#eddb48)^i(/home/orestis/.xmonad/dzen2/cpu.xbm)^fg(\#ffffff) ${cpu}%   \
+^fg(\#eddb48)^i(/home/orestis/.xmonad/dzen2/mem.xbm)^fg(\#ffffff) ${memperc}%   \
+^fg(\#eddb48)^i(/home/orestis/.xmonad/dzen2/volume.xbm)^fg(\#ffffff) ${exec /home/orestis/.xmonad/volume.sh}   \
+^fg(\#eddb48)^i(/home/orestis/.xmonad/dzen2/battery.xbm)^fg(\#ffffff) ${exec acpi --battery | grep -o '[0-9]*%'}   \
+^fg(\#eddb48)^i(/home/orestis/.xmonad/dzen2/clock.xbm)^fg(\#ffffff) ${time %d %m %Y} [${time %T}] \
 

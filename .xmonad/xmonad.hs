@@ -148,8 +148,7 @@ myUrgencyHook = NoUrgencyHook -- dzenUrgencyHook { args = ["-bg", "darkgreen", "
 
 -- Glue all them up.
 main = do
-  dzenLeftBar <- spawnPipe myStatusBar-- myXmonadBar
-  -- dzenRightBar <- spawnPipe myStatusBar
+  dzenLeftBar <- spawnPipe myStatusBar
   xmonad $ withUrgencyHook myUrgencyHook $ defaultConfig {
     focusedBorderColor = myFocusedBorderColor
   , normalBorderColor = myNormalBorderColor
