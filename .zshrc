@@ -5,8 +5,9 @@ CASE_SENSITIVE="true"
 ENABLE_CORRECTION="true"
 # COMPLETION_WAITING_DOTS="true"
 
-plugins=(git zsh-syntax-highlighting colored-man-pages colorize extract history
-         cabal pip)
+plugins=(git colored-man-pages colorize extract history cabal pip
+         zsh-syntax-highlighting
+        )
 
 # User configuration
   export PATH="~/bin:/opt/ros/indigo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/idea-IU-141.2735.5/bin/"
@@ -39,6 +40,17 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%b%{$fg_bold[gray]%})%{$reset_color%} "
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg_bold[red]%}✱"
 RPROMPT='$(git_prompt_info)'
+
+# Syntax highlighting options
+[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow, bold'
+ZSH_HIGHLIGHT_STYLES[command]='fg=green, bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=yellow, bold'
+ZSH_HIGHLIGHT_STYLES[path]='fg=yellow, bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=green, bold'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
 EDITOR='subl'
 
