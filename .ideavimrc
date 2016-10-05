@@ -1,0 +1,23 @@
+set number              " show line numbers
+set rnu                 " show relative line numbers
+set showcmd             " show command in bottom bar
+set wildmenu            " visual autocomplete for command menu
+set showmatch           " highlight matching [{()}]
+set incsearch           " search as characters are entered
+set hlsearch            " highlight matches
+set ignorecase          " do case insensitive matching
+set smartcase           " do smart case matching
+
+set encoding=utf-8
+set t_Co=256
+colorscheme badwolf         " awesome colorscheme
+set fillchars+=stl:\ ,stlnc:\
+set laststatus=2
+set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 14
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=L  "remove left-hand scroll bar
+set clipboard=unnamedplus  "X clipboard as unnamed
+
+:map <C-j> :action PreviousTab<CR>
+:map <C-k> :action NextTab<CR>
