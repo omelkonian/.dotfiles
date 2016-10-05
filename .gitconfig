@@ -15,10 +15,10 @@
   ignored = !git ls-files -v | grep "^[[:lower:]]"
 
   # Switch to PR
-  copr = "!f(){ \
-        if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
-          git fetch origin refs/pull/$1/head:pr/$1 && \
-          git checkout pr/$1; \
+  chpr = "!f(){ \
+        if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+          git fetch $1 refs/pull/$2/head:pr/$2 && \
+          git checkout pr/$2; \
         fi \
       }; f"
 
