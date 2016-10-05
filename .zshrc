@@ -125,7 +125,7 @@ export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
 add_to_path ~/.local/bni
 
 # Play framework
-add_to_path ~/Activator/bin/
+add_to_path /opt/Activator/bin/
 
 # EclipseCLP
 add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux

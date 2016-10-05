@@ -148,7 +148,8 @@ myUrgencyHook = NoUrgencyHook -- dzenUrgencyHook { args = ["-bg", "darkgreen", "
 
 -- Glue all them up.
 main = do
-  dzenLeftBar <- spawnPipe myStatusBar
+  -- dzenLeftBar <- spawnPipe myStatusBar
+  xmproc <- spawnPipe "xmobar"
   xmonad $ withUrgencyHook myUrgencyHook $ defaultConfig {
     focusedBorderColor = myFocusedBorderColor
   , normalBorderColor = myNormalBorderColor
@@ -165,7 +166,17 @@ main = do
   , manageHook = manageHook defaultConfig
       <+> composeAll myManagementHooks
       <+> manageDocks
-  , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
+  , logHook = takeTopFocus <+> dynamicLogWithPP xmobarPP {
+      ppOutput = hPutStrLn xmproc
+      , ppTitle = xmobarColor myTitleColor "" -- . shorten myTitleLength
+      , ppCurrent = xmobarColor myCurrentWSColor ""
+        . wrap myCurrentWSLeft myCurrentWSRight
+      , ppVisible = xmobarColor myVisibleWSColor ""
+        . wrap myVisibleWSLeft myVisibleWSRight
+      , ppUrgent = xmobarColor myUrgentWSColor ""
+        . wrap myUrgentWSLeft myUrgentWSRight
+    }
+                -- myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
   }
     `additionalKeys` myKeys
     `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
