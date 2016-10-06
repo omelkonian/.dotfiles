@@ -51,6 +51,7 @@
   # Branches
   rs = remote -v
   br = branch
+  brd = branch -D
   rrm = remote rm
   rad = "!f() { git remote add origin https://github.com/"$1"/"$2".git; }; f"
   rau = "!f() { git remote add upstream https://github.com/"$1"/"$2".git; }; f"
