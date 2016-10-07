@@ -54,6 +54,10 @@ ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
 EDITOR='subl'
 
+# Remap CapsLock as Ctrl/Escape
+setxkbmap -option ctrl:nocaps
+xcape -e 'Control_L=Escape'
+
 # Aliases
 function cd {
   builtin cd "$@" && ls
