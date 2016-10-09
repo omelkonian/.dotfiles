@@ -23,6 +23,7 @@ import XMonad.Hooks.ICCCMFocus
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import Data.Ratio ((%))
+import Graphics.X11.ExtraTypes.XF86
 
 
 myModMask            = mod1Mask       -- changes the mod key to "alt"
@@ -101,6 +102,11 @@ myKeys =
     , ((myModMask, xK_space), nextWS)
     , ((myModMask .|. shiftMask, xK_space), prevWS)
     , ((myModMask, xK_c), kill)
+    , ((0, xF86XK_MonBrightnessUp), spawn "/etc/acpi/asus-keyboard-backlight.sh up")
+    , ((0, xF86XK_MonBrightnessDown), spawn "/etc/acpi/asus-keyboard-backlight.sh down")
+    , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 3%-")
+    , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 3%+")
+    , ((0, xF86XK_AudioMute), spawn "amixer -q set Master 0")
   ]
   ++
   [
