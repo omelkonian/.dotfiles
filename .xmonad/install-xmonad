@@ -7,7 +7,7 @@ sudo apt-get update
 echo "Installing required packages..."
 sudo apt-get install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar \
     xcompmgr nitrogen stalonetray moreutils consolekit synapse \
-    ssh-askpass-gnome thunar terminator remmina conky dzen2 slock trayer
+    ssh-askpass-gnome thunar terminator remmina conky dzen2 slock trayer xcape
 
 echo "Creating xmonad xsession configuration..."
 sudo mv /usr/share/xsessions/xmonad.desktop /usr/share/xsessions/xmonad.desktop.original
