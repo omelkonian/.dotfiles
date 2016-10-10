@@ -74,6 +74,9 @@
   chb = checkout -b
   undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
 
+  # Clone
+  cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
+
 [core]
 	excludesfile = ~/.gitignore
 	editor = subl -w
