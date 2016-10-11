@@ -6,7 +6,7 @@ sudo apt-get update
 
 echo "Installing required packages..."
 sudo apt-get install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar \
-    xcompmgr nitrogen stalonetray moreutils consolekit synapse \
+    xcompmgr nitrogen stalonetray moreutils consolekit synapse xbacklight \
     ssh-askpass-gnome thunar terminator remmina conky dzen2 slock trayer xcape
 
 echo "Creating xmonad xsession configuration..."
