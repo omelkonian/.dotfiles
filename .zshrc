@@ -16,8 +16,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=500
-SAVEHIST=10000
+HISTSIZE=999999999
+SAVEHIST=$HISTSIZE
 setopt appendhistory autocd beep extendedglob nomatch notify
 bindkey -e
 zstyle :compinstall filename '~/.zshrc'
@@ -205,4 +205,4 @@ cds_reset() {
   cds fixtures files
 }
 alias cds_run="cds run --debugger"
-alias cds_celery="celery -A cds.celery worker -l info --autoreload --include=cds.modules.webhooks.tasks"
+alias cds_celery="celery -A cds.celery worker -l info"
