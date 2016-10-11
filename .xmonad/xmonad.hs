@@ -74,6 +74,7 @@ myManagementHooks = [
   , (className =? "Sublime_text") --> doF (W.shift "3:Edit")
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
   , (className =? "Evince") --> doF (W.shift "0:PDF")
+  , (className =? "Vlc") --> doF (W.shift "8:Video")
   ]
 
 numPadKeys =
