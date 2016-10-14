@@ -170,6 +170,7 @@ myUrgencyHook = NoUrgencyHook -- dzenUrgencyHook { args = ["-bg", "darkgreen", "
 -- Glue all them up.
 main = do
   -- dzenLeftBar <- spawnPipe myStatusBar
+  -- xmproc <- spawnPipe "i3status -c /home/orestis/.xmonad/i3status.conf | xmobar -o -t \"%StdinReader%\" -c \"[Run StdinReader]\""
   xmproc <- spawnPipe "xmobar"
   xmonad $ withUrgencyHook myUrgencyHook $ defaultConfig {
     focusedBorderColor = myFocusedBorderColor

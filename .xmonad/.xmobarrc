@@ -36,12 +36,12 @@ Config {
     -- based upon your specific hardware. Or, for a desktop you may want
     -- to just remove this section entirely.
     Run Battery [
+      "-L", "30",
+      "-H", "80",
       "-t", "<acstatus>: <left>%",
-      "--",
-      "-O", "AC",
-      "-o", "Bat",
-      "-h", "green",
-      "-l", "red"
+      "--high","green",
+      "--normal","yellow",
+      "--low", "red"
     ] 10,
 
     -- To get volume information, we run a custom bash script.
