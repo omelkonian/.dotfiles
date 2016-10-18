@@ -22,3 +22,4 @@ set clipboard=unnamedplus  "X clipboard as unnamed
 :map <C-j> :action PreviousTab<CR>
 :map <C-k> :action NextTab<CR>
 :map <C-S-t> :action ReopenClosedTab<CR>
+:map <C-p> :action editRunConfigurations<CR>
