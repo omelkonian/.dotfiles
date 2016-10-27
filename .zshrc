@@ -206,3 +206,6 @@ cds_reset() {
 }
 alias cds_run="cds run --debugger"
 alias cds_celery="celery -A cds.celery worker -l info"
+
+# Audio
+alias unmute="pacmd set-sink-mute 0 0"
