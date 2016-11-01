@@ -1,8 +1,8 @@
 [credential]
-	helper = cache --timeout=3600
+  helper = cache --timeout=3600
 [user]
-	email = melkon.or@gmail.com
-	name = Orestis Melkonian
+  email = melkon.or@gmail.com
+  name = Orestis Melkonian
 [color]
   ui = auto # covers diff = true, status = auto, branch = auto
   interactive = auto
@@ -14,13 +14,7 @@
   unignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
 
-  # Switch to PR
-  chpr = "!f(){ \
-        if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
-          git fetch $1 refs/pull/$2/head:pr/$2 && \
-          git checkout pr/$2; \
-        fi \
-      }; f"
+
 
   # General
   s = status
@@ -63,7 +57,8 @@
   # Push
   p = push origin
   pf = push -f origin
-	pu = push -u origin master
+  pu = push -u origin master
+  update = !git all && git can && git pf
 
   # Rebase
   ri = rebase --interactive
@@ -73,13 +68,19 @@
   chm = checkout master
   chb = checkout -b
   undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
+  chpr = "!f(){ \
+        if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+          git fetch $1 refs/pull/$2/head:pr/$2 && \
+          git checkout pr/$2; \
+        fi \
+      }; f"
 
   # Clone
   cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
 
 [core]
-	excludesfile = ~/.gitignore
-	editor = subl -w
-	pager = less -r
+  excludesfile = ~/.gitignore
+  editor = subl -w
+  pager = less -r
 [push]
-	default = simple
+  default = simple
