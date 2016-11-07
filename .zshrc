@@ -57,6 +57,7 @@ EDITOR='subl'
 # Remap CapsLock as Ctrl/Escape
 setxkbmap -option ctrl:nocaps
 xcape -e 'Control_L=Escape'
+alias caps_off="xdotool key Caps_Lock"
 
 # Aliases
 function cd {
