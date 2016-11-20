@@ -136,7 +136,7 @@ add_to_path /opt/Activator/bin/
 add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
 
 # Intellij
-add_to_path /opt/intellij15/bin
+add_to_path /home/orestis/Intellij/bin
 
 # DroidCam
 alias droid_connect="sudo droidcam-cli 192.168.0.27 4747"
