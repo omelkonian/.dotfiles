@@ -71,7 +71,7 @@ function mkcdir {
   cd -P -- "$1"
 }
 function add_to_path {
-    export PATH=$PATH:"$1"
+  export PATH=$PATH:"$1"
 }
 alias lt="ll -tr"
 
@@ -83,6 +83,11 @@ add_to_path /usr/bin
 add_to_path /sbin
 add_to_path /bin
 add_to_path ~/bin
+
+# SED
+function delete_between {
+  sed -n '1,/"$1"/p;/"$2"/,$p' $3 > tmp && mv tmp $3
+}
 
 # C++
 alias g++="g++ --std=c++11"
