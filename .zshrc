@@ -96,6 +96,7 @@ alias gpp="gpp --std=c++11"
 # Noglobs
 alias git="noglob git"
 alias pip="noglob pip"
+alias stack="noglob stack"
 
 # Python
 alias pipall="pip list | awk '{print $1}' | xargs pip uninstall -y"
