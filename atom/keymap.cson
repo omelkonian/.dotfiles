@@ -75,3 +75,7 @@
   'alt-backspace': 'window:focus-pane-on-right'
   'ctrl-alt-2': 'pane:split-right'
   'ctrl-alt-3': 'pane:split-down'
+
+# Vim ignore
+'atom-text-editor.vim-mode.insert-mode':
+  'ctrl-w': 'core:close'
