@@ -78,4 +78,10 @@
 
 # Vim ignore
 'atom-text-editor.vim-mode.insert-mode':
-  'ctrl-w': 'core:close'
+  'ctrl-w': ''
+'atom-text-editor.vim-mode':
+  'ctrl-c': ''
+
+# Autocomplete
+'atom-text-editor':
+  'alt-enter': 'autocomplete-plus:activate'
