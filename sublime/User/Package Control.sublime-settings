@@ -5,9 +5,12 @@
 	],
 	"installed_packages":
 	[
+		"Better CoffeeScript",
+		"CSS Colors",
 		"Elm Language Support",
 		"Git Config",
 		"GitGutter",
+		"Gutter Color",
 		"JSX",
 		"Markdown Preview",
 		"Package Control",
