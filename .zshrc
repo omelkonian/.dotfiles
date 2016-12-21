@@ -216,3 +216,7 @@ alias cds_celery="celery -A cds.celery worker -l info"
 
 # Audio
 alias unmute="pacmd set-sink-mute 0 0"
+
+# Timezones
+alias greek_time="sudo timedatectl set-timezone Europe/Athens"
+alias swiss_time="sudo timedatectl set-timezone Europe/Zurich"
