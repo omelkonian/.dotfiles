@@ -71,10 +71,10 @@
 
 # Multiple panels
 'body':
-  'alt-0': 'window:focus-pane-on-left'
-  'alt-backspace': 'window:focus-pane-on-right'
-  'ctrl-alt-2': 'pane:split-right'
-  'ctrl-alt-3': 'pane:split-down'
+  'ctrl-alt-j': 'window:focus-pane-on-left'
+  'ctrl-alt-k': 'window:focus-pane-on-right'
+  'ctrl-shift-e': 'pane:split-right'
+  'ctrl-shift-o': 'pane:split-down'
 
 # Vim ignore
 'atom-text-editor.vim-mode.insert-mode':
