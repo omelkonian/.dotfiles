@@ -84,6 +84,9 @@ add_to_path /sbin
 add_to_path /bin
 add_to_path ~/bin
 
+# Git
+alias g=git
+
 # SED
 function delete_between {
   sed -n '1,/"$1"/p;/"$2"/,$p' $3 > tmp && mv tmp $3
