@@ -61,7 +61,10 @@
   update = !git all && git can && git pf
 
   # Rebase
+  r = rebase
   ri = rebase --interactive
+  rco = rebase --continue
+  rab = rebase --abort
 
   # Checkout
   ch = checkout
