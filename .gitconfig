@@ -81,6 +81,9 @@
   # Clone
   cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
 
+  # Reset
+  rh = reset --hard
+
 [core]
   excludesfile = ~/.gitignore
   editor = subl -w
