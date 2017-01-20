@@ -52,7 +52,7 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=yellow, bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=green, bold'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
-EDITOR='subl'
+EDITOR='vim'
 
 # Remap CapsLock as Ctrl/Escape
 setxkbmap -option ctrl:nocaps
@@ -121,6 +121,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib
 alias fixKeyboard="ibus-daemon -rd"
 alias fixSound="pactl exit"
 alias restart_sound="pulseaudio -k && sudo alsa force-reload"
+alias unmute="pacmd set-sink-mute 0 0"
 
 # ssh to okeanos
 alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
@@ -217,9 +218,7 @@ cds_reset() {
 alias cds_run="cds run --debugger"
 alias cds_celery="celery -A cds.celery worker -l info"
 
-# Audio
-alias unmute="pacmd set-sink-mute 0 0"
-
 # Timezones
 alias greek_time="sudo timedatectl set-timezone Europe/Athens"
 alias swiss_time="sudo timedatectl set-timezone Europe/Zurich"
+
