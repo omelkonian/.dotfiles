@@ -54,6 +54,9 @@ ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
 EDITOR='vim'
 
+# Language switch
+setxkbmap -layout us,gr -option grp:rwin_toggle
+
 # Remap CapsLock as Ctrl/Escape
 setxkbmap -option ctrl:nocaps
 xcape -e 'Control_L=Escape'

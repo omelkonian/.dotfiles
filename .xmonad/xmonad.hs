@@ -99,7 +99,6 @@ myKeys =
     , ((myModMask .|. shiftMask, xK_l), spawn "slock")
     , ((myModMask .|. shiftMask, xK_F11), spawn "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now")
     , ((myModMask .|. shiftMask, xK_F12), spawn "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now")
-    , ((myModMask, xK_Escape), spawn "/home/orestis/.xmonad/lang_switch.sh")
     , ((myModMask, xK_space), nextWS)
     , ((myModMask .|. shiftMask, xK_space), prevWS)
     , ((myModMask, xK_c), kill)
