@@ -52,7 +52,7 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=yellow, bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=green, bold'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
-EDITOR='vim'
+EDITOR='subl'
 
 # Language switch
 setxkbmap -layout us,gr -option grp:rwin_toggle
