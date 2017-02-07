@@ -176,7 +176,7 @@ eval "$(stack --bash-completion-script stack)"
 # CDS
 cds_setup() {
   export FLASK_DEBUG=1
-  export SQLALCHEMY_DATABASE_URI="mysql+pymysql://root:123456@localhost:3306/invenio"
+  export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/invenio"
 }
 cds_cd() {
   cdvirtualenv src/cds
@@ -199,24 +199,25 @@ cds_init() {
 }
 cds_fixtures() {
   cds fixtures cds
+  cds fixtures categories
+  cds fixtures sequence_generator
+  cds fixtures pages
   cds fixtures files
+  cds fixtures videos
+}
+cds_del() {
+  cds db destroy --yes-i-know
+  cds index destroy --yes-i-know
 }
 cds_all() {
   $(cds_install)
   $(cds_init)
   $(cds_fixtures)
 }
-cds_del() {
-  yes | cds db destroy
-  yes | cds index destroy
-}
 cds_reset() {
   $(cds_del)
-  cds db init
-  cds db create
-  cds index init
-  cds fixtures cds
-  cds fixtures files
+  $(cds_init)
+  $(cds_fixtures)
 }
 alias cds_run="cds run --debugger"
 alias cds_celery="celery -A cds.celery worker -l info"
