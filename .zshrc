@@ -87,6 +87,9 @@ add_to_path /sbin
 add_to_path /bin
 add_to_path ~/bin
 
+# Sublime
+alias s=subl
+
 # Git
 alias g=git
 
