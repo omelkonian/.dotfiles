@@ -199,6 +199,7 @@ cds_init() {
   cds db create
   cds users create test@test.ch -a
   cds index init
+  cds files location default /tmp --default
 }
 cds_fixtures() {
   cds fixtures cds
@@ -228,4 +229,3 @@ alias cds_celery="celery -A cds.celery worker -l info"
 # Timezones
 alias greek_time="sudo timedatectl set-timezone Europe/Athens"
 alias swiss_time="sudo timedatectl set-timezone Europe/Zurich"
-
