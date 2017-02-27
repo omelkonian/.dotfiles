@@ -79,6 +79,13 @@
         fi \
       }; f"
 
+  # Stash
+  st = stash
+  stl = stash list
+  stp = stash pop
+  sts = stash show
+  stc = stash clear
+
   # Clone
   cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
 
