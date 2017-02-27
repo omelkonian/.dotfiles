@@ -229,3 +229,7 @@ alias cds_celery="celery -A cds.celery worker -l info"
 # Timezones
 alias greek_time="sudo timedatectl set-timezone Europe/Athens"
 alias swiss_time="sudo timedatectl set-timezone Europe/Zurich"
+
+# Languages
+alias gr="setxkbmap -layout gr"
+alias us="setxkbmap -layout us"
