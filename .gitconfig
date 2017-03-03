@@ -66,6 +66,7 @@
   ri = rebase --interactive
   rco = rebase --continue
   rab = rebase --abort
+  ron = rebase --onto
 
   # Checkout
   ch = checkout
