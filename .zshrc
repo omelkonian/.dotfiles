@@ -223,7 +223,8 @@ cds_reset() {
   $(cds_init)
   $(cds_fixtures)
 }
-alias cds_run="cds run --debugger"
+alias cds_run="cds run --with-threads --debugger || killall -9 cds"
+alias cds_run_single="cds run --debugger"
 alias cds_celery="celery -A cds.celery worker -l info"
 
 # Timezones
