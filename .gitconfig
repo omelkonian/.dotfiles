@@ -9,13 +9,6 @@
 [alias]
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
 
-  # Ignore
-  ignore = update-index --assume-unchanged
-  unignore = update-index --no-assume-unchanged
-  ignored = !git ls-files -v | grep "^[[:lower:]]"
-
-
-
   # General
   s = status
 
@@ -72,7 +65,6 @@
   ch = checkout
   chm = checkout master
   chb = checkout -b
-  undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
   chpr = "!f(){ \
         if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
           git fetch $1 refs/pull/$2/head:pr/$2 && \
@@ -90,8 +82,16 @@
   # Clone
   cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
 
-  # Reset
-  rh = reset --hard
+  # Undoing
+  rsh = reset --hard
+  rss = reset --soft
+  undoamend = !git reset --soft HEAD@{1} && git commit -s
+  undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
+
+  # Ignore
+  ignore = update-index --assume-unchanged
+  unignore = update-index --no-assume-unchanged
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
 
 [core]
   excludesfile = ~/.gitignore
