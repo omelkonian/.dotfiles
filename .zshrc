@@ -138,6 +138,7 @@ work() {
     workon "$1"
     cdvirtualenv src/"$1"
 }
+alias mkvenv="mkvirtualenv -p `which python3`"
 
 # sqlite
 export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
@@ -185,14 +186,14 @@ cds_cd() {
   cdvirtualenv src/cds
 }
 cds_install() {
-  $(cds_cd)
+  cds_cd
   python -O -m compileall .
   cds npm
   cdvirtualenv var/instance/static
   npm install
   cds collect -v
   cds assets build
-  $(cds_cd)
+  cds_cd
 }
 cds_init() {
   cds db init
@@ -202,26 +203,23 @@ cds_init() {
   cds files location default /tmp --default
 }
 cds_fixtures() {
-  cds fixtures cds
-  cds fixtures categories
   cds fixtures sequence_generator
+  cds fixtures categories
   cds fixtures pages
-  cds fixtures files
-  cds fixtures videos
 }
 cds_del() {
   cds db destroy --yes-i-know
   cds index destroy --yes-i-know
 }
 cds_all() {
-  $(cds_install)
-  $(cds_init)
-  $(cds_fixtures)
+  cds_install
+  cds_init
+  cds_fixtures
 }
 cds_reset() {
-  $(cds_del)
-  $(cds_init)
-  $(cds_fixtures)
+  cds_del
+  cds_init
+  cds_fixtures
 }
 alias cds_run="cds run --with-threads --debugger || killall -9 cds"
 alias cds_run_single="cds run --debugger"
