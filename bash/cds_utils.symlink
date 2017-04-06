@@ -1,0 +1,63 @@
+work_cds3() {
+  workon cds3
+  cdvirtualenv src/cds
+}
+
+cds_setup() {
+  # export FLASK_DEBUG=1
+  export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/invenio"
+}
+
+cds_test_setup() {
+  export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/test-invenio"
+}
+
+cds_cd() {
+  cdvirtualenv src/cds
+}
+
+cds_install() {
+  cds_cd
+  python -O -m compileall .
+  cds npm
+  cdvirtualenv var/instance/static
+  npm install
+  cds collect -v
+  cds assets build
+  cds_cd
+}
+
+cds_init() {
+  cds db init
+  cds db create
+  cds users create test@test.ch -a
+  cds index init
+  cds files location default /tmp --default
+}
+
+cds_fixtures() {
+  cds fixtures sequence_generator
+  cds fixtures categories
+  cds fixtures pages
+}
+
+cds_del() {
+  cds db destroy --yes-i-know
+  cds index destroy --yes-i-know
+}
+
+cds_all() {
+  cds_install
+  cds_init
+  cds_fixtures
+}
+
+cds_reset() {
+  cds_del
+  cds_init
+  cds_fixtures
+}
+
+alias cds_run="cds run --with-threads --debugger || killall -9 cds"
+alias cds_run_single="cds run --debugger"
+alias cds_celery="celery -A cds.celery worker -l info"

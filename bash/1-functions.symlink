@@ -1,0 +1,27 @@
+function cd {
+  builtin cd "$@" && ls
+}
+
+function untar {
+  tar xvzf "$@"
+}
+
+function mkcdir {
+  mkdir -p -- "$1" &&
+  cd -P -- "$1"
+}
+
+function add_to_path {
+  export PATH=$PATH:"$1"
+}
+
+# SED
+function delete_between {
+  sed -n '1,/"$1"/p;/"$2"/,$p' $3 > tmp && mv tmp $3
+}
+
+# virtualenv
+function work() {
+    workon "$1"
+    cdvirtualenv src/"$1"
+}

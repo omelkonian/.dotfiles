@@ -1,0 +1,15 @@
+# ROS
+# source /opt/ros/indigo/setup.bash
+export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
+export ROS_MAVEN_PATH=/home/orestis/rosjava/devel/share/maven
+add_to_path /opt/ros/indigo/bin
+
+# Java
+add_to_path /usr/lib/jvm/java-8-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
+# OpenCV
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib
+
+# sqlite
+export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"

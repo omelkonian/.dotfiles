@@ -1,0 +1,26 @@
+alias lt="ll -tr"
+alias s=subl
+alias g=git
+
+# ZSH
+alias zshconfig="${EDITOR} ~/.zshrc"
+alias ohmyzsh="${EDITOR} ~/.oh-my-zsh"
+
+# C++
+alias g++="g++ --std=c++11"
+alias gpp="gpp --std=c++11"
+
+# virtualenv
+. /usr/local/bin/virtualenvwrapper.sh
+alias mkvenv="mkvirtualenv -p `which python3`"
+
+# ssh to okeanos
+alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
+
+# Noglobs
+alias git="noglob git"
+alias pip="noglob pip"
+alias stack="noglob stack"
+
+# DroidCam
+alias droid_connect="sudo droidcam-cli 192.168.0.27 4747"

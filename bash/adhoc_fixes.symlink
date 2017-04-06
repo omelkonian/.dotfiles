@@ -1,0 +1,5 @@
+# Adhoc Fixes
+alias fixKeyboard="ibus-daemon -rd"
+alias fixSound="pactl exit"
+alias restart_sound="pulseaudio -k && sudo alsa force-reload"
+alias unmute="pacmd set-sink-mute 0 0"
