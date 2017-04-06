@@ -39,6 +39,7 @@ cds_fixtures() {
   cds fixtures sequence_generator
   cds fixtures categories
   cds fixtures pages
+  cds fixtures videos
 }
 
 cds_del() {
