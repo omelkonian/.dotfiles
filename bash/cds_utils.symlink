@@ -1,6 +1,10 @@
+cds_cd() {
+  cdvirtualenv src/cds
+}
+
 work_cds3() {
   workon cds3
-  cdvirtualenv src/cds
+  cds_cd
 }
 
 cds_setup() {
@@ -10,10 +14,6 @@ cds_setup() {
 
 cds_test_setup() {
   export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/test-invenio"
-}
-
-cds_cd() {
-  cdvirtualenv src/cds
 }
 
 cds_install() {
@@ -59,6 +59,13 @@ cds_reset() {
   cds_fixtures
 }
 
-alias cds_run="cds run --with-threads --debugger || killall -9 cds"
-alias cds_run_single="cds run --debugger"
-alias cds_celery="celery -A cds.celery worker -l info"
+cds_test() {
+  cds_test_setup
+  echo "DB: ${SQLALCHEMY_DATABASE_URI}"
+  cds_cd
+  ./run-tests.sh
+}
+
+alias cds_run="cds_setup && echo $SQLALCHEMY_DATABASE_URI && (cds run --with-threads --debugger || killall -9 cds)"
+alias cds_run_single="cds_setup && echo $SQLALCHEMY_DATABASE_URI && cds run --debugger"
+alias cds_celery="cds_setup && echo $SQLALCHEMY_DATABASE_URI && celery -A cds.celery worker -l info"
