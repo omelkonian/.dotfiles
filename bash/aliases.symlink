@@ -2,9 +2,14 @@ alias lt="ll -tr"
 alias s=subl
 alias g=git
 
-# ZSH
-alias zshconfig="${EDITOR} ~/.zshrc"
-alias ohmyzsh="${EDITOR} ~/.oh-my-zsh"
+# Config
+alias zshconfig="edit ~/.zshrc"
+alias ohmyzsh="edit ~/.oh-my-zsh"
+alias xconfig="edit ~/.xmonad"
+alias dotconfig="edit ~/git/.dotfiles"
+
+# History
+alias show_history="edit ~/.histfile"
 
 # C++
 alias g++="g++ --std=c++11"

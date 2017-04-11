@@ -63,6 +63,7 @@ defaultLayouts = smartBorders(avoidStruts(
 myLayouts =
   {-onWorkspace "7:Chat" chatLayout $-} defaultLayouts
 
+-- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks = [
   resource =? "synapse" --> doIgnore
@@ -74,6 +75,7 @@ myManagementHooks = [
   , (className =? "Sublime_text") --> doF (W.shift "3:Edit")
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
   , (className =? "Evince") --> doF (W.shift "0:PDF")
+  , (className =? "Eog") --> doF (W.shift "0:PDF")
   , (className =? "Vlc") --> doF (W.shift "8:Video")
   ]
 
