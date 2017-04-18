@@ -1,3 +1,6 @@
+PROD_DB="postgresql+psycopg2://orestis:123456@localhost:5432/invenio"
+TEST_DB="postgresql+psycopg2://orestis:123456@localhost:5432/test-invenio"
+
 cds_cd() {
   cdvirtualenv src/cds
 }
@@ -9,14 +12,23 @@ work_cds3() {
 
 cds_setup() {
   # export FLASK_DEBUG=1
-  export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/invenio"
+  if [[ $SQLALCHEMY_DATABASE_URI != $PROD_DB ]];
+  then
+    export SQLALCHEMY_DATABASE_URI=$PROD_DB
+  fi
+  echo "PROD_DB: ${SQLALCHEMY_DATABASE_URI}"
 }
 
 cds_test_setup() {
-  export SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://orestis:123456@localhost:5432/test-invenio"
+  if [[ $SQLALCHEMY_DATABASE_URI != $TEST_DB ]];
+  then
+    export SQLALCHEMY_DATABASE_URI=$TEST_DB
+  fi
+  echo "TEST_DB: ${SQLALCHEMY_DATABASE_URI}"
 }
 
 cds_install() {
+  cds_setup
   cds_cd
   python -O -m compileall .
   cds npm
@@ -28,6 +40,7 @@ cds_install() {
 }
 
 cds_init() {
+  cds_setup
   cds db init
   cds db create
   cds users create test@test.ch -a
@@ -36,6 +49,7 @@ cds_init() {
 }
 
 cds_fixtures() {
+  cds_setup
   cds fixtures sequence_generator
   cds fixtures categories
   cds fixtures pages
@@ -43,8 +57,10 @@ cds_fixtures() {
 }
 
 cds_del() {
-  cds db destroy --yes-i-know
-  cds index destroy --yes-i-know
+  cds_setup
+  cds db destroy --yes-i-know  # delete DB
+  curl -XDELETE localhost:9200/*  # delete ES indices
+  # cds index destroy --yes-i-know
 }
 
 cds_all() {
@@ -55,17 +71,26 @@ cds_all() {
 
 cds_reset() {
   cds_del
-  cds_init
-  cds_fixtures
+  cds_all
+}
+
+cds_run() {
+  cds_setup
+  cds run --with-threads --debugger
+}
+
+cds_run_single() {
+  cds_setup
+  cds run --debugger
+}
+
+cds_celery() {
+  cds_setup
+  celery -A cds.celery worker -l info
 }
 
 cds_test() {
   cds_test_setup
-  echo "DB: ${SQLALCHEMY_DATABASE_URI}"
   cds_cd
   ./run-tests.sh
 }
-
-alias cds_run="cds_setup && echo $SQLALCHEMY_DATABASE_URI && (cds run --with-threads --debugger || killall -9 cds)"
-alias cds_run_single="cds_setup && echo $SQLALCHEMY_DATABASE_URI && cds run --debugger"
-alias cds_celery="cds_setup && echo $SQLALCHEMY_DATABASE_URI && celery -A cds.celery worker -l info"
