@@ -58,9 +58,8 @@ cds_fixtures() {
 
 cds_del() {
   cds_setup
-  cds db destroy --yes-i-know  # delete DB
-  curl -XDELETE localhost:9200/*  # delete ES indices
-  # cds index destroy --yes-i-know
+  cds db destroy --yes-i-know
+  cds index destroy --yes-i-know
 }
 
 cds_all() {

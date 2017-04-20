@@ -5,6 +5,7 @@ alias g=git
 # Config
 alias zshconfig="edit ~/.zshrc"
 alias ohmyzsh="edit ~/.oh-my-zsh"
+alias gitconfig="edit ~/.gitconfig"
 alias xconfig="edit ~/.xmonad"
 alias dotconfig="edit ~/git/.dotfiles"
 
