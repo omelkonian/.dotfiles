@@ -54,6 +54,14 @@ cds_fixtures() {
   cds fixtures categories
   cds fixtures pages
   cds fixtures videos
+  cds fixtures categories
+  cds fixtures keywords
+}
+
+cds_index() {
+  cds_setup
+  cds index reindex --yes-i-know
+  cds index run
 }
 
 cds_del() {
@@ -66,6 +74,7 @@ cds_all() {
   cds_install
   cds_init
   cds_fixtures
+  cds_index
 }
 
 cds_reset() {
@@ -86,6 +95,12 @@ cds_run_single() {
 cds_celery() {
   cds_setup
   celery -A cds.celery worker -l info
+}
+
+cds_pytest() {
+  cds_test_setup
+  cds_cd
+  py.test -s $1
 }
 
 cds_test() {
