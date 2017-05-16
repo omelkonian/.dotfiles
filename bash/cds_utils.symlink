@@ -97,6 +97,12 @@ cds_celery() {
   celery -A cds.celery worker -l info
 }
 
+cds_pytest() {
+  cds_test_setup
+  cds_cd
+  py.test -s $1
+}
+
 cds_test() {
   cds_test_setup
   cds_cd
