@@ -16,11 +16,9 @@ if [ -z "$(pgrep synapse)" ] ; then
     synapse -s &
 fi
 
-# Skype
 start "skype"
-
-# Thunderbird
 start "thunderbird"
+start "dropbox"
 
 echo "Apps started"
 
