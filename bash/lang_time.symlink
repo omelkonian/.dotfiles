@@ -1,5 +1,5 @@
 # Language switch
-setxkbmap -layout us,gr -option grp:rwin_toggle
+setxkbmap -layout us,gr -option grp:rwin_toggle -option grp:alt_shift_toggle
 
 # Timezones
 alias greek_time="sudo timedatectl set-timezone Europe/Athens"
