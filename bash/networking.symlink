@@ -2,3 +2,11 @@
 get_ip() {
   ip route get 8.8.8.8 | awk '{print $NF; exit}'
 }
+
+# external IP
+extip() {
+  curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+}
+
+# ssh to okeanos
+alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
