@@ -1,5 +1,15 @@
-# Adhoc Fixes
 alias fixKeyboard="ibus-daemon -rd"
+
+# Audio
 alias fixSound="pactl exit"
 alias restart_sound="pulseaudio -k && sudo alsa force-reload"
 alias unmute="pacmd set-sink-mute 0 0"
+
+# Networking
+alias fixBluetooth="sudo modprobe rtbth"
+function fixWifi {
+  sudo ifconfig eno1 up
+  sudo service network-manager restart
+}
+
+

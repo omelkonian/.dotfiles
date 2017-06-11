@@ -5,25 +5,18 @@ function start {
         $1 &
     fi
 }
-
-# Network manager
 if [ -z "$(pgrep nm-applet)" ] ; then
     nm-applet --sm-disable &
 fi
-
-# App launcher
 if [ -z "$(pgrep synapse)" ] ; then
     synapse -s &
 fi
-
 start "skype"
 start "thunderbird"
 start "/home/orestis/.dropbox-dist/dropboxd"
-
 echo "Apps started"
 
 
-# Multiple screens setup
 if [ -n "$(xrandr | grep "HDMI1" | grep " connected ")" ]; then
     # Work setup
     # xrandr --output LVDS1 --off --output HDMI1 --mode 1280x1024 --pos 0x0 --output VGA1 --mode 1280x1024 --pos 1320x0
@@ -34,10 +27,15 @@ else
 fi
 echo "Monitors configured"
 
-# Icon tray and monitor setup
 if [ -n "$(pgrep trayer)" ] ; then
     kill $(pgrep trayer)
 fi
 # trayer --edge top --monitor primary --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --height 12 --transparent true --tint 0x000000 &
 trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 24 --transparent true --alpha 0 --tint 0x000000 &
 echo "Icon tray spawned"
+
+nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg
+echo "Wallpaper set"
+
+fixWifi | at now + 1 min
+echo "Network fixed"

@@ -76,7 +76,7 @@ myManagementHooks = [
   , (className =? "google-chrome") --> doF (W.shift "6:Web")
   , (className =? "Evince") --> doF (W.shift "0:PDF")
   , (className =? "Eog") --> doF (W.shift "0:PDF")
-  , (className =? "Vlc") --> doF (W.shift "8:Video")
+  , (className =? "vlc") --> doF (W.shift "8:Video")
   ]
 
 numPadKeys =
