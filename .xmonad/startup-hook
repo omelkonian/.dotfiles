@@ -37,5 +37,5 @@ echo "Icon tray spawned"
 nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg
 echo "Wallpaper set"
 
-fixWifi | at now + 1 min
-echo "Network fixed"
+sleep 5 && fixWifi
+echo "Wifi fixed"

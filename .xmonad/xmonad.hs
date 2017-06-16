@@ -14,8 +14,10 @@ import XMonad.Util.NamedWindows
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
 import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.RotSlaves (rotAllUp)
 import XMonad.Actions.CycleWS (nextWS, prevWS, nextScreen, prevScreen)
-import XMonad.Actions.SpawnOn (spawnOn)
+import XMonad.Actions.GroupNavigation
+import XMonad.Actions.SpawnOn
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.FadeInactive
@@ -52,7 +54,7 @@ myWorkspaces =
     "0:PDF",    "Extr1",     "Extr2"
   ]
 
-startupWorkspace = "5:Web"  -- which workspace do you want to be on after launch?
+startupWorkspace = "4:Term"  -- which workspace do you want to be on after launch?
 
 defaultLayouts = smartBorders(avoidStruts(
   ResizableTall 1 (3/100) (1/2) []
@@ -92,23 +94,34 @@ myKeys =
     ((myModMask, xK_b), sendMessage ToggleStruts)
     , ((myModMask, xK_a), sendMessage MirrorShrink)
     , ((myModMask, xK_z), sendMessage MirrorExpand)
+    -- Kill
+    , ((myModMask, xK_c), kill)
+    -- Launcher
     , ((myModMask, xK_p), spawn "synapse")
+    -- Focus
     , ((myModMask, xK_u), focusUrgent)
+    -- Lock
+    , ((myModMask .|. shiftMask, xK_l), spawn "slock")
+    -- Shutdown/Restart
+    , ((myModMask .|. shiftMask, xK_F11), spawn "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now")
+    , ((myModMask .|. shiftMask, xK_F12), spawn "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now")
+    -- Navigation
+    , ((myModMask, xK_space), nextWS)
+    , ((myModMask .|. shiftMask, xK_space), prevWS)
+    , ((myModMask, xK_grave), rotAllUp)
+    , ((myModMask, xK_Tab), nextMatch History (return True))
+    -- Spotify
     , ((myModMask .|. shiftMask, xK_P), spawnOn "9:Music" "google-chrome --new-window play.spotify.com")
+    -- Volume
     , ((myModMask, xK_F10), spawn "amixer -q set Master toggle")
     , ((myModMask, xK_Page_Down), spawn "amixer -q set Master 2%-")
     , ((myModMask, xK_Page_Up), spawn "amixer -q set Master 2%+")
-    , ((myModMask .|. shiftMask, xK_l), spawn "slock")
-    , ((myModMask .|. shiftMask, xK_F11), spawn "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now")
-    , ((myModMask .|. shiftMask, xK_F12), spawn "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now")
-    , ((myModMask, xK_space), nextWS)
-    , ((myModMask .|. shiftMask, xK_space), prevWS)
-    , ((myModMask, xK_c), kill)
-    , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight + 20")
-    , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
     , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 3%-")
     , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 3%+")
     , ((0, xF86XK_AudioMute), spawn "amixer -q set Master 0")
+    -- Brightness
+    , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight + 20")
+    , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
   ]
   ++
   [
@@ -187,7 +200,7 @@ main = do
       setWMName "LG3D"
       windows $ W.greedyView startupWorkspace
       spawn "~/.xmonad/startup-hook"
-  , manageHook = manageHook defaultConfig
+  , manageHook = manageSpawn <+> manageHook defaultConfig
       <+> composeAll myManagementHooks
       <+> manageDocks
   , logHook = takeTopFocus <+> dynamicLogWithPP xmobarPP {
@@ -199,7 +212,7 @@ main = do
         . wrap myVisibleWSLeft myVisibleWSRight
       , ppUrgent = xmobarColor myUrgentWSColor ""
         . wrap myUrgentWSLeft myUrgentWSRight
-    }
+    } <+> historyHook
                 -- myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
   }
     `additionalKeys` myKeys
