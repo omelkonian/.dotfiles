@@ -47,6 +47,7 @@
 
   # Pull
   pp = pull
+  pr = pull --rebase
 
   # Push
   p = push origin

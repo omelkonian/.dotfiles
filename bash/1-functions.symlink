@@ -15,7 +15,18 @@ function add_to_path {
   export PATH=$PATH:"$1"
 }
 
+function backup {
+  set -x
+  cp -r "$1" "$DROPBOX_BACKUP_FOLDER"
+}
+
 # SED
+function find_and_replace {
+  cp $2 .sed_original
+  find . -maxdepth $1 -name $2 -exec sed -i -r 's/'$3'/'$4'/g' '{}' \;
+  g diff .sed_original $2
+  rm .sed_original
+}
 function delete_between {
   sed -n '1,/"$1"/p;/"$2"/,$p' $3 > tmp && mv tmp $3
 }
@@ -27,5 +38,5 @@ function work {
 }
 
 function edit {
-  ${EDITOR} $1
+  ${EDITOR} $1 --add
 }

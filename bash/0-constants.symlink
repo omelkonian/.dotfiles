@@ -1,1 +1,2 @@
 EDITOR='subl'
+DROPBOX_BACKUP_FOLDER=~/Dropbox/Backup/
