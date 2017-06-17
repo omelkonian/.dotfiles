@@ -10,6 +10,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Fullscreen
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
+import XMonad.Actions.SpawnOn
 import XMonad.Util.NamedWindows
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
@@ -17,12 +18,13 @@ import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.RotSlaves (rotAllUp)
 import XMonad.Actions.CycleWS (nextWS, prevWS, nextScreen, prevScreen)
 import XMonad.Actions.GroupNavigation
-import XMonad.Actions.SpawnOn
+import XMonad.Actions.Navigation2D (navigation2D, windowGo, windowSwap)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.FadeInactive
-import XMonad.Hooks.ICCCMFocus
 import qualified XMonad.StackSet as W
+
+import Data.Default (def)
 import qualified Data.Map as M
 import Data.Ratio ((%))
 import Graphics.X11.ExtraTypes.XF86
@@ -54,7 +56,7 @@ myWorkspaces =
     "0:PDF",    "Extr1",     "Extr2"
   ]
 
-startupWorkspace = "4:Term"  -- which workspace do you want to be on after launch?
+startupWorkspace = "None" --"4:Term"
 
 defaultLayouts = smartBorders(avoidStruts(
   ResizableTall 1 (3/100) (1/2) []
@@ -70,6 +72,7 @@ myManagementHooks :: [ManageHook]
 myManagementHooks = [
   resource =? "synapse" --> doIgnore
   , resource =? "stalonetray" --> doIgnore
+  , resource =? "zenity" --> doFloat
   , (className =? "skype") --> doF (W.shift "7:Chat")
   , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
   , (className =? "Nautilus") --> doF (W.shift "2:Files")
@@ -89,6 +92,9 @@ numPadKeys =
     , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
   ]
 
+-- Spawn process with a confirm dialog
+confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
+
 myKeys =
   [
     ((myModMask, xK_b), sendMessage ToggleStruts)
@@ -103,15 +109,13 @@ myKeys =
     -- Lock
     , ((myModMask .|. shiftMask, xK_l), spawn "slock")
     -- Shutdown/Restart
-    , ((myModMask .|. shiftMask, xK_F11), spawn "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now")
-    , ((myModMask .|. shiftMask, xK_F12), spawn "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now")
-    -- Navigation
+    , ((myModMask .|. shiftMask, xK_F11), confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now")
+    , ((myModMask .|. shiftMask, xK_F12), confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now")
+    -- Group navigation
     , ((myModMask, xK_space), nextWS)
     , ((myModMask .|. shiftMask, xK_space), prevWS)
     , ((myModMask, xK_grave), rotAllUp)
     , ((myModMask, xK_Tab), nextMatch History (return True))
-    -- Spotify
-    , ((myModMask .|. shiftMask, xK_P), spawnOn "9:Music" "google-chrome --new-window play.spotify.com")
     -- Volume
     , ((myModMask, xK_F10), spawn "amixer -q set Master toggle")
     , ((myModMask, xK_Page_Down), spawn "amixer -q set Master 2%-")
@@ -138,22 +142,18 @@ myKeys =
   ]
 
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
-
     -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
-
     -- mod-button3, Raise the window to the top of the stack
     , ((modMask, button3), (\w -> focus w >> windows W.swapMaster))
-
     -- mod-button2, Set the window to floating mode and resize by dragging
     , ((modMask, button2), (\w -> focus w >> mouseResizeWindow w))
-
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
 -- Loghook
 myBitmapsDir = "/home/orestis/.xmonad/dzen2"
-myLogHook h = dynamicLogWithPP $ defaultPP
+myLogHook h = dynamicLogWithPP $ def
     {
         ppCurrent           =   dzenColor "#ebac54" "#1B1D1E" . pad
       , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
@@ -179,42 +179,53 @@ myXmonadBar = "dzen2 -p -xs 0 -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
 myStatusBar = "conky -c /home/orestis/.xmonad/.conky_dzen | dzen2 -p -xs 1 -ta 'r' -fg '#FFFFFF' -bg '#1B1D1E'"
 
 -- Notifications
-myUrgencyHook = NoUrgencyHook -- dzenUrgencyHook { args = ["-bg", "darkgreen", "-xs", "1"] }
+myUrgencyHook = NoUrgencyHook
+
+-- Navigation
+navigation :: XConfig l -> XConfig l
+navigation = navigation2D
+  def -- default configuration
+  (xK_Up, xK_Left, xK_Down, xK_Right) -- direction keys (U, L, D, R)
+  [ -- modifiers -> actions
+    (myModMask .|. shiftMask, windowGo),
+    (myModMask .|. controlMask .|. shiftMask, windowSwap)
+  ]
+  True -- wrapping flag
 
 -- Glue all them up.
 main = do
-  -- dzenLeftBar <- spawnPipe myStatusBar
-  -- xmproc <- spawnPipe "i3status -c /home/orestis/.xmonad/i3status.conf | xmobar -o -t \"%StdinReader%\" -c \"[Run StdinReader]\""
   xmproc <- spawnPipe "xmobar"
-  xmonad $ withUrgencyHook myUrgencyHook $ defaultConfig {
-    focusedBorderColor = myFocusedBorderColor
-  , normalBorderColor = myNormalBorderColor
-  , terminal = myTerminal
-  , borderWidth = myBorderWidth
-  , layoutHook = myLayouts
-  , workspaces = myWorkspaces
-  , modMask = myModMask
-  , mouseBindings = myMouseBindings
-  , handleEventHook = fullscreenEventHook
-  , startupHook = do
-      setWMName "LG3D"
-      windows $ W.greedyView startupWorkspace
-      spawn "~/.xmonad/startup-hook"
-  , manageHook = manageSpawn <+> manageHook defaultConfig
-      <+> composeAll myManagementHooks
-      <+> manageDocks
-  , logHook = takeTopFocus <+> dynamicLogWithPP xmobarPP {
-      ppOutput = hPutStrLn xmproc
-      , ppTitle = xmobarColor myTitleColor "" -- . shorten myTitleLength
-      , ppCurrent = xmobarColor myCurrentWSColor ""
-        . wrap myCurrentWSLeft myCurrentWSRight
-      , ppVisible = xmobarColor myVisibleWSColor ""
-        . wrap myVisibleWSLeft myVisibleWSRight
-      , ppUrgent = xmobarColor myUrgentWSColor ""
-        . wrap myUrgentWSLeft myUrgentWSRight
-    } <+> historyHook
-                -- myLogHook dzenLeftBar >> fadeInactiveLogHook 0xeeeeeeee
-  }
+  xmonad
+    $ navigation
+    $ withUrgencyHook myUrgencyHook
+    $ def {
+      focusedBorderColor = myFocusedBorderColor
+    , normalBorderColor = myNormalBorderColor
+    , terminal = myTerminal
+    , borderWidth = myBorderWidth
+    , layoutHook = myLayouts
+    , workspaces = myWorkspaces
+    , modMask = myModMask
+    , mouseBindings = myMouseBindings
+    , handleEventHook = fullscreenEventHook
+    , startupHook = do
+        setWMName "LG3D"
+        windows $ W.greedyView startupWorkspace
+        spawn "~/.xmonad/startup-hook"
+    , manageHook = manageSpawn <+> manageHook def
+        <+> composeAll myManagementHooks
+        <+> manageDocks
+    , logHook = dynamicLogWithPP xmobarPP {
+        ppOutput = hPutStrLn xmproc
+        , ppTitle = xmobarColor myTitleColor "" -- . shorten myTitleLength
+        , ppCurrent = xmobarColor myCurrentWSColor ""
+          . wrap myCurrentWSLeft myCurrentWSRight
+        , ppVisible = xmobarColor myVisibleWSColor ""
+          . wrap myVisibleWSLeft myVisibleWSRight
+        , ppUrgent = xmobarColor myUrgentWSColor ""
+          . wrap myUrgentWSLeft myUrgentWSRight
+      } <+> historyHook
+    }
     `additionalKeys` myKeys
     `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
                   ++ [(myModMask, xK_Return)])
