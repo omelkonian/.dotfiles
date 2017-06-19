@@ -1,28 +1,29 @@
 import XMonad
-import XMonad.Hooks.SetWMName
-import XMonad.Layout.Grid
+import qualified XMonad.StackSet as W
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.ThreeColumns
-import XMonad.Layout.NoBorders
 import XMonad.Layout.Circle
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Fullscreen
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
-import XMonad.Actions.SpawnOn
 import XMonad.Util.NamedWindows
-import XMonad.Hooks.DynamicLog
+import XMonad.Actions.SpawnOn
 import XMonad.Actions.Plane
 import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.RotSlaves (rotAllUp)
 import XMonad.Actions.CycleWS (nextWS, prevWS, nextScreen, prevScreen)
 import XMonad.Actions.GroupNavigation
 import XMonad.Actions.Navigation2D (navigation2D, windowGo, windowSwap)
+import XMonad.Actions.FlexibleResize as Flex
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.FadeInactive
-import qualified XMonad.StackSet as W
+import XMonad.Hooks.SetWMName
 
 import Data.Default (def)
 import qualified Data.Map as M
@@ -58,11 +59,9 @@ myWorkspaces =
 
 startupWorkspace = "None" --"4:Term"
 
-defaultLayouts = smartBorders(avoidStruts(
-  ResizableTall 1 (3/100) (1/2) []
-  ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
-  ||| noBorders Full
-  ||| Grid))
+defaultLayouts = smartBorders $ avoidStruts $ -- modifiers
+  tall ||| Mirror tall ||| noBorders Full ||| Grid -- options
+  where tall = ResizableTall 1 (3/100) (1/2) []
 
 myLayouts =
   {-onWorkspace "7:Chat" chatLayout $-} defaultLayouts
@@ -70,18 +69,19 @@ myLayouts =
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks = [
-  resource =? "synapse" --> doIgnore
-  , resource =? "stalonetray" --> doIgnore
-  , resource =? "zenity" --> doFloat
-  , (className =? "skype") --> doF (W.shift "7:Chat")
-  , (className =? "Thunderbird") --> doF (W.shift "1:Mail")
-  , (className =? "Nautilus") --> doF (W.shift "2:Files")
-  , (className =? "totem") --> doF (W.shift "9:Music")
-  , (className =? "Sublime_text") --> doF (W.shift "3:Edit")
-  , (className =? "google-chrome") --> doF (W.shift "6:Web")
-  , (className =? "Evince") --> doF (W.shift "0:PDF")
-  , (className =? "Eog") --> doF (W.shift "0:PDF")
-  , (className =? "vlc") --> doF (W.shift "8:Video")
+  appName =? "synapse" --> doIgnore
+  , appName =? "stalonetray" --> doIgnore
+  , appName =? "zenity" --> doFloat
+  , className =? "skype" --> doF (W.shift "7:Chat")
+  , className =? "Thunderbird" --> doF (W.shift "1:Mail")
+  , className =? "Nautilus" --> doF (W.shift "2:Files")
+  , className =? "totem" --> doF (W.shift "9:Music")
+  , className =? "Sublime_text" --> doF (W.shift "3:Edit")
+  , className =? "Google-chrome" --> doF (W.shift "6:Web")
+  , className =? "Evince" --> doF (W.shift "0:PDF")
+  , className =? "Eog" --> doF (W.shift "0:PDF")
+  , className =? "vlc" --> doF (W.shift "8:Video")
+  , className =? "totem" --> doF (W.shift "8:Video")
   ]
 
 numPadKeys =
@@ -98,12 +98,18 @@ confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want
 myKeys =
   [
     ((myModMask, xK_b), sendMessage ToggleStruts)
+    , ((myModMask, xK_h), sendMessage Shrink)
+    , ((myModMask, xK_l), sendMessage Expand)
     , ((myModMask, xK_a), sendMessage MirrorShrink)
     , ((myModMask, xK_z), sendMessage MirrorExpand)
     -- Kill
     , ((myModMask, xK_c), kill)
     -- Launcher
     , ((myModMask, xK_p), spawn "synapse")
+    -- Specifix apps
+    , ((myModMask, xK_i), spawn "google-chrome-stable")
+    , ((myModMask, xK_s), spawn "subl")
+    , ((myModMask, xK_f), spawn "nautilus --new-window")
     -- Focus
     , ((myModMask, xK_u), focusUrgent)
     -- Lock
@@ -142,14 +148,16 @@ myKeys =
   ]
 
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
-    -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
-    -- mod-button3, Raise the window to the top of the stack
-    , ((modMask, button3), (\w -> focus w >> windows W.swapMaster))
-    -- mod-button2, Set the window to floating mode and resize by dragging
-    , ((modMask, button2), (\w -> focus w >> mouseResizeWindow w))
-    -- you may also bind events to the mouse scroll wheel (button4 and button5)
-    ]
+  [ -- Left-click, Float window and move by dragging
+    ((myModMask, button1), (\w -> focus w >> mouseMoveWindow w))
+    -- Right-click, Resize floating window
+  , ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+    -- Scroll, Resize slaves
+  , ((myModMask, button4), const $ sendMessage MirrorExpand)
+  , ((myModMask, button5), const $ sendMessage MirrorShrink)
+    -- Scroll-click, Unfloat window
+  , ((myModMask, button2), const $ withFocused $ windows . W.sink)
+  ]
 
 -- Loghook
 myBitmapsDir = "/home/orestis/.xmonad/dzen2"
@@ -212,7 +220,9 @@ main = do
         setWMName "LG3D"
         windows $ W.greedyView startupWorkspace
         spawn "~/.xmonad/startup-hook"
-    , manageHook = manageSpawn <+> manageHook def
+    , manageHook =
+        manageSpawn
+        <+> manageHook def
         <+> composeAll myManagementHooks
         <+> manageDocks
     , logHook = dynamicLogWithPP xmobarPP {
