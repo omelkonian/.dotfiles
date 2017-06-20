@@ -14,11 +14,17 @@
  <Multi_key> <comma> <comma>: U2286
  # Equivalence
  <Multi_key> <equal> <equal>: U2261
+ # Inequality
+ <Multi_key> <1> <equal>: U2260
  # Transitive Closure
  <Multi_key> <plus> <plus>: U207A
  # Inverse
  <Multi_key> <i> <i>: U207B
  <Multi_key> <6> <1>: U00B9
+ # Reflexive closure
+ <Multi_key> <question> <question>: U2753
+ # Reflexive transitive closure
+ <Multi_key> <8> <8>: UFF0A
  # Parentheses
  <Multi_key> <bracketleft> <bracketleft>: U2997
  <Multi_key> <bracketright> <bracketright>: U2998
