@@ -8,6 +8,8 @@
  <Multi_key> <semicolon> <semicolon> : U2A3E
  # Union
  <Multi_key> <u> <u>: U222A
+ # Big union
+ <Multi_key> <U> <U>: U22C3
  # Intersection
  <Multi_key> <6> <6>: U2229
  # Inclusion
@@ -33,3 +35,16 @@
  # Subscripts
  <Multi_key> <minus> <1>: U2081
  <Multi_key> <minus> <2>: U2082
+ # Internal relation
+ <Multi_key> <i> <n>: U2219
+ <Multi_key> <e> <t>: U2218
+ # Cartesian product
+ <Multi_key> <x> <x>: U2715
+ # Encapsulation
+ <Multi_key> <less> <less>: U27EA
+ <Multi_key> <greater> <greater>: U27EB
+ # Lambda
+ <Multi_key> <l> <l>: U03BB
+
+	
+
