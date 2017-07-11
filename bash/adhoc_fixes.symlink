@@ -2,6 +2,7 @@ alias fixKeyboard="ibus-daemon -rd"
 
 # Audio
 alias fixSound="pactl exit"
+alias fixSound2="amixer -D pulse set Master 1+ toggle"
 alias restart_sound="pulseaudio -k && sudo alsa force-reload"
 alias unmute="pacmd set-sink-mute 0 0"
 
