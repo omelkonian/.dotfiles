@@ -1,4 +1,8 @@
+# Keyboard
 alias fixKeyboard="ibus-daemon -rd"
+
+# Display
+alias restart_xserver="sudo systemctl restart lightdm.service"
 
 # Audio
 alias fixSound="pactl exit"

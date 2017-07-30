@@ -2,3 +2,8 @@
 setxkbmap -option ctrl:nocaps
 xcape -e 'Control_L=Escape'
 alias caps_off="xdotool key Caps_Lock"
+
+# Set ComposeKey
+# export GTK_IM_MODULE='xim'
+export XCOMPOSEFILE='/home/orestis/.XCompose'
+setxkbmap -option compose:menu
