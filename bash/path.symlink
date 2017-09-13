@@ -29,3 +29,6 @@ add_to_path ~/Idris/.cabal-sandbox/bin
 
 # Haskell
 add_to_path ~/.local/bin
+
+# HOL
+add_to_path ~/HOL/bin
