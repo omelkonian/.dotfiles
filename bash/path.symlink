@@ -32,3 +32,9 @@ add_to_path ~/.local/bin
 
 # HOL
 add_to_path ~/HOL/bin
+
+# GCC
+add_to_LD_path /usr/lib32
+add_to_LD_path /usr/lib
+
+add_to_path ~/MathSAT/bin

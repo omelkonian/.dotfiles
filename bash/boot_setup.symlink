@@ -1,0 +1,2 @@
+# Enable horizontal scrolling
+synclient HorizTwoFingerScroll=1

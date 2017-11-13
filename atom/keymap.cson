@@ -1,59 +1,51 @@
 # Idris
 'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-a': 'language-idris:add-clause'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-c': 'language-idris:case-split'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-d': 'language-idris:docs-for'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-enter': 'language-idris:open-repl'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-l': 'language-idris:make-lemma'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-m': 'language-idris:make-case'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-r': 'language-idris:typecheck'
-'atom-text-editor':
-  'ctrl-alt-p': 'language-idris:proof-search'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-w': 'language-idris:make-with'
-'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-g': 'language-idris:type-of'
 
+# 'atom-text-editor':
+  'ctrl-alt-p': 'language-idris:proof-search'
+
 # Haskell: IDE
-'atom-text-editor[data-grammar~="haskell"]':
-  'escape': 'ide-haskell:close-tooltip'
-  '':'ide-haskell:prettify-file'
-  '':'ide-haskell:next-error'
-  '':'ide-haskell:prev-error'
+# 'atom-text-editor[data-grammar~="haskell"]':
+  # '':'ide-haskell:prettify-file'
+  # '':'ide-haskell:next-error'
+  # '':'ide-haskell:prev-error'
 
 'atom-text-editor[data-grammar~="cabal"]':
   '': 'ide-haskell:prettify-file'
 
 'atom-workspace':
   '': 'ide-haskell:toggle-output'
-
 # Haskell: Hoogle
 # 'atom-text-editor[data-grammar~="haskell"]':
 
 # Haskell: GHC-mod
 'atom-text-editor[data-grammar~="haskell"]':
+  'shift-escape': 'ide-haskell:close-tooltip'
   'ctrl-alt-r': 'haskell-ghc-mod:check-file'
   '': 'haskell-ghc-mod:lint-file'
   'ctrl-alt-g': 'haskell-ghc-mod:show-type'
   'ctrl-alt-i': 'haskell-ghc-mod:show-info'
   'ctrl-alt-T': 'haskell-ghc-mod:insert-type'
   'ctrl-alt-c': 'haskell-ghc-mod:case-split'
-  '': 'haskell-ghc-mod:sig-fill'
-  '': 'haskell-ghc-mod:show-info-fallback-to-type'
-  '': 'haskell-ghc-mod:show-type-fallback-to-info'
-  '': 'haskell-ghc-mod:show-type-and-info'
-  '': 'haskell-ghc-mod:insert-import'
+  # '': 'haskell-ghc-mod:sig-fill'
+  # '': 'haskell-ghc-mod:show-info-fallback-to-type'
+  # '': 'haskell-ghc-mod:show-type-fallback-to-info'
+  # '': 'haskell-ghc-mod:show-type-and-info'
+  # '': 'haskell-ghc-mod:insert-import'
   'ctrl-alt-b': 'haskell-ghc-mod:go-to-declaration'
   'ctrl-alt-p': 'haskell-hoogle:lookup'
 
-'atom-workspace':
-  '': 'haskell-ghc-mod:shutdown-backend'
+# 'atom-workspace':
+#   '': 'haskell-ghc-mod:shutdown-backend'
 
 # Haskell: REPL
 "atom-text-editor.ide-haskell-repl":
@@ -61,13 +53,14 @@
   'up': 'ide-haskell-repl:history-back'
   'down': 'ide-haskell-repl:history-forward'
   'ctrl-r': 'ide-haskell-repl:ghci-reload'
+  'ctrl-shift-C': 'ide-haskell-repl:ghci-interrupt'
 
 # Haskell: Cabal
-'atom-workspace':
-  'ctrl-b': 'ide-haskell-cabal:build'
-  '': 'ide-haskell-cabal:set-build-target'
-  'ctrl-alt-c': 'ide-haskell-cabal:clean'
-  'ctrl-t': 'ide-haskell-cabal:test'
+# 'atom-workspace':
+  # 'ctrl-b': 'ide-haskell-cabal:build'
+  # '': 'ide-haskell-cabal:set-build-target'
+  # 'ctrl-alt-c': 'ide-haskell-cabal:clean'
+  # 'ctrl-t': 'ide-haskell-cabal:test'
 
 # Multiple panels
 'body':
@@ -76,11 +69,17 @@
   'ctrl-shift-e': 'pane:split-right'
   'ctrl-shift-o': 'pane:split-down'
 
-# Vim ignore
-'atom-text-editor.vim-mode.insert-mode':
-  'ctrl-w': ''
-'atom-text-editor.vim-mode':
-  'ctrl-c': ''
+# Vim
+'atom-text-editor.vim-mode-plus:not(.normal-mode)':
+  'ctrl-shift-j': 'vim-mode-plus:previous-tab'
+  'ctrl-shift-k': 'vim-mode-plus:next-tab'
+'atom-text-editor.vim-mode-plus:not(.insert-mode)':
+  'ctrl-shift-j': 'vim-mode-plus:previous-tab'
+  'ctrl-shift-k': 'vim-mode-plus:next-tab'
+'atom-text-editor.vim-mode-plus':
+  'ctrl-c': 'core:copy'
+  'ctrl-v': 'core:paste'
+  'ctrl-w': 'core:close'
 
 # Autocomplete
 'atom-text-editor':

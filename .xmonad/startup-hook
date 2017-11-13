@@ -11,7 +11,7 @@ fi
 if [ -z "$(pgrep synapse)" ] ; then
     synapse -s &
 fi
-start "skype"
+# start "skype"
 start "thunderbird"
 start "/home/orestis/.dropbox-dist/dropboxd"
 echo "Apps started"
@@ -36,3 +36,6 @@ echo "Icon tray spawned"
 
 nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg
 echo "Wallpaper set"
+
+source ~/.zshrc
+echo "ZSH run"

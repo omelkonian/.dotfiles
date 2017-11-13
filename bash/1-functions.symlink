@@ -14,6 +14,9 @@ function mkcdir {
 function add_to_path {
   export PATH=$PATH:"$1"
 }
+function add_to_LD_path {
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:"$1"
+}
 
 function backup {
   set -x
