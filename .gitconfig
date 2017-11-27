@@ -82,6 +82,7 @@
 
   # Clone
   cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
+  cld = "!f() { git clone https://github.com/"$1"/"$2".git "$3"; }; f"
 
   # Undoing
   rsh = reset --hard
