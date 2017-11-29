@@ -99,7 +99,8 @@ confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want
 
 -- Sound control
 soundCard = "alsa_output.usb-Focusrite_Audio_Engineering_Saffire_6USB-00.analog-surround-40"
-setVolume mod = "pactl set-sink-volume " ++ soundCard ++ " " ++ mod
+soundCardBuiltin = "alsa_output.pci-0000_00_1b.0.analog-stereo"
+setVolume mod = "~/.xmonad/set_volume.sh " ++ mod
 
 myKeys =
   [
@@ -129,15 +130,9 @@ myKeys =
     , ((myModMask, xK_grave), rotAllUp)
     , ((myModMask, xK_Tab), nextMatch History (return True))
     -- Volume (desktop keyboard)
-    -- , ((myModMask, xK_F10), spawn "amixer -q set Master toggle")
-    -- , ((myModMask, xK_Page_Down), spawn "amixer -q set Master 2%-")
-    -- , ((myModMask, xK_Page_Up), spawn "amixer -q set Master 2%+")
     , ((myModMask, xK_Page_Down), spawn $ setVolume "-5%")
     , ((myModMask, xK_Page_Up), spawn $ setVolume "+5%")
     -- Volume (laptop keyboard)
-    -- , ((0, xF86XK_AudioMute), spawn "amixer -q set Master 0")
-    -- , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 3%-")
-    -- , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 3%+")
     , ((0, xF86XK_AudioMute), spawn $ setVolume "0%")
     , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
     , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
