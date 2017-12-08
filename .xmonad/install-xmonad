@@ -18,5 +18,5 @@ sudo chmod a+r /usr/share/unity-greeter/custom_xmonad_badge.png
 
 echo "Linking to customized gnome 2 configuration..."
 mv ~/.gtkrc-2.0 ~/gtkrc-2.0.original
-ln -s .xmonad/.gtkrc-2.0 ~/.gtkrc-2.0
+ln -s ~/git/.dotfiles/.xmonad/.gtkrc-2.0 ~/.gtkrc-2.0
 
