@@ -50,11 +50,17 @@ myUrgentWSLeft  = "{"         -- wrap urgent workspace with these
 myUrgentWSRight = "}"
 
 myWorkspaces =
-  [
-    "7:Chat",   "8:Video",  "9:Music",
-    "4:Term",   "5:Dev",     "6:Web",
-    "1:Mail",   "2:Files",   "3:Edit",
-    "0:PDF",    "Extr1",     "Extr2"
+  [ "1:Mail",   "2:Files",   "3:Edit"
+  , "4:Term",   "5:Dev",     "6:Web"
+  , "7:Chat",   "8:Video",  "9:Music"
+  , "0:PDF",    "Extr1",     "Extr2"
+  ]
+
+numPadKeys =
+  [ xK_KP_End, xK_KP_Down, xK_KP_Page_Down
+  , xK_KP_Left, xK_KP_Begin,xK_KP_Right
+  , xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
+  , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
   ]
 
 startupWorkspace = "None" --"4:Term"
@@ -86,13 +92,7 @@ myManagementHooks = [
   , className =? "totem" --> doF (W.shift "8:Video")
   ]
 
-numPadKeys =
-  [
-    xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
-    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
-    , xK_KP_End, xK_KP_Down, xK_KP_Page_Down
-    , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
-  ]
+
 
 -- Spawn process with a confirm dialog
 confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
@@ -244,5 +244,5 @@ main = do
       } <+> historyHook
     }
     `additionalKeys` myKeys
-    `removeKeys` ([(myModMask, n) | n <- [xK_1 .. xK_9] ++ [xK_Left, xK_Right, xK_Up, xK_Down]]
+    `removeKeys` ([(myModMask, n) | n <- [xK_Left, xK_Right, xK_Up, xK_Down]]
                   ++ [(myModMask, xK_Return)])
