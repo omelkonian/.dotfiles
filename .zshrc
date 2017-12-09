@@ -26,6 +26,10 @@ zstyle :compinstall filename '~/.zshrc'
 autoload -Uz compinit
 compinit
 
+# Stack auto-completion
+autoload -U +X bashcompinit && bashcompinit
+eval "$(stack --bash-completion-script stack)"
+
 # Imports
 for file in ~/git/.dotfiles/bash/*.symlink ; do
     . $file
