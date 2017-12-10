@@ -7,6 +7,7 @@
 	[
 		"Better CoffeeScript",
 		"CSS Colors",
+		"Dockerfile Syntax Highlighting",
 		"Elm Language Support",
 		"Git Config",
 		"GitGutter",
@@ -21,6 +22,7 @@
 		"SideBarEnhancements",
 		"SML (Standard ML)",
 		"SublimeHaskell",
+		"SublimeLinter-contrib-yamllint",
 		"SublimeLinter-pep8",
 		"SublimeLinter-pylint",
 		"SublimeREPL",
@@ -28,6 +30,7 @@
 		"Theme - Soda",
 		"Travis YML Lint",
 		"Travis-CI",
+		"Vagrant",
 		"Vintageous"
 	]
 }
