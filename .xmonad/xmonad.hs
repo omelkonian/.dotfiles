@@ -100,8 +100,6 @@ myManagementHooks = [
 confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
 
 -- Sound control
-soundCard = "alsa_output.usb-Focusrite_Audio_Engineering_Saffire_6USB-00.analog-surround-40"
-soundCardBuiltin = "alsa_output.pci-0000_00_1b.0.analog-stereo"
 setVolume mod = "~/.xmonad/set_volume.sh " ++ mod
 
 myKeys =
