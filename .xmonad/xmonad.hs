@@ -38,7 +38,7 @@ myBorderWidth        = 2              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
 
 myTitleColor     = "#eeeeee"  -- color of window title
-myTitleLength    = 80         -- truncate window title to this length
+myTitleLength    = 50         -- truncate window title to this length
 myCurrentWSColor = "#e6744c"  -- color of active workspace
 myVisibleWSColor = "#c185a7"  -- color of inactive workspace
 myUrgentWSColor  = "#cc0000"  -- color of workspace with 'urgent' window
@@ -62,6 +62,8 @@ numPadKeys =
   , xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
   , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
   ]
+
+numKeys = [ xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0 ]
 
 startupWorkspace = "None" --"4:Term"
 
@@ -146,6 +148,11 @@ myKeys =
        | (i, k) <- zip myWorkspaces numPadKeys
        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
   ] ++
+  [
+    ((m .|. myModMask, k), windows $ f i)
+       | (i, k) <- zip myWorkspaces numKeys
+       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+  ] ++
   M.toList (planeKeys myModMask (Lines 4) Finite) ++
   [
     ((m .|. myModMask, key), screenWorkspace sc
@@ -154,11 +161,11 @@ myKeys =
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
   ]
 
-myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modMask} = M.fromList
   [ -- Left-click, Float window and move by dragging
-    ((myModMask, button1), (\w -> focus w >> mouseMoveWindow w))
+    ((myModMask, button1), \w -> focus w >> mouseMoveWindow w)
     -- Right-click, Resize floating window
-  , ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+  , ((myModMask, button3), \w -> focus w >> Flex.mouseResizeWindow w)
     -- Scroll, Resize slaves
   , ((myModMask, button4), const $ sendMessage MirrorExpand)
   , ((myModMask, button5), const $ sendMessage MirrorShrink)
@@ -188,10 +195,6 @@ myLogHook h = dynamicLogWithPP $ def
       , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
       , ppOutput            =   hPutStrLn h
     }
-
--- Status bars
-myXmonadBar = "dzen2 -p -xs 0 -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
-myStatusBar = "conky -c /home/orestis/.xmonad/.conky_dzen | dzen2 -p -xs 1 -ta 'r' -fg '#FFFFFF' -bg '#1B1D1E'"
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook
@@ -234,13 +237,12 @@ main = do
         <+> manageDocks
     , logHook = dynamicLogWithPP xmobarPP {
         ppOutput = hPutStrLn xmproc
-        , ppTitle = xmobarColor myTitleColor "" -- . shorten myTitleLength
-        , ppCurrent = xmobarColor myCurrentWSColor ""
-          . wrap myCurrentWSLeft myCurrentWSRight
-        , ppVisible = xmobarColor myVisibleWSColor ""
-          . wrap myVisibleWSLeft myVisibleWSRight
-        , ppUrgent = xmobarColor myUrgentWSColor ""
-          . wrap myUrgentWSLeft myUrgentWSRight
+        , ppTitle = xmobarColor myTitleColor "" . shorten myTitleLength
+        , ppCurrent = xmobarColor myCurrentWSColor "" . wrap myCurrentWSLeft myCurrentWSRight
+        , ppVisible = xmobarColor myVisibleWSColor "" . wrap myVisibleWSLeft myVisibleWSRight
+        , ppUrgent = xmobarColor myUrgentWSColor "" . wrap myUrgentWSLeft myUrgentWSRight
+        , ppSep = " | "
+        , ppLayout = const ""
       } <+> historyHook
     }
     `additionalKeys` myKeys

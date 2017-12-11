@@ -7,7 +7,7 @@ Config {
   bgColor = "black",
   fgColor = "white",
 
-  -- Position is top left, taking up 95% of screen.
+  -- Position is top left, taking up 90% of screen.
   -- You are likely to have to tweak the width here based on the width
   -- of your screen to make it play nicely with stalonetray, which we
   -- want to be taking up the remainer of the space on the right side
@@ -20,13 +20,17 @@ Config {
     -- Gather and format CPU usage information.
     -- If it's above 50%, we consider it high usage and make it red.
     Run Cpu [
-      "-H","50",
+      "--low","white",
+      "--normal","yellow",
       "--high","red"
     ] 10,
 
     -- Gather and format memory usage information
     Run Memory [
-      "-t","Mem: <usedratio>%"
+      "-t","Mem: <usedratio>%",
+      "--low","white",
+      "--normal","yellow",
+      "--high","red"
     ] 10,
 
     -- Date formatting
@@ -36,18 +40,17 @@ Config {
     -- based upon your specific hardware. Or, for a desktop you may want
     -- to just remove this section entirely.
     Run Battery [
-      "-L", "30",
-      "-H", "80",
       "-t", "<acstatus>: <left>%",
-      "--high","green",
+      "--low", "red",
       "--normal","yellow",
-      "--low", "red"
+      "--high","green"
     ] 10,
 
-    -- To get volume information, we run a custom bash script.
-    -- This is because the built-in volume support in xmobar is disabled
-    -- in Debian and derivatives like Ubuntu.
-    Run Com "/bin/bash" ["-c", "~/.xmonad/get_volume.sh"] "myvolume" 10,
+    -- Get current volume
+    Run Com "/bin/bash" ["-c", "~/.xmonad/get_volume.sh"] "vol" 10,
+
+    -- Get current GPU
+    Run Com "/bin/bash" ["-c", "~/.xmonad/get_gpu.sh"] "gpu" 10,
 
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
@@ -63,5 +66,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %myvolume%  <fc=#e6744c>%date%</fc>   "
+   template = "%StdinReader% }{   %battery% | %cpu% | %memory% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
 }
