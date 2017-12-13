@@ -13,7 +13,8 @@ if [ -z "$(pgrep synapse)" ] ; then
 fi
 # start "skype"
 start "thunderbird"
-start "/home/orestis/.dropbox-dist/dropboxd"
+# start "/home/orestis/.dropbox-dist/dropboxd"
+start "dropbox"
 echo "Apps started"
 
 

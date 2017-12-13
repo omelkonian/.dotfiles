@@ -1,0 +1,3 @@
+# Timezones
+alias gr_time="sudo timedatectl set-timezone Europe/Athens"
+alias cet_time="sudo timedatectl set-timezone Europe/Zurich"

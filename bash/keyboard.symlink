@@ -6,5 +6,11 @@ alias caps_off="xdotool key Caps_Lock"
 
 # Set ComposeKey
 # export GTK_IM_MODULE='xim'
-export XCOMPOSEFILE='/home/orestis/.XCompose'
+export XCOMPOSEFILE='~/.XCompose'
 setxkbmap -option compose:menu
+
+# Set layout
+setxkbmap us
+
+# Language switch
+setxkbmap -layout us,gr -option grp:shifts_toggle # -option grp:rwin_toggle
