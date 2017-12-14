@@ -14,13 +14,12 @@
   'ctrl-alt-p': 'language-idris:proof-search'
 
 # Haskell: IDE
+'atom-text-editor.ide-haskell':
+  'ctrl-r':'ide-haskell:prettify-file'
 # 'atom-text-editor[data-grammar~="haskell"]':
   # '':'ide-haskell:prettify-file'
   # '':'ide-haskell:next-error'
   # '':'ide-haskell:prev-error'
-
-'atom-text-editor[data-grammar~="cabal"]':
-  '': 'ide-haskell:prettify-file'
 
 'atom-workspace':
   '': 'ide-haskell:toggle-output'
