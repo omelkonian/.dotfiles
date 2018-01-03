@@ -20,14 +20,6 @@ alias gpp="gpp --std=c++11"
 . /usr/local/bin/virtualenvwrapper.sh
 alias mkvenv="mkvirtualenv -p `which python3`"
 
-# ssh to okeanos
-alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
-
-# ssh keys
-function gen_ssh_key {
-    ssh-keygen -t rsa -C "$1" -b 4096
-}
-
 # Noglobs
 alias git="noglob git"
 alias pip="noglob pip"

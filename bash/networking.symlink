@@ -8,5 +8,10 @@ extip() {
   curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
 }
 
+# ssh keys
+function gen_ssh_key {
+    ssh-keygen -t rsa -C "$1" -b 4096
+}
+
 # ssh to okeanos
-alias okeanos="ssh snf-709756.vm.okeanos.grnet.gr"
+alias okeanos="ssh user@snf-793830.vm.okeanos.grnet.gr"

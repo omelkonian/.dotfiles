@@ -20,8 +20,8 @@ echo "Apps started"
 
 if [ "$(hostname)" == "omelkonian-XPS-15-9560" ]; then
     # Dell
-    HDMI="HDMI-1"
-    BUILTIN="eDP-1"
+    HDMI="HDMI1"
+    BUILTIN="eDP1"
 else
     # HP
     HDMI="HDMI1"
