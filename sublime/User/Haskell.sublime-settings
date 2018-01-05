@@ -1,6 +1,7 @@
 {
 	"extensions":
 	[
-		"gcl"
+		"gcl",
+		".xmobarrc"
 	]
 }

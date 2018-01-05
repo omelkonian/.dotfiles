@@ -50,11 +50,21 @@ myUrgentWSLeft  = "{"         -- wrap urgent workspace with these
 myUrgentWSRight = "}"
 
 myWorkspaces =
-  [ "1:Mail",   "2:Files",   "3:Edit"
-  , "4:Term",   "5:Dev",     "6:Web"
-  , "7:Chat",   "8:Video",  "9:Music"
-  , "0:PDF",    "Extr1",     "Extr2"
-  ]
+  clickable . (map xmobarEscape) $
+    [ "1:Mail",   "2:Files",   "3:Edit"
+    , "4:Term",   "5:Dev",     "6:Web"
+    , "7:Chat",   "8:Video",  "9:Music"
+    , "0:PDF"
+    ]
+    where clickable l =
+            [ "<action=xdotool key alt+" ++ show i ++ ">" ++ ws ++ "</action>" |
+              (i,ws) <- zip ([1..9] ++ [0]) l
+            ]
+          xmobarEscape = concatMap doubleLts
+          doubleLts '<' = "<<"
+          doubleLts x   = [x]
+
+indexWs i = myWorkspaces !! (i - 1)
 
 numPadKeys =
   [ xK_KP_End, xK_KP_Down, xK_KP_Page_Down
@@ -65,7 +75,7 @@ numPadKeys =
 
 numKeys = [ xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0 ]
 
-startupWorkspace = "None" --"4:Term"
+startupWorkspace = "None" -- indexWs 4
 
 defaultLayouts = smartBorders $ avoidStruts $ -- modifiers
   tall ||| Mirror tall ||| noBorders Full ||| Grid -- options
@@ -80,18 +90,18 @@ myManagementHooks = [
   appName =? "synapse" --> doIgnore
   , appName =? "stalonetray" --> doIgnore
   , appName =? "zenity" --> doFloat
-  , className =? "skype" --> doF (W.shift "7:Chat")
-  , className =? "Thunderbird" --> doF (W.shift "1:Mail")
-  , className =? "Nautilus" --> doF (W.shift "2:Files")
-  , className =? "totem" --> doF (W.shift "9:Music")
-  , className =? "Subl" --> doF (W.shift "3:Edit")
-  , className =? "Sublime_text" --> doF (W.shift "3:Edit")
-  , className =? "Atom" --> doF (W.shift "5:Dev")
-  , className =? "Google-chrome" --> doF (W.shift "6:Web")
-  , className =? "Evince" --> doF (W.shift "0:PDF")
-  , className =? "Eog" --> doF (W.shift "0:PDF")
-  , className =? "vlc" --> doF (W.shift "8:Video")
-  , className =? "totem" --> doF (W.shift "8:Video")
+  , className =? "skype" --> doF (W.shift $ indexWs 7)
+  , className =? "Thunderbird" --> doF (W.shift $ indexWs 1)
+  , className =? "Nautilus" --> doF (W.shift $ indexWs 2)
+  , className =? "totem" --> doF (W.shift $ indexWs 9)
+  , className =? "Subl" --> doF (W.shift $ indexWs 3)
+  , className =? "Sublime_text" --> doF (W.shift $ indexWs 3)
+  , className =? "Atom" --> doF (W.shift $ indexWs 5)
+  , className =? "Google-chrome" --> doF (W.shift $ indexWs 6)
+  , className =? "Evince" --> doF (W.shift $ indexWs 10)
+  , className =? "Eog" --> doF (W.shift $ indexWs 10)
+  , className =? "vlc" --> doF (W.shift $ indexWs 8)
+  , className =? "totem" --> doF (W.shift $ indexWs 8)
   ]
 
 

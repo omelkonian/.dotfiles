@@ -13,6 +13,7 @@ Config {
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
   position = TopW L 90,
+  -- lowerOnStart = True,
 
   -- list of commands which gather information about your system for
   -- presentation in the bar.
@@ -32,6 +33,8 @@ Config {
       "--normal","yellow",
       "--high","red"
     ] 10,
+
+    Run Swap [] 10,
 
     -- Date formatting
     Run Date "%a %b %_d %l:%M" "date" 10,
@@ -54,7 +57,8 @@ Config {
 
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
-    Run StdinReader
+    --Run StdinReader
+    Run UnsafeStdinReader
    ],
 
    -- Separator character used to wrape variables in the xmobar template
@@ -66,5 +70,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
+   template = "%UnsafeStdinReader% }{ %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
 }
