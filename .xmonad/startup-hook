@@ -43,7 +43,7 @@ if [ -n "$(pgrep trayer)" ] ; then
     kill $(pgrep trayer)
 fi
 # trayer --edge top --monitor primary --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --height 12 --transparent true --tint 0x000000 &
-trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 24 --transparent true --alpha 0 --tint 0x000000 &
+trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 19 --transparent true --alpha 0 --tint 0x000000 &
 echo "Icon tray spawned"
 
 nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg

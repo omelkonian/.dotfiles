@@ -3,9 +3,10 @@
 Config {
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
-  font = "xft:Ubuntu Mono-12",
+  font = "xft:Monospace-10",
   bgColor = "black",
   fgColor = "white",
+  iconRoot = "/home/omelkonian/.xmonad/images/"
 
   -- Position is top left, taking up 90% of screen.
   -- You are likely to have to tweak the width here based on the width
@@ -70,5 +71,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%UnsafeStdinReader% }{ %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
+   template = "%UnsafeStdinReader% }{ { <action=xinput --enable 12>∃</action> <action=xinput --disable 12>∄</action> }     %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
 }

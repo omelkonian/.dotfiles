@@ -149,6 +149,8 @@ myKeys =
     -- Brightness
     , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight + 20")
     , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
+    -- Mousepad
+    , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/toggle_mousepad.sh")
   ]
   ++
   [
