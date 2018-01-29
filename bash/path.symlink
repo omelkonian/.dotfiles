@@ -38,3 +38,6 @@ add_to_LD_path /usr/lib32
 add_to_LD_path /usr/lib
 
 add_to_path ~/MathSAT/bin
+
+# Sencha
+add_to_path /usr/bin/Sencha/Cmd/4.0.5.87

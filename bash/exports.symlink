@@ -5,8 +5,13 @@ export ROS_MAVEN_PATH=/home/orestis/rosjava/devel/share/maven
 add_to_path /opt/ros/indigo/bin
 
 # Java
-add_to_path /usr/lib/jvm/java-8-oracle
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+add_to_path $JAVA_HOME
+
+# Maven
+export M3_HOME=/usr/local/apache-maven
+export MAVEN_HOME=/usr/local/apache-maven
+add_to_path ${M3_HOME}/bin
 
 # OpenCV
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib

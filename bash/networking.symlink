@@ -14,4 +14,6 @@ function gen_ssh_key {
 }
 
 # ssh to okeanos
-alias okeanos="ssh user@snf-793830.vm.okeanos.grnet.gr"
+export OKEANOS_URL="snf-793830.vm.okeanos.grnet.gr"
+export OKEANOS_USER="user"
+alias okeanos="ssh ${OKEANOS_USER}@${OKEANOS_URL}"

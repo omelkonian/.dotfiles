@@ -5,6 +5,7 @@
 	],
 	"installed_packages":
 	[
+		"ANSIescape",
 		"Better CoffeeScript",
 		"CSS Colors",
 		"Dockerfile Syntax Highlighting",

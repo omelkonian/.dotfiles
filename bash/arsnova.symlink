@@ -1,0 +1,25 @@
+function deploy_backend {
+  scp -r $1 user@snf-793830.vm.okeanos.grnet.gr:/home/user/api.war
+  ssh user@snf-793830.vm.okeanos.grnet.gr 'docker cp /home/user/api.war arsnovadocker_webapp_1:/var/lib/tomcat8/webapps'
+}
+function deploy_frontend {
+  scp -r $1 user@snf-793830.vm.okeanos.grnet.gr:/home/user/mobile.war
+  ssh user@snf-793830.vm.okeanos.grnet.gr 'docker cp /home/user/mobile.war arsnovadocker_webapp_1:/var/lib/tomcat8/webapps'
+}
+function check_db {
+  curl http://snf-793830.vm.okeanos.grnet.gr:5984
+}
+function check_backend {
+  curl -H "Accept: application/json" http://snf-793830.vm.okeanos.grnet.gr:8080/api/
+}
+function check_frontend {
+  curl http://snf-793830.vm.okeanos.grnet.gr:8080/mobile/resources/version.json
+}
+function check_arsnova {
+    echo -n 'Checking DB:\n\t'
+    check_db
+    echo -n 'Checking backend:\n\t'
+    check_backend
+    echo -n '\nChecking frontend:\n\t'
+    check_frontend
+}

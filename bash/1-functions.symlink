@@ -43,6 +43,7 @@ function work {
   cdvirtualenv src/"$1"
 }
 
+# Editor
 function edit {
   ${EDITOR} $1 --add
 }
