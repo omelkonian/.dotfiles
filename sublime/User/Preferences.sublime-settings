@@ -17,7 +17,12 @@
 	[
 		"*.DS_Store",
 		"*.pyc",
-		"*.git"
+		"*.git",
+		"*.aux",
+		"*.glob",
+		"*.d",
+		"*.vo",
+		"#*"
 	],
 	"find_selected_text": true,
 	"fold_buttons": true,
