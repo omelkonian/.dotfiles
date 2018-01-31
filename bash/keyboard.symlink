@@ -5,7 +5,10 @@ xcape -e 'Control_L=Escape'
 alias caps_off="xdotool key Caps_Lock"
 
 # Set ComposeKey
-# export GTK_IM_MODULE='xim'
+input_module=xim
+export GTK_IM_MODULE=$input_module
+export XMODIFIERS=@im=$input_module
+export QT_IM_MODULE=$input_module
 export XCOMPOSEFILE='~/.XCompose'
 setxkbmap -option compose:menu
 
