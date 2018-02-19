@@ -13,7 +13,18 @@ function gen_ssh_key {
     ssh-keygen -t rsa -C "$1" -b 4096
 }
 
-# ssh to okeanos
+# Okeanos VM
 export OKEANOS_URL="snf-793830.vm.okeanos.grnet.gr"
 export OKEANOS_USER="user"
 alias okeanos="ssh ${OKEANOS_USER}@${OKEANOS_URL}"
+
+# Utrecht VM
+export UUVM_URLA="up.science.uu.nl"
+export UUVM_URLB="science-vs159.science.uu.nl"
+export UUVM_USER="orestis"
+function uuvm {
+    ssh-agent
+    ssh-add ~/.ssh/id_rsa
+    ssh -A ${UUVM_USER}@${UUVM_URLA}
+}
+
