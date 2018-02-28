@@ -25,13 +25,12 @@ function backup {
 
 # SED
 function find_and_replace {
-  cp $2 .sed_original
   find . -maxdepth $1 -name $2 -exec sed -i -r 's/'$3'/'$4'/g' '{}' \;
-  g diff .sed_original $2
-  rm .sed_original
+  git diff --color-words $2
 }
 function find_and_replace_all {
   find . -maxdepth $1 -name "$2" -exec sed -i -r 's/'$3'/'$4'/g' '{}' \;
+  git diff --color-words
 }
 function delete_between {
   sed -n '1,/"$1"/p;/"$2"/,$p' $3 > tmp && mv tmp $3
