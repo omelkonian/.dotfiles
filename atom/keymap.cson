@@ -1,3 +1,7 @@
+# Vim
+'atom-text-editor.vim-mode-plus-input-char-waiting':
+  ':': 'vim-mode-plus:set-input-char-:'
+
 # Idris
 'atom-text-editor[data-grammar~="idris"]':
   'ctrl-alt-a': 'language-idris:add-clause'
@@ -83,3 +87,7 @@
 # Autocomplete
 'atom-text-editor':
   'alt-enter': 'autocomplete-plus:activate'
+
+# Agda
+'atom-text-editor.agda':
+  'ctrl-c ctrl-g': 'agda-mode:give'

@@ -41,8 +41,8 @@
   br = branch
   brd = branch -D
   rrm = remote rm
-  rad = "!f() { git remote add origin https://github.com/"$1"/"$2".git; }; f"
-  rau = "!f() { git remote add upstream https://github.com/"$1"/"$2".git; }; f"
+  rad = "!f() { git remote add origin git@github.com:"$1"/"$2".git; }; f"
+  rau = "!f() { git remote add upstream git@github.com:"$1"/"$2".git; }; f"
   fall = fetch --all
 
   # Pull
@@ -81,11 +81,9 @@
   stc = stash clear
 
   # Clone
-  cl = "!f() { git clone https://github.com/"$1"/"$2".git; }; f"
-  cls = "!f() { git clone git@github.com:"$1"/"$2".git; }; f"
-  cld = "!f() { git clone https://github.com/"$1"/"$2".git "$3"; }; f"
-  clsd = "!f() { git clone git@github.com:"$1"/"$2".git "$3"; }; f"
-  clr = "!f() { git clone --recursive https://github.com/"$1"/"$2".git; }; f"
+  cl = "!f() { git clone git@github.com:"$1"/"$2".git; }; f"
+  cld = "!f() { git clone git@github.com:"$1"/"$2".git "$3"; }; f"
+  clr = "!f() { git clone --recursive git@github.com:"$1"/"$2".git; }; f"
 
   # Undoing
   rsh = reset --hard
