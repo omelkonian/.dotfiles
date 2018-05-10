@@ -1,0 +1,18 @@
+# GHC: devel2
+alias ghc2="~/ghc/inplace/bin/ghc-stage2"
+alias ghc2i="ghc2 --interactive"
+alias ghc2make="make -C ~/ghc/ghc"
+alias ghc2reset="(cd ~/ghc && ./boot && ./configure)"
+
+# GHC: Flags
+export FILE="-ddump-to-file"
+export PASS="-dshow-passes"
+export PPR="-dppr-debug"
+export PARSE="-ddump-parsed"
+export AST="-ddump-parsed-ast"
+export TCC="-ddump-tc-trace"
+export TC="-ddump-tc"
+export TC_AST="-ddump-tc-ast"
+export TYPES="-ddump-types"
+export DERIV="-ddump-deriv"
+export AGAIN="-fforce-recomp"

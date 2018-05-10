@@ -10,7 +10,7 @@ alias xconfig="edit ~/.xmonad"
 alias dotconfig="edit ~/git/.dotfiles"
 
 # History
-alias show_history="edit ~/.histfile"
+alias hist="edit ~/.histfile"
 
 # C++
 alias g++="g++ --std=c++11"

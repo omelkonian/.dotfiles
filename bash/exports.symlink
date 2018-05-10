@@ -18,3 +18,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib
 
 # sqlite
 export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
+
+# R
+export RSTUDIO_WHICH_R=`which R`

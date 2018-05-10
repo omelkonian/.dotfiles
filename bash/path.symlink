@@ -41,3 +41,6 @@ add_to_path ~/MathSAT/bin
 
 # Sencha
 add_to_path /usr/bin/Sencha/Cmd/4.0.5.87
+
+#GHC
+add_to_path /opt/ghc/bin
