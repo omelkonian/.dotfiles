@@ -4,9 +4,10 @@ Config {
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
   font = "xft:Monospace-10",
+
   bgColor = "black",
   fgColor = "white",
-  iconRoot = "/home/omelkonian/.xmonad/images/"
+  iconRoot = "/home/omelkonian/.xmonad/images/",
 
   -- Position is top left, taking up 90% of screen.
   -- You are likely to have to tweak the width here based on the width
@@ -14,7 +15,13 @@ Config {
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
   position = TopW L 90,
-  -- lowerOnStart = True,
+
+  -- General options
+  -- lowerOnStart = False,
+  -- hideOnStart = False,
+  -- persistent = True,
+  -- overrideRedirect = False,
+  -- allDesktops = True,
 
   -- list of commands which gather information about your system for
   -- presentation in the bar.

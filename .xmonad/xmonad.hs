@@ -224,6 +224,7 @@ navigation = navigation2D
 main = do
   xmproc <- spawnPipe "xmobar"
   xmonad
+    $ docks
     $ navigation
     $ withUrgencyHook myUrgencyHook
     $ def {
