@@ -3,6 +3,7 @@
 	[
 		"gcl",
 		".xmobarrc",
-		"agda"
+		"agda",
+		"ag"
 	]
 }
