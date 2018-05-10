@@ -47,6 +47,7 @@
 
   # Pull
   pp = pull
+  ppall = '!f() { git pull --ff-only --rebase && git submodule update --init --recursive; }; f'
   pr = pull --rebase
 
   # Push
@@ -102,3 +103,15 @@
   pager = less -r
 [push]
   default = current
+[url "git@github.com:ghc/packages-"]
+	insteadOf = git@github.com:ghc/packages/
+[url "git://github.com/ghc/packages-"]
+	insteadOf = git://github.com/ghc/packages/
+[url "http://github.com/ghc/packages-"]
+	insteadOf = http://github.com/ghc/packages/
+[url "https://github.com/ghc/packages-"]
+	insteadOf = https://github.com/ghc/packages/
+[url "ssh://git\\@github.com/ghc/packages-"]
+	insteadOf = ssh://git@github.com/ghc/packages/
+[url "git\\@github.com:/ghc/packages-"]
+	insteadOf = git@github.com:/ghc/packages/
