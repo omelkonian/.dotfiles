@@ -4,6 +4,8 @@
 		"gcl",
 		".xmobarrc",
 		"agda",
-		"ag"
+		"ag",
+		"out",
+		"hs-boot"
 	]
 }

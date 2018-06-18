@@ -1,4 +1,5 @@
 [
+    { "keys": ["ctrl+d"], "command": false },
     { "keys": ["ctrl+b"], "command": "build", "args": { "variant": "" } },
     { "keys": ["ctrl+shift+b"], "command": "build", "args": { "variant": "Run" } },
     { "keys": ["alt+right"], "command": "next_view" },

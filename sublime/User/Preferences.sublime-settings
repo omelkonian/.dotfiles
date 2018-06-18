@@ -15,26 +15,38 @@
 	"fade_fold_buttons": false,
 	"file_exclude_patterns":
 	[
-		"*.DS_Store",
-		"*.pyc",
-		"*.git",
 		"*.aux",
 		"*.glob",
 		"*.d",
 		"*.vo",
-		"#*"
+		"#*",
+		"*.DS_Store",
+		"*.pyc",
+		"*.git",
+		"*.hi",
+		"*.o",
+		"*.dyn_o"
 	],
 	"find_selected_text": true,
 	"fold_buttons": true,
 	"folder_exclude_patterns":
 	[
+		".git",
+		".stack-work"
+	],
+	"font_face": "Fira Code",
+	"font_options":
+	[
+		"subpixel_antialias"
 	],
 	"font_size": 9,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
-		"Vintage"
+		"Six",
+		"Vintage",
+		"Vintageous"
 	],
 	"indent_guide_options":
 	[
@@ -60,10 +72,11 @@
 	"smart_indent": true,
 	"sublimelinter": true,
 	"tab_completion": true,
-	"tab_size": 4,
+	"tab_size": 2,
 	"theme": "ayu-light.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_trailing_white_space_on_save": true,
 	"use_tab_stops": true,
+	"vintage_start_in_command_mode": true,
 	"word_wrap": "auto"
 }

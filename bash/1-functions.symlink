@@ -46,3 +46,8 @@ function work {
 function edit {
   ${EDITOR} $1 --add
 }
+
+# Domain-specific Grep
+function grepOn {
+  grep -nr "$2" **/**."$1"
+}

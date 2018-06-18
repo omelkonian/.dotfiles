@@ -1,7 +1,7 @@
 # GHC: devel2
 alias ghc2="~/ghc/inplace/bin/ghc-stage2"
 alias ghc2i="ghc2 --interactive"
-alias ghc2make="make -C ~/ghc/ghc"
+alias ghc2make="make -j8 -C ~/ghc/ghc"
 alias ghc2reset="(cd ~/ghc && ./boot && ./configure)"
 
 # GHC: Flags
@@ -16,3 +16,7 @@ export TC_AST="-ddump-tc-ast"
 export TYPES="-ddump-types"
 export DERIV="-ddump-deriv"
 export AGAIN="-fforce-recomp"
+export CORE="-dcore-lint"
+export CMM="-dcmm-lint"
+export ASM="-dasm-lint"
+export WALL="-Wall"

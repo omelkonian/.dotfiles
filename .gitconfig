@@ -47,7 +47,7 @@
 
   # Pull
   pp = pull
-  ppall = '!f() { git pull --ff-only --rebase && git submodule update --init --recursive; }; f'
+  ppall = "!f() { git pull --ff-only --rebase && git submodule update --init --recursive; }; f"
   pr = pull --rebase
 
   # Push

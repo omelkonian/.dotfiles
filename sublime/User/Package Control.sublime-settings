@@ -18,9 +18,11 @@
 		"GitGutter",
 		"Github Color Theme",
 		"Gutter Color",
+		"HoogleSearch",
 		"JSX",
-		"Markdown Preview",
+		"MarkdownPreview",
 		"Material Theme",
+		"NeoVintageous",
 		"Package Control",
 		"PackageResourceViewer",
 		"Prolog",
@@ -28,7 +30,9 @@
 		"PureScript",
 		"Racket",
 		"rsub",
+		"Seti_UI",
 		"SideBarEnhancements",
+		"Six",
 		"SML (Standard ML)",
 		"SublimeLinter-contrib-yamllint",
 		"SublimeLinter-pep8",
@@ -38,7 +42,7 @@
 		"Theme - Soda",
 		"Travis YML Lint",
 		"Travis-CI",
-		"Vagrant",
-		"Vintageous"
+		"UnicodeMath",
+		"Vagrant"
 	]
 }

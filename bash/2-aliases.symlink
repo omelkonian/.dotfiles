@@ -1,6 +1,6 @@
+# General
 alias lt="ll -tr"
 alias s=subl
-alias g=git
 
 # Config
 alias zshconfig="edit ~/.zshrc"
@@ -22,5 +22,13 @@ alias mkvenv="mkvirtualenv -p `which python3`"
 
 # Noglobs
 alias git="noglob git"
+alias g="noglob git"
 alias pip="noglob pip"
 alias stack="noglob stack"
+
+# Make
+alias make='make -j"${CPU_CORES}"'
+
+# Grep
+alias grepHS="grepOn hs"
+alias grepAG="grepOn ag"
