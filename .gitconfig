@@ -68,11 +68,11 @@
   chm = checkout master
   chb = checkout -b
   chpr = "!f(){ \
-        if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
-          git fetch $1 refs/pull/$2/head:pr/$2 && \
-          git checkout pr/$2; \
-        fi \
-      }; f"
+    if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+      git fetch $1 refs/pull/$2/head:pr/$2 && \
+      git checkout pr/$2; \
+    fi \
+  }; f"
 
   # Stash
   st = stash
@@ -85,6 +85,12 @@
   cl = "!f() { git clone git@github.com:"$1"/"$2".git; }; f"
   cld = "!f() { git clone git@github.com:"$1"/"$2".git "$3"; }; f"
   clr = "!f() { git clone --recursive git@github.com:"$1"/"$2".git; }; f"
+  cls = "!f() { \
+    org="$1"; shift; \
+    for repo in "$@"; do \
+      git clone git@github.com:"$org"/"$repo".git ; \
+    done \
+  }; f"
 
   # Undoing
   rsh = reset --hard

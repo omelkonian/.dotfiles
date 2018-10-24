@@ -21,3 +21,11 @@ export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"
 
 # R
 export RSTUDIO_WHICH_R=`which R`
+
+# PyEnv
+add_to_path /home/omelkonian/.pyenv/bin
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+# OPAM (OCaml)
+eval $(opam config env)

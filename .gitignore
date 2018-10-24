@@ -1,3 +1,5 @@
 sublime/User/*last-run
 sublime/User/*cache/
+sublime/User/Package Control.merged-ca-bundle
+sublime/User/Package Control.user-ca-bundle
 .xmonad/xmonad.state

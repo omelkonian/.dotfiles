@@ -86,23 +86,27 @@ myLayouts =
 
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
-myManagementHooks = [
-  appName =? "synapse" --> doIgnore
-  , appName =? "stalonetray" --> doIgnore
-  , appName =? "zenity" --> doFloat
-  , className =? "skype" --> doF (W.shift $ indexWs 7)
-  , className =? "Thunderbird" --> doF (W.shift $ indexWs 1)
-  , className =? "Nautilus" --> doF (W.shift $ indexWs 2)
-  , className =? "totem" --> doF (W.shift $ indexWs 9)
-  , className =? "Subl" --> doF (W.shift $ indexWs 3)
-  , className =? "Sublime_text" --> doF (W.shift $ indexWs 3)
-  , className =? "Atom" --> doF (W.shift $ indexWs 5)
-  , className =? "Google-chrome" --> doF (W.shift $ indexWs 6)
-  , className =? "Evince" --> doF (W.shift $ indexWs 10)
-  , className =? "Eog" --> doF (W.shift $ indexWs 10)
-  , className =? "vlc" --> doF (W.shift $ indexWs 8)
-  , className =? "totem" --> doF (W.shift $ indexWs 8)
+myManagementHooks =
+  [ appName   =? "synapse"       --> doIgnore
+  , appName   =? "stalonetray"   --> doIgnore
+  , appName   =? "zenity"        --> doFloat
+  , className =? "skype"         --> shift 7
+  , className =? "Thunderbird"   --> shift 1
+  , className =? "Nautilus"      --> shift 2
+  , className =? "totem"         --> shift 9
+  , className =? "Subl"          --> shift 3
+  , className =? "Sublime_text"  --> shift 3
+  , className =? "Atom"          --> shift 5
+  , className =? "Google-chrome" --> shift 6
+  , className =? "Evince"        --> shift 10
+  , className =? "Eog"           --> shift 10
+  , className =? "vlc"           --> shift 8
+  , className =? "totem"         --> shift 8
+  , className =? "Spotify"       --> shift 9
   ]
+  where
+    shift = doF . W.shift . indexWs
+
 
 
 

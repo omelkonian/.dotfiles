@@ -24,8 +24,11 @@
 		"*.pyc",
 		"*.git",
 		"*.hi",
+		"*.hi-boot",
 		"*.o",
-		"*.dyn_o"
+		"*.o-boot",
+		"*.dyn_*",
+		"*.p_*"
 	],
 	"find_selected_text": true,
 	"fold_buttons": true,
@@ -39,7 +42,7 @@
 	[
 		"subpixel_antialias"
 	],
-	"font_size": 9,
+	"font_size": 8,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":

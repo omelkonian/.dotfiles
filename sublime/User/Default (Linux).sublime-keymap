@@ -78,6 +78,11 @@
         "command": "sublime_haskell_complete",
         "args": {"characters": "", "wide": true},
         "context": [ { "key": "haskell_source_or_repl" } ]
-    }
+    },
+    // Markdown Preview
+    // {   "keys": ["ctrl+alt+m"],
+    //     "command": "markdown_preview",
+    //     "args": {"target": "browser", "parser":"github"}
+    // },
 ]
 ]

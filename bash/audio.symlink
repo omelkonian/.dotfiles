@@ -1,0 +1,12 @@
+# Conversion
+function mp3_to_wav {
+  lame --decode $1.mp3 $1.wav
+}
+
+# Editing
+function extract_left_channel {
+  sox $1.wav -c 1 "$1"_L.wav remix 1
+}
+function extract_right_channel {
+  sox $1.wav -c 1 "$1"_R.wav remix 2
+}

@@ -28,3 +28,5 @@ function uuvm {
     ssh -A ${UUVM_USER}@${UUVM_URLA}
 }
 
+# Storage IP
+export STORAGE_IP="137.224.145.233"
