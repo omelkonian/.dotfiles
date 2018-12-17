@@ -17,4 +17,8 @@ function fixWifi {
   sudo service network-manager restart
 }
 
-
+# PLFA
+function plfa {
+  cd $HOME/git/plfa.github.io-master
+  bundle exec jekyll serve
+}

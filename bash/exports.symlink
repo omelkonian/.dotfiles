@@ -1,8 +1,9 @@
 # ROS
-# source /opt/ros/indigo/setup.bash
-export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
-export ROS_MAVEN_PATH=/home/orestis/rosjava/devel/share/maven
-add_to_path /opt/ros/indigo/bin
+export ROS_VERSION='kinetic'
+source /opt/ros/$ROS_VERSION/setup.zsh
+add_to_path /opt/ros/$ROS_VERSION/bin
+# export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
+# export ROS_MAVEN_PATH=/home/orestis/rosjava/devel/share/maven
 
 # Java
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
@@ -14,7 +15,9 @@ export MAVEN_HOME=/usr/local/apache-maven
 add_to_path ${M3_HOME}/bin
 
 # OpenCV
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/opencv-2.4.9/bin/lib
+add_to_LD_path $HOME/git/opencv/build/bin
+add_to_LD_path $HOME/git/opencv/build/lib
+add_to_LD_path /usr/lib/x86_64-linux-gnu/
 
 # sqlite
 export SQLALCHEMY_DATABASE_URI="sqlite:///foo.db"

@@ -87,9 +87,12 @@ myLayouts =
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks =
-  [ appName   =? "synapse"       --> doIgnore
-  , appName   =? "stalonetray"   --> doIgnore
-  , appName   =? "zenity"        --> doFloat
+  [ appName   =? "synapse"         --> doIgnore
+  , appName   =? "stalonetray"     --> doIgnore
+  , appName   =? "zenity"          --> doFloat
+  , appName   =? "Extract archive" --> doFloat
+
+  , className =? "Pdfpc"         --> doFloat
   , className =? "skype"         --> shift 7
   , className =? "Thunderbird"   --> shift 1
   , className =? "Nautilus"      --> shift 2
@@ -155,6 +158,8 @@ myKeys =
     , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
     -- Mousepad
     , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/toggle_mousepad.sh")
+    -- Scroll-click emulation
+    , ((myModMask .|. shiftMask, xK_u), withFocused $ windows . W.sink)
   ]
   ++
   [
@@ -175,7 +180,7 @@ myKeys =
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
   ]
 
-myMouseBindings XConfig {XMonad.modMask = modMask} = M.fromList
+myMouseBindings _ = M.fromList
   [ -- Left-click, Float window and move by dragging
     ((myModMask, button1), \w -> focus w >> mouseMoveWindow w)
     -- Right-click, Resize floating window

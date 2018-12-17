@@ -32,3 +32,8 @@ alias make='make -j"${CPU_CORES}"'
 # Grep
 alias grepHS="grepOn hs"
 alias grepAG="grepOn ag"
+alias grepPy="grepOn py"
+alias grepJava="grepOn java"
+alias grepBash="grepOn symlink"
+alias grepScala="grepOn scala"
+alias grepAgda="grepOn agda"

@@ -28,7 +28,14 @@
 		"*.o",
 		"*.o-boot",
 		"*.dyn_*",
-		"*.p_*"
+		"*.p_*",
+		"*.class",
+		"*.bin",
+		"*.bat",
+		"*_tmp",
+		"*.agdai",
+		"*.agda~",
+		".#*"
 	],
 	"find_selected_text": true,
 	"fold_buttons": true,
@@ -42,7 +49,7 @@
 	[
 		"subpixel_antialias"
 	],
-	"font_size": 8,
+	"font_size": 10,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":

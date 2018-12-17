@@ -51,3 +51,11 @@ function edit {
 function grepOn {
   grep -nr "$2" **/**."$1"
 }
+
+# Dyck
+function dyckdot {
+  for wo in $@
+  do
+    dot -Tpng $wo.dot > $wo.png && eog $wo.png &
+  done
+}
