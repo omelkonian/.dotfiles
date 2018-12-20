@@ -71,3 +71,9 @@
 
 ;; Trailing whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Smooth scrolling
+(add-to-list 'load-path "~/.emacs.d/sublimity/")
+(require 'sublimity)
+(require 'sublimity-scroll)
+
