@@ -17,9 +17,9 @@
   cm = commit -m
   cs = commit -s
   csm = commit -sm
-  ca = commit --amend
-  can = commit --amend --no-edit
-  csa = commit -s --amend
+  ca = commit --amend --date=format:rfc2822
+  can = commit --amend --no-edit --date=format:rfc2822
+  csa = commit -s --amend --date=format:rfc2822
   cf = "!f(){ git commit --fixup=\"$1\" && git rebase -i --autosquash \"$1\"^;};f"
 
   # Add
