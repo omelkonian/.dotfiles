@@ -11,10 +11,10 @@ fi
 if [ -z "$(pgrep synapse)" ] ; then
     synapse -s &
 fi
-# start "skype"
+# start email client
 start "thunderbird"
-# start "/home/orestis/.dropbox-dist/dropboxd"
-start "dropbox"
+# start Slack
+slack &
 echo "Apps started"
 
 

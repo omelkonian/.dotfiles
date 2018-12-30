@@ -106,12 +106,10 @@ myManagementHooks =
   , className =? "vlc"           --> shift 8
   , className =? "totem"         --> shift 8
   , className =? "Spotify"       --> shift 9
+  , className =? "Slack"         --> shift 9
   ]
   where
     shift = doF . W.shift . indexWs
-
-
-
 
 -- Spawn process with a confirm dialog
 confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
