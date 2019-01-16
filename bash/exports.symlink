@@ -32,3 +32,8 @@ eval "$(pyenv virtualenv-init -)"
 
 # OPAM (OCaml)
 eval $(opam config env)
+
+# Spotify setup
+export SPOTIPY_CLIENT_ID='3035f03a789149968ccf80e5f0a824f4'
+export SPOTIPY_CLIENT_SECRET='3f200238bff34b9db8baa3b69bbb2f09'
+export SPOTIPY_REDIRECT_URI='http://www.purple.com'
