@@ -1,3 +1,9 @@
+alias fixBluetooth="sudo modprobe rtbth"
+function fixWifi {
+  sudo ifconfig eno1 up
+  sudo service network-manager restart
+}
+
 # IP
 get_ip() {
   ip route get 8.8.8.8 | awk '{print $NF; exit}'

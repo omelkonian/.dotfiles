@@ -140,9 +140,10 @@ myKeys =
     , ((myModMask .|. shiftMask, xK_F11), confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now")
     , ((myModMask .|. shiftMask, xK_F12), confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now")
     -- Group navigation
-    , ((myModMask, xK_space), nextWS)
-    , ((myModMask .|. shiftMask, xK_space), prevWS)
-    , ((myModMask, xK_grave), rotAllUp)
+    -- NB: use these for switching between layouts instead
+    -- , ((myModMask, xK_space), nextWS)
+    -- , ((myModMask .|. shiftMask, xK_space), prevWS)
+    -- , ((myModMask, xK_grave), rotAllUp)
     , ((myModMask, xK_Tab), nextMatch History (return True))
     -- Volume (desktop keyboard)
     , ((myModMask, xK_Page_Down), spawn $ setVolume "-5%")

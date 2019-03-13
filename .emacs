@@ -39,6 +39,23 @@
   (transient-mark-mode 1) ;; No region when it is not highlighted
   (setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
 
+;; LaTeX
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+(global-prettify-symbols-mode)
+(add-hook 'TeX-mode-hook 'prettify-symbols-mode)
+
+;; Coq
+(custom-set-variables '(coq-prog-name "/home/omelkonian/.opam/4.06.0/bin/coqtop") '(proof-three-window-enable t))
+
 ;; Agda
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
@@ -48,7 +65,7 @@
 ;; default to DejaVu Sans Mono,
 (set-face-attribute 'default nil
 		    :family "DejaVu Sans Mono"
-		    :height 120
+		    :height 100
 		    :weight 'normal
 		    :width  'normal)
 
@@ -76,4 +93,3 @@
 (add-to-list 'load-path "~/.emacs.d/sublimity/")
 (require 'sublimity)
 (require 'sublimity-scroll)
-

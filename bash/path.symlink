@@ -21,14 +21,15 @@ add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
 # Intellij
 add_to_path /home/orestis/Intellij/bin
 
-# cabal
-add_to_path ~/.cabal/bin
-
 # idris
 add_to_path ~/Idris/.cabal-sandbox/bin
 
 # Haskell
 add_to_path ~/.local/bin
+add_to_path ~/.cabal/bin
+# for d in ~/.cabal/store/*/*/lib/; do
+#   add_to_LD_path $d
+# done
 
 # HOL
 add_to_path ~/HOL/bin

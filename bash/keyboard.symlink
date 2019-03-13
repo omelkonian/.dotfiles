@@ -1,3 +1,5 @@
+alias fixKeyboard="ibus-daemon -rd"
+
 # Remap CapsLock as Ctrl/Escape
 xmodmap -e "clear Lock"
 setxkbmap -option ctrl:nocaps

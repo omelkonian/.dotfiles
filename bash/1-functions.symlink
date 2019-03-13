@@ -59,3 +59,9 @@ function dyckdot {
     dot -Tpng $wo.dot > $wo.png && eog $wo.png &
   done
 }
+
+# Build PLFA website locally
+function plfa {
+  cd $HOME/git/plfa.github.io-master
+  bundle exec jekyll serve
+}
