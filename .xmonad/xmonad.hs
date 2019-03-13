@@ -42,12 +42,13 @@ myTitleLength    = 50         -- truncate window title to this length
 myCurrentWSColor = "#e6744c"  -- color of active workspace
 myVisibleWSColor = "#c185a7"  -- color of inactive workspace
 myUrgentWSColor  = "#cc0000"  -- color of workspace with 'urgent' window
+myLayoutColor    = "#dddd00"  -- color of the current layout
 myCurrentWSLeft  = "["        -- wrap active workspace with these
 myCurrentWSRight = "]"
 myVisibleWSLeft  = "("        -- wrap inactive workspace with these
 myVisibleWSRight = ")"
-myUrgentWSLeft  = "{"         -- wrap urgent workspace with these
-myUrgentWSRight = "}"
+myUrgentWSLeft   = "{"         -- wrap urgent workspace with these
+myUrgentWSRight  = "}"
 
 myWorkspaces =
   clickable . (map xmobarEscape) $
@@ -118,49 +119,48 @@ confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want
 setVolume mod = "~/.xmonad/set_volume.sh " ++ mod
 
 myKeys =
-  [
-    ((myModMask, xK_b), sendMessage ToggleStruts)
-    , ((myModMask, xK_h), sendMessage Shrink)
-    , ((myModMask, xK_l), sendMessage Expand)
-    , ((myModMask, xK_a), sendMessage MirrorShrink)
-    , ((myModMask, xK_z), sendMessage MirrorExpand)
-    -- Kill
-    , ((myModMask, xK_c), kill)
-    -- Launcher
-    , ((myModMask, xK_p), spawn "synapse")
-    -- Specifix apps
-    , ((myModMask, xK_i), spawn "google-chrome-stable")
-    , ((myModMask, xK_s), spawn "subl")
-    , ((myModMask, xK_f), spawn "nautilus --new-window")
-    -- Focus
-    , ((myModMask, xK_u), focusUrgent)
-    -- Lock
-    , ((myModMask .|. shiftMask, xK_l), spawn "slock")
-    -- Shutdown/Restart
-    , ((myModMask .|. shiftMask, xK_F11), confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now")
-    , ((myModMask .|. shiftMask, xK_F12), confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now")
-    -- Group navigation
-    -- NB: use these for switching between layouts instead
-    -- , ((myModMask, xK_space), nextWS)
-    -- , ((myModMask .|. shiftMask, xK_space), prevWS)
-    -- , ((myModMask, xK_grave), rotAllUp)
-    , ((myModMask, xK_Tab), nextMatch History (return True))
-    -- Volume (desktop keyboard)
-    , ((myModMask, xK_Page_Down), spawn $ setVolume "-5%")
-    , ((myModMask, xK_Page_Up), spawn $ setVolume "+5%")
-    -- Volume (laptop keyboard)
-    , ((0, xF86XK_AudioMute), spawn $ setVolume "0%")
-    , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
-    , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
-    -- Brightness
-    , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight + 20")
-    , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
-    -- Mousepad
-    , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/toggle_mousepad.sh")
-    -- Scroll-click emulation
-    , ((myModMask .|. shiftMask, xK_u), withFocused $ windows . W.sink)
-  ]
-  ++
+  [ -- Layout management
+    ((myModMask, xK_space), sendMessage NextLayout)
+  , ((myModMask, xK_b),     sendMessage ToggleStruts)
+  , ((myModMask, xK_h),     sendMessage Shrink)
+  , ((myModMask, xK_l),     sendMessage Expand)
+  , ((myModMask, xK_a),     sendMessage MirrorShrink)
+  , ((myModMask, xK_z),     sendMessage MirrorExpand)
+  , ((myModMask, xK_Tab),   nextMatch History (return True))
+  -- Kill
+  , ((myModMask, xK_c), kill)
+  -- Launcher
+  , ((myModMask, xK_p), spawn "synapse")
+  -- Specifix apps
+  , ((myModMask, xK_i), spawn "google-chrome-stable")
+  , ((myModMask, xK_s), spawn "subl")
+  , ((myModMask, xK_f), spawn "nautilus --new-window")
+  -- Focus
+  , ((myModMask, xK_u), focusUrgent)
+  -- Lock
+  , ((myModMask .|. shiftMask, xK_l), spawn "slock")
+  -- Shutdown/Restart
+  , ( (myModMask .|. shiftMask, xK_F11)
+    , confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now"
+    )
+  , ( (myModMask .|. shiftMask, xK_F12)
+    , confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now"
+    )
+  -- Volume (desktop keyboard)
+  , ((myModMask, xK_Page_Down), spawn $ setVolume "-5%")
+  , ((myModMask, xK_Page_Up),   spawn $ setVolume "+5%")
+  -- Volume (laptop keyboard)
+  , ((0, xF86XK_AudioMute),        spawn $ setVolume "0%")
+  , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
+  , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
+  -- Brightness
+  , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
+  , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
+  -- Mousepad
+  , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/toggle_mousepad.sh")
+  -- Scroll-click emulation
+  , ((myModMask .|. shiftMask, xK_u), withFocused $ windows . W.sink)
+  ] ++
   [
     ((m .|. myModMask, k), windows $ f i)
        | (i, k) <- zip myWorkspaces numPadKeys
@@ -191,29 +191,6 @@ myMouseBindings _ = M.fromList
   , ((myModMask, button2), const $ withFocused $ windows . W.sink)
   ]
 
--- Loghook
-myBitmapsDir = "/home/orestis/.xmonad/dzen2"
-myLogHook h = dynamicLogWithPP $ def
-    {
-        ppCurrent           =   dzenColor "#ebac54" "#1B1D1E" . pad
-      , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
-      , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
-      , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
-      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad
-      , ppWsSep             =   " "
-      , ppSep               =   "  |  "
-      , ppLayout            =   dzenColor "#ebac54" "#1B1D1E" .
-                                (\x -> case x of
-                                    "ResizableTall" -> "^i(" ++ myBitmapsDir ++ "/tall.xbm)"
-                                    "Mirror ResizableTall" -> "^i(" ++ myBitmapsDir ++ "/mtall.xbm)"
-                                    "Full" -> "^i(" ++ myBitmapsDir ++ "/full.xbm)"
-                                    "Simple Float" -> "~"
-                                    _ -> x
-                                )
-      , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
-      , ppOutput            =   hPutStrLn h
-    }
-
 -- Notifications
 myUrgencyHook = NoUrgencyHook
 
@@ -237,31 +214,33 @@ main = do
     $ withUrgencyHook myUrgencyHook
     $ def {
       focusedBorderColor = myFocusedBorderColor
-    , normalBorderColor = myNormalBorderColor
-    , terminal = myTerminal
-    , borderWidth = myBorderWidth
-    , layoutHook = myLayouts
-    , workspaces = myWorkspaces
-    , modMask = myModMask
-    , mouseBindings = myMouseBindings
-    , handleEventHook = fullscreenEventHook
-    , startupHook = do
-        setWMName "LG3D"
-        windows $ W.greedyView startupWorkspace
-        spawn "~/.xmonad/startup-hook"
-    , manageHook =
-        manageSpawn
-        <+> manageHook def
-        <+> composeAll myManagementHooks
-        <+> manageDocks
+    , normalBorderColor  = myNormalBorderColor
+    , terminal           = myTerminal
+    , borderWidth        = myBorderWidth
+    , layoutHook         = myLayouts
+    , workspaces         = myWorkspaces
+    , modMask            = myModMask
+    , mouseBindings      = myMouseBindings
+    , handleEventHook    = fullscreenEventHook
+    , startupHook = do setWMName "LG3D"
+                       windows $ W.greedyView startupWorkspace
+                       spawn "~/.xmonad/startup-hook"
+    , manageHook = manageSpawn
+               <+> manageHook def
+               <+> composeAll myManagementHooks
+               <+> manageDocks
     , logHook = dynamicLogWithPP xmobarPP {
-        ppOutput = hPutStrLn xmproc
-        , ppTitle = xmobarColor myTitleColor "" . shorten myTitleLength
-        , ppCurrent = xmobarColor myCurrentWSColor "" . wrap myCurrentWSLeft myCurrentWSRight
-        , ppVisible = xmobarColor myVisibleWSColor "" . wrap myVisibleWSLeft myVisibleWSRight
-        , ppUrgent = xmobarColor myUrgentWSColor "" . wrap myUrgentWSLeft myUrgentWSRight
-        , ppSep = " | "
-        , ppLayout = const ""
+          ppOutput  = hPutStrLn xmproc
+        , ppTitle   = xmobarColor myTitleColor ""
+                    . shorten myTitleLength
+        , ppCurrent = xmobarColor myCurrentWSColor ""
+                    . wrap myCurrentWSLeft myCurrentWSRight
+        , ppVisible = xmobarColor myVisibleWSColor ""
+                    . wrap myVisibleWSLeft myVisibleWSRight
+        , ppUrgent  = xmobarColor myUrgentWSColor ""
+                    . wrap myUrgentWSLeft myUrgentWSRight
+        , ppSep     = " | "
+        , ppLayout  = xmobarColor myLayoutColor ""
       } <+> historyHook
     }
     `additionalKeys` myKeys

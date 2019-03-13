@@ -78,5 +78,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%UnsafeStdinReader% }{ { <action=xinput --enable 12>∃</action> <action=xinput --disable 12>∄</action> }     %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
+   template = "%UnsafeStdinReader% }{ { <action=xinput --enable 12>∃</action> <action=xinput --disable 12>∄</action> } %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
 }
