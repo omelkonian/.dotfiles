@@ -5,6 +5,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(coq-prog-name "/home/omelkonian/.opam/4.06.0/bin/coqtop")
  '(custom-safe-themes
 	 (quote
 		("3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default)))
@@ -13,7 +14,11 @@
 	 (quote
 		(("gnu" . "http://elpa.gnu.org/packages/")
 		 ("melpa-stable" . "http://stable.melpa.org/packages/")
-		 ("melpa" . "http://melpa.org/packages/")))))
+		 ("melpa" . "http://melpa.org/packages/"))))
+ '(package-selected-packages
+	 (quote
+		(company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil)))
+ '(proof-three-window-enable t))
 (package-initialize)
 
 ;; Evil mode
@@ -54,11 +59,15 @@
 (add-hook 'TeX-mode-hook 'prettify-symbols-mode)
 
 ;; Coq
-(custom-set-variables '(coq-prog-name "/home/omelkonian/.opam/4.06.0/bin/coqtop") '(proof-three-window-enable t))
+(add-hook 'coq-mode-hook #'company-coq-mode)
 
 ;; Agda
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+
+(add-hook 'agda2-mode-hook
+  (lambda ()
+    (setq agda2-highlight-level 'interactive)))
 
 ;; Setting up Fonts for use with Agda/PLFA on DICE machines:
 ;;
@@ -93,3 +102,14 @@
 (add-to-list 'load-path "~/.emacs.d/sublimity/")
 (require 'sublimity)
 (require 'sublimity-scroll)
+
+;; Ivy (auto-completion)
+;; (ivy-mode 1)
+
+;; Projectile (project management)
+(require 'projectile)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(setq projectile-completion-system 'ivy)
+(setq projectile-project-search-path '("~/git/"))

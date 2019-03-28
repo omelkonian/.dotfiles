@@ -1,9 +1,10 @@
 alias fixKeyboard="ibus-daemon -rd"
 
 # Remap CapsLock as Ctrl/Escape
-xmodmap -e "clear Lock"
-setxkbmap -option ctrl:nocaps
-xcape -e 'Control_L=Escape'
+# xmodmap -e "clear Lock"
+# setxkbmap -option ctrl:nocaps
+# xcape -e 'Control_L=Escape'
+setxkbmap -option caps:escape
 alias caps_off="xdotool key Caps_Lock"
 
 # Set ComposeKey

@@ -58,10 +58,10 @@ Config {
     ] 10,
 
     -- Get current volume
-    Run Com "/bin/bash" ["-c", "~/.xmonad/get_volume.sh"] "vol" 10,
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_volume.sh"] "vol" 10,
 
     -- Get current GPU
-    Run Com "/bin/bash" ["-c", "~/.xmonad/get_gpu.sh"] "gpu" 10,
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_gpu.sh"] "gpu" 10,
 
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.

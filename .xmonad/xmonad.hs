@@ -116,7 +116,7 @@ myManagementHooks =
 confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
 
 -- Sound control
-setVolume mod = "~/.xmonad/set_volume.sh " ++ mod
+setVolume mod = "~/.xmonad/scripts/set_volume.sh " ++ mod
 
 myKeys =
   [ -- Layout management
@@ -157,7 +157,7 @@ myKeys =
   , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
   , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
   -- Mousepad
-  , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/toggle_mousepad.sh")
+  , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
   -- Scroll-click emulation
   , ((myModMask .|. shiftMask, xK_u), withFocused $ windows . W.sink)
   ] ++

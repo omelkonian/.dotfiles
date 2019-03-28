@@ -35,6 +35,7 @@
 
   # Diff
   d = diff --color-words
+  dc = diff --cached --color-words
 
   # Branches
   rs = remote -v
