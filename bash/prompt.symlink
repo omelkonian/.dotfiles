@@ -1,5 +1,5 @@
 # Theme
-PROMPT='%{$fg_bold[green]%}λ %{$reset_color%}' # Զ  λ   𝆑   𝄞   𝄆   𝄢   𝆓
+PROMPT='%{$fg_bold[green]%}λ %{$reset_color%}'
 
 ZLE_RPROMPT_INDENT=0
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[gray]%}(%{$fg_no_bold[yellow]%}%B"

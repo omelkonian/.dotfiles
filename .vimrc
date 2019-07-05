@@ -40,3 +40,4 @@ set incsearch           " search as characters are entered
 set hlsearch            " highlight matches
 set ignorecase          " do case insensitive matching
 set smartcase           " do smart case matching
+

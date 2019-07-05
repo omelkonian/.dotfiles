@@ -17,7 +17,7 @@ alias g++="g++ --std=c++11"
 alias gpp="gpp --std=c++11"
 
 # virtualenv
-. /usr/local/bin/virtualenvwrapper.sh
+# . /usr/local/bin/virtualenvwrapper.sh
 alias mkvenv="mkvirtualenv -p `which python3`"
 
 # Noglobs
@@ -37,3 +37,4 @@ alias grepJava="grepOn java"
 alias grepBash="grepOn symlink"
 alias grepScala="grepOn scala"
 alias grepAgda="grepOn agda"
+alias grepTex="grepOn tex"

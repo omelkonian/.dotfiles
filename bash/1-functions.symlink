@@ -42,9 +42,14 @@ function work {
   cdvirtualenv src/"$1"
 }
 
+# Viewer
+function pdfview {
+  $VIEWER $* &
+}
+
 # Editor
 function edit {
-  ${EDITOR} $1 --add
+  $EDITOR $1 --add
 }
 
 # Domain-specific Grep
@@ -64,4 +69,11 @@ function dyckdot {
 function plfa {
   cd $HOME/git/plfa.github.io-master
   bundle exec jekyll serve
+}
+
+# cd + make + view PDFs
+function makeAt {
+  set -euxo pipefail
+  builtin cd "$1"
+  make ; (evince --class='TeX' *.pdf &)
 }

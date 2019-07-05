@@ -1,37 +1,97 @@
+{-# LANGUAGE LambdaCase #-}
 import XMonad
-import qualified XMonad.StackSet as W
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Grid
-import XMonad.Layout.IM
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.Circle
-import XMonad.Layout.PerWorkspace (onWorkspace)
-import XMonad.Layout.Fullscreen
-import XMonad.Util.EZConfig
-import XMonad.Util.Run
-import XMonad.Util.NamedWindows
-import XMonad.Actions.SpawnOn
-import XMonad.Actions.Plane
-import XMonad.Actions.PhysicalScreens
-import XMonad.Actions.RotSlaves (rotAllUp)
-import XMonad.Actions.CycleWS (nextWS, prevWS, nextScreen, prevScreen)
-import XMonad.Actions.GroupNavigation
-import XMonad.Actions.Navigation2D (navigation2D, windowGo, windowSwap)
-import XMonad.Actions.FlexibleResize as Flex
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.FadeInactive
-import XMonad.Hooks.SetWMName
-
-import Data.Default (def)
-import qualified Data.Map as M
-import Data.Ratio ((%))
+  ( X
+  , XConfig (..)
+  , xmonad
+  , Window, WorkspaceId
+  , Layout (..)
+  , ManageHook
+  , spawn , whenJust
+  , ButtonMask, Button, button1, button2, button3, button4, button5
+  , (<+>), (.|.), (-->), (=?)
+  , KeyMask, mod1Mask, shiftMask, controlMask
+  , KeySym
+  , xK_Left, xK_Right, xK_Up, xK_Down, xK_Return, xK_space
+  , xK_Page_Up, xK_Page_Down, xK_Home, xK_End, xK_Insert, xK_Delete
+  , xK_a, xK_b, xK_c, xK_e, xK_f, xK_h, xK_i, xK_l, xK_m, xK_p, xK_r
+  , xK_s, xK_u, xK_w, xK_z, xK_Tab, xK_F11, xK_F12
+  , xK_0, xK_1, xK_9
+  )
 import Graphics.X11.ExtraTypes.XF86
+  ( xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume
+  , xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
+  )
+import qualified Data.Map                      as M
+import qualified XMonad.StackSet               as W
+import qualified XMonad.Actions.FlexibleResize as Flex
+import Data.Default                   (def)
+import XMonad.Operations              (focus, mouseMoveWindow, sendMessage, kill, windows, withFocused, screenWorkspace)
+import XMonad.Layout                  (Resize (..), Mirror (..), Full (..), (|||), ChangeLayout (..))
+import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
+import XMonad.Layout.NoBorders        (noBorders, smartBorders)
+import XMonad.Layout.Grid             (Grid (..))
+import XMonad.Layout.Fullscreen       (fullscreenEventHook)
+import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className)
+import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
+import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleStruts (..))
+import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
+import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
+import XMonad.Hooks.SetWMName         (setWMName)
+import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
+import XMonad.Util.Run                (spawnPipe, hPutStrLn)
+import XMonad.Actions.SpawnOn         (manageSpawn)
+import XMonad.Actions.Plane           (planeKeys, Lines (..), Limits (..))
+import XMonad.Actions.GroupNavigation (Direction (..), historyHook, nextMatch)
+import XMonad.Actions.Navigation2D    (navigation2D, windowGo, windowSwap)
 
+-- | Main configuration.
+main :: IO ()
+main = do
+  xmproc <- spawnPipe "xmobar"
+  xmonad
+    $ docks
+    $ navigation
+    $ withUrgencyHook myUrgencyHook
+    $ def {
+      focusedBorderColor = myFocusedBorderColor
+    , normalBorderColor  = myNormalBorderColor
+    , terminal           = myTerminal
+    , borderWidth        = myBorderWidth
+    , layoutHook         = myLayouts
+    , workspaces         = myWorkspaces
+    , modMask            = alt
+    , mouseBindings      = myMouseBindings
+    , handleEventHook    = fullscreenEventHook
+    , startupHook        = do setWMName "LG3D"
+                              -- windows $ W.greedyView (ws 1)
+                              spawn "~/.xmonad/startup-hook"
+    , manageHook         = manageSpawn
+                       <+> manageHook def
+                       <+> composeAll myManagementHooks
+                       <+> manageDocks
+    , logHook = dynamicLogWithPP (pp xmproc) <+> historyHook
+    }
+    `additionalKeys` myKeys
+    `removeKeys` (  [(alt, n) | n <- [xK_Left, xK_Right, xK_Up, xK_Down]]
+                 ++ [(alt, xK_Return)])
+  where
+    pp proc = xmobarPP {
+        ppOutput  = hPutStrLn proc
+      , ppTitle   = xmobarColor myTitleColor ""
+                  . shorten myTitleLength
+      , ppCurrent = xmobarColor myCurrentWSColor ""
+                  . wrap myCurrentWSLeft myCurrentWSRight
+      , ppVisible = xmobarColor myVisibleWSColor ""
+                  . wrap myVisibleWSLeft myVisibleWSRight
+      , ppUrgent  = xmobarColor myUrgentWSColor ""
+                  . wrap myUrgentWSLeft myUrgentWSRight
+      , ppSep     = " | "
+      , ppLayout  = xmobarColor myLayoutColor ""
+      }
 
-myModMask            = mod1Mask       -- changes the mod key to "alt"
+-------------------------------------------------------
+-- Styling.
+
 myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 2              -- width of border around windows
@@ -50,6 +110,21 @@ myVisibleWSRight = ")"
 myUrgentWSLeft   = "{"         -- wrap urgent workspace with these
 myUrgentWSRight  = "}"
 
+-------------------------------------------------------
+-- Layouts.
+
+myLayouts
+  = smartBorders
+  $ avoidStruts
+  $ tall ||| Mirror tall ||| full ||| Grid
+  where
+    tall = ResizableTall 1 (3/100) (1/2) []
+    full = noBorders Full
+
+-------------------------------------------------------
+-- Workspaces.
+
+myWorkspaces :: [WorkspaceId]
 myWorkspaces =
   clickable . (map xmobarEscape) $
     [ "1:Mail",   "2:Files",   "3:Edit"
@@ -57,192 +132,143 @@ myWorkspaces =
     , "7:Chat",   "8:Video",  "9:Music"
     , "0:PDF"
     ]
-    where clickable l =
-            [ "<action=xdotool key alt+" ++ show i ++ ">" ++ ws ++ "</action>" |
-              (i,ws) <- zip ([1..9] ++ [0]) l
-            ]
-          xmobarEscape = concatMap doubleLts
-          doubleLts '<' = "<<"
-          doubleLts x   = [x]
+    where
+      clickable l
+        = [ "<action=xdotool key alt+" ++ show i ++ ">" ++ s ++ "</action>"
+          | (i, s) <- zip ([1..9] ++ [0]) l
+          ]
+      xmobarEscape = concatMap (\case '<' -> "<<" ; x -> [x])
 
-indexWs i = myWorkspaces !! (i - 1)
+ws :: Int -> WorkspaceId
+ws 0 = last $ myWorkspaces
+ws i = myWorkspaces !! (i - 1)
 
-numPadKeys =
-  [ xK_KP_End, xK_KP_Down, xK_KP_Page_Down
-  , xK_KP_Left, xK_KP_Begin,xK_KP_Right
-  , xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
-  , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
+navigation :: XConfig l -> XConfig l
+navigation = navigation2D def
+  (xK_Up, xK_Left, xK_Down, xK_Right)
+  [ (alt .|. shift, windowGo),
+    (alt .|. controlMask .|. shift, windowSwap)
   ]
+  True -- wrapping flag
 
-numKeys = [ xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0 ]
-
-startupWorkspace = "None" -- indexWs 4
-
-defaultLayouts = smartBorders $ avoidStruts $ -- modifiers
-  tall ||| Mirror tall ||| noBorders Full ||| Grid -- options
-  where tall = ResizableTall 1 (3/100) (1/2) []
-
-myLayouts =
-  {-onWorkspace "7:Chat" chatLayout $-} defaultLayouts
+-------------------------------------------------------
+-- Hooks.
 
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks =
-  [ appName   =? "synapse"         --> doIgnore
+  [ isFullscreen --> doFullFloat
+  , appName   =? "synapse"         --> doIgnore
   , appName   =? "stalonetray"     --> doIgnore
   , appName   =? "zenity"          --> doFloat
   , appName   =? "Extract archive" --> doFloat
-
-  , className =? "Pdfpc"         --> doFloat
-  , className =? "skype"         --> shift 7
-  , className =? "Thunderbird"   --> shift 1
-  , className =? "Nautilus"      --> shift 2
-  , className =? "totem"         --> shift 9
-  , className =? "Subl"          --> shift 3
-  , className =? "Sublime_text"  --> shift 3
-  , className =? "Atom"          --> shift 5
-  , className =? "Google-chrome" --> shift 6
-  , className =? "Evince"        --> shift 10
-  , className =? "Eog"           --> shift 10
-  , className =? "vlc"           --> shift 8
-  , className =? "totem"         --> shift 8
-  , className =? "Spotify"       --> shift 9
-  , className =? "Slack"         --> shift 9
+  , className =? "Pdfpc"           --> doFloat
+  , className =? "Thunderbird"     --> goto 1
+  , className =? "Nautilus"        --> goto 2
+  , className =? "Atom"            --> goto 5
+  , className =? "Google-chrome"   --> goto 6
+  , className =? "vlc"             --> goto 8
+  , className =? "totem"           --> goto 8
+  , className =? "Spotify"         --> goto 9
+  , className =? "Slack"           --> goto 9
+  , className =? "Evince"          --> goto 10
+  , className =? "TeX"             --> goto 5
+  , className =? "Eog"             --> goto 10
   ]
-  where
-    shift = doF . W.shift . indexWs
-
--- Spawn process with a confirm dialog
-confirmSpawn msg cmd = spawn $ "zenity --question --text \"Are you sure you want to " ++ msg ++  "?\" && " ++ cmd
-
--- Sound control
-setVolume mod = "~/.xmonad/scripts/set_volume.sh " ++ mod
-
-myKeys =
-  [ -- Layout management
-    ((myModMask, xK_space), sendMessage NextLayout)
-  , ((myModMask, xK_b),     sendMessage ToggleStruts)
-  , ((myModMask, xK_h),     sendMessage Shrink)
-  , ((myModMask, xK_l),     sendMessage Expand)
-  , ((myModMask, xK_a),     sendMessage MirrorShrink)
-  , ((myModMask, xK_z),     sendMessage MirrorExpand)
-  , ((myModMask, xK_Tab),   nextMatch History (return True))
-  -- Kill
-  , ((myModMask, xK_c), kill)
-  -- Launcher
-  , ((myModMask, xK_p), spawn "synapse")
-  -- Specifix apps
-  , ((myModMask, xK_i), spawn "google-chrome-stable")
-  , ((myModMask, xK_s), spawn "subl")
-  , ((myModMask, xK_f), spawn "nautilus --new-window")
-  -- Focus
-  , ((myModMask, xK_u), focusUrgent)
-  -- Lock
-  , ((myModMask .|. shiftMask, xK_l), spawn "slock")
-  -- Shutdown/Restart
-  , ( (myModMask .|. shiftMask, xK_F11)
-    , confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && sleep 2 && shutdown -r now"
-    )
-  , ( (myModMask .|. shiftMask, xK_F12)
-    , confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && sleep 2 && shutdown -h now"
-    )
-  -- Volume (desktop keyboard)
-  , ((myModMask, xK_Page_Down), spawn $ setVolume "-5%")
-  , ((myModMask, xK_Page_Up),   spawn $ setVolume "+5%")
-  -- Volume (laptop keyboard)
-  , ((0, xF86XK_AudioMute),        spawn $ setVolume "0%")
-  , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
-  , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
-  -- Brightness
-  , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
-  , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
-  -- Mousepad
-  , ((myModMask .|. shiftMask, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
-  -- Scroll-click emulation
-  , ((myModMask .|. shiftMask, xK_u), withFocused $ windows . W.sink)
-  ] ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numPadKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  M.toList (planeKeys myModMask (Lines 4) Finite) ++
-  [
-    ((m .|. myModMask, key), screenWorkspace sc
-      >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0, 1, 2]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-  ]
-
-myMouseBindings _ = M.fromList
-  [ -- Left-click, Float window and move by dragging
-    ((myModMask, button1), \w -> focus w >> mouseMoveWindow w)
-    -- Right-click, Resize floating window
-  , ((myModMask, button3), \w -> focus w >> Flex.mouseResizeWindow w)
-    -- Scroll, Resize slaves
-  , ((myModMask, button4), const $ sendMessage MirrorExpand)
-  , ((myModMask, button5), const $ sendMessage MirrorShrink)
-    -- Scroll-click, Unfloat window
-  , ((myModMask, button2), const $ withFocused $ windows . W.sink)
-  ]
+  where goto = doF . W.shift . ws
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook
 
--- Navigation
-navigation :: XConfig l -> XConfig l
-navigation = navigation2D
-  def -- default configuration
-  (xK_Up, xK_Left, xK_Down, xK_Right) -- direction keys (U, L, D, R)
-  [ -- modifiers -> actions
-    (myModMask .|. shiftMask, windowGo),
-    (myModMask .|. controlMask .|. shiftMask, windowSwap)
-  ]
-  True -- wrapping flag
+-------------------------------------------------------
+-- Keys.
 
--- Glue all them up.
-main = do
-  xmproc <- spawnPipe "xmobar"
-  xmonad
-    $ docks
-    $ navigation
-    $ withUrgencyHook myUrgencyHook
-    $ def {
-      focusedBorderColor = myFocusedBorderColor
-    , normalBorderColor  = myNormalBorderColor
-    , terminal           = myTerminal
-    , borderWidth        = myBorderWidth
-    , layoutHook         = myLayouts
-    , workspaces         = myWorkspaces
-    , modMask            = myModMask
-    , mouseBindings      = myMouseBindings
-    , handleEventHook    = fullscreenEventHook
-    , startupHook = do setWMName "LG3D"
-                       windows $ W.greedyView startupWorkspace
-                       spawn "~/.xmonad/startup-hook"
-    , manageHook = manageSpawn
-               <+> manageHook def
-               <+> composeAll myManagementHooks
-               <+> manageDocks
-    , logHook = dynamicLogWithPP xmobarPP {
-          ppOutput  = hPutStrLn xmproc
-        , ppTitle   = xmobarColor myTitleColor ""
-                    . shorten myTitleLength
-        , ppCurrent = xmobarColor myCurrentWSColor ""
-                    . wrap myCurrentWSLeft myCurrentWSRight
-        , ppVisible = xmobarColor myVisibleWSColor ""
-                    . wrap myVisibleWSLeft myVisibleWSRight
-        , ppUrgent  = xmobarColor myUrgentWSColor ""
-                    . wrap myUrgentWSLeft myUrgentWSRight
-        , ppSep     = " | "
-        , ppLayout  = xmobarColor myLayoutColor ""
-      } <+> historyHook
-    }
-    `additionalKeys` myKeys
-    `removeKeys` ([(myModMask, n) | n <- [xK_Left, xK_Right, xK_Up, xK_Down]]
-                  ++ [(myModMask, xK_Return)])
+alt, shift :: KeyMask
+alt   = mod1Mask -- meta key
+shift = shiftMask
+
+myKeys :: [((KeyMask, KeySym), X ())]
+myKeys =
+  [ -- Layout management
+    ((alt, xK_space), sendMessage NextLayout)
+  , ((alt, xK_b),     sendMessage ToggleStruts)
+  , ((alt, xK_h),     sendMessage Shrink)
+  , ((alt, xK_l),     sendMessage Expand)
+  , ((alt, xK_a),     sendMessage MirrorShrink)
+  , ((alt, xK_z),     sendMessage MirrorExpand)
+  , ((alt, xK_Tab),   nextMatch History (return True))
+  -- Kill
+  , ((alt, xK_c), kill)
+  -- Launcher
+  , ((alt, xK_p), spawn "synapse")
+  -- Specifix apps
+  , ((alt, xK_i), spawn "google-chrome-stable")
+  , ((alt, xK_s), spawn "subl")
+  , ((alt, xK_f), spawn "nautilus --new-window")
+  -- Focus
+  , ((alt, xK_u), focusUrgent)
+  -- Lock
+  , ((alt .|. shift, xK_l), spawn "slock")
+  -- Shutdown/Restart
+  , ( (alt .|. shift, xK_F11)
+    , confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now"
+    )
+  , ( (alt .|. shift, xK_F12)
+    , confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
+    )
+  -- Volume control
+  , ((0, xF86XK_AudioMute),        spawn $ setVolume "0%")
+  , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
+  , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
+  , ((alt, xK_Delete),             spawn $ setVolume "0%")
+  , ((alt, xK_Page_Down),          spawn $ setVolume "-5%")
+  , ((alt, xK_Page_Up),            spawn $ setVolume "+5%")
+  -- Music controls
+  , ((alt, xK_Insert),              spawn "clementine --play-pause")
+  , ((alt, xK_End),                 spawn "clementine --next")
+  , ((alt, xK_Home),                spawn "clementine --prev")
+  , ((alt .|. shift, xK_Page_Up),   spawn "clementine --seek-by -5")
+  , ((alt .|. shift, xK_Page_Down), spawn "clementine --seek-by +5")
+  -- Brightness
+  , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
+  , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
+  -- Mousepad
+  , ((alt .|. shift, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
+  -- Scroll-click emulation
+  , ((alt .|. shift, xK_u), withFocused $ windows . W.sink)
+  ] ++
+  [
+    ((m .|. alt, k), windows $ f i)
+       | (i, k) <- zip myWorkspaces ([xK_1..xK_9] ++ [xK_0])
+       , (f, m) <- [(W.greedyView, 0), (W.shift, shift)]
+  ] ++
+  M.toList (planeKeys alt (Lines 4) Finite) ++
+  [
+    ((m .|. alt, key), screenWorkspace sc
+      >>= flip whenJust (windows . f))
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0, 1, 2]
+      , (f, m) <- [(W.view, 0), (W.shift, shift)]
+  ]
+  where
+    -- | Spawn process with a confirm dialog.
+    confirmSpawn msg cmd =
+      spawn $ "zenity --question --text \"Are you sure you want to "
+            ++ msg
+            ++  "?\" && "
+            ++ cmd
+
+    -- | Sound control.
+    setVolume vol = "~/.xmonad/scripts/set_volume.sh " ++ vol
+
+myMouseBindings :: XConfig Layout -> M.Map (ButtonMask, Button) (Window -> X ())
+myMouseBindings _ = M.fromList
+  [ -- Left-click, Float window and move by dragging
+    ((alt, button1), \w -> focus w >> mouseMoveWindow w)
+    -- Right-click, Resize floating window
+  , ((alt, button3), \w -> focus w >> Flex.mouseResizeWindow w)
+    -- Scroll, Resize slaves
+  , ((alt, button4), const $ sendMessage MirrorExpand)
+  , ((alt, button5), const $ sendMessage MirrorShrink)
+    -- Scroll-click, Unfloat window
+  , ((alt, button2), const $ withFocused $ windows . W.sink)
+  ]

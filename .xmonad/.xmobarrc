@@ -1,9 +1,28 @@
 -- xmobar configuration file
 
 Config {
+  -- General options
+  lowerOnStart     = False,
+  hideOnStart      = False,
+  -- overrideRedirect = False,
+  -- persistent       = False,
+  -- wmClass          = "xmobar",
+  -- wmName           = "xmobar",
+  -- border           = NoBorder,
+  -- borderColor      = "#BFBFBF",
+  -- borderWidth      = 1,
+  -- textOffset       = -1,
+  -- textOffsets      = [],
+  -- iconOffset       = -1,
+  -- allDesktops      = True,
+  -- pickBroadest     = False,
+  -- alpha            = 255,
+  -- verbose          = True,
+
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
   font = "xft:Monospace-10",
+  additionalFonts = [],
 
   bgColor = "black",
   fgColor = "white",
@@ -16,19 +35,13 @@ Config {
   -- of your screen.
   position = TopW L 90,
 
-  -- General options
-  -- lowerOnStart = False,
-  -- hideOnStart = False,
-  -- persistent = True,
-  -- overrideRedirect = False,
-  -- allDesktops = True,
-
   -- list of commands which gather information about your system for
   -- presentation in the bar.
   commands = [
     -- Gather and format CPU usage information.
     -- If it's above 50%, we consider it high usage and make it red.
     Run Cpu [
+      "-t","<icon=cpu.xbm/> <total>%",
       "--low","white",
       "--normal","yellow",
       "--high","red"
@@ -36,25 +49,29 @@ Config {
 
     -- Gather and format memory usage information
     Run Memory [
-      "-t","Mem: <usedratio>%",
+      "-t","<icon=mem.xbm/> <usedratio>%",
       "--low","white",
       "--normal","yellow",
       "--high","red"
     ] 10,
 
-    Run Swap [] 10,
+    Run Swap ["-t", "<icon=left-right-cursor.xbm/> <usedratio>%"] 10,
 
     -- Date formatting
-    Run Date "%a %b %_d %l:%M" "date" 10,
+    Run Date "%a %b %_d %l:%M:%S" "date" 10,
 
     -- Battery information. This is likely to require some customization
     -- based upon your specific hardware. Or, for a desktop you may want
     -- to just remove this section entirely.
-    Run Battery [
-      "-t", "<acstatus>: <left>%",
+    Run BatteryP ["BAT0"] [
+      "-t", "<acstatus> <left>%",
       "--low", "red",
       "--normal","yellow",
-      "--high","green"
+      "--high","green",
+      "--",
+      "-O", "<icon=power-ac.xbm/>",
+      "-i", "<icon=power-ac.xbm/>",
+      "-o", "<icon=power-bat2.xbm/>"
     ] 10,
 
     -- Get current volume
@@ -65,11 +82,11 @@ Config {
 
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
-    --Run StdinReader
+    -- Run StdinReader
     Run UnsafeStdinReader
    ],
 
-   -- Separator character used to wrape variables in the xmobar template
+   -- Separator character used to wrap variables in the xmobar template
    sepChar = "%",
 
    -- Alignment separater characer used in the xmobar template. Everything
@@ -78,5 +95,14 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%UnsafeStdinReader% }{ { <action=xinput --enable 12>∃</action> <action=xinput --disable 12>∄</action> } %battery% | %cpu% | %memory% | %swap% | Vol: %vol% | GPU: %gpu%   <fc=#e6744c>%date%</fc>   "
+   -- template = "%StdinReader% }{ %battery% | %cpu%"
+   template = "%UnsafeStdinReader% }{\
+     \ %battery%\
+     \ | %cpu%\
+     \ | %memory% %swap%\
+     \ | <icon=vol-hi.xbm/> %vol%\
+     \ | <fc=#E6744C>%date%</fc>\
+     \ | <action=spd-say 'bebop bebap bebop bop di bop di ba ba bebop bebap bebop bop di bop di ba ba'><icon=trumpet.xbm/></action>\
+     \ | <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
+     \    "
 }

@@ -2,3 +2,4 @@
 alias gr_time="sudo timedatectl set-timezone Europe/Athens"
 alias cet_time="sudo timedatectl set-timezone Europe/Zurich"
 alias us_time="sudo timedatectl set-timezone America/New_York"
+alias uk_time="sudo timedatectl set-timezone Europe/London"

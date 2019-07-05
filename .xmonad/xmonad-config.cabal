@@ -1,0 +1,26 @@
+name:          xmonad-config
+version:       0.15
+synopsis:      My XMonad Configuration
+homepage:      https://github.com/omelkonian/.dotfiles
+author:        Orestis Melkonian <melkon.or@gmail.com>
+maintainer:    Orestis Melkonian <melkon.or@gmail.com>
+category:      Configuration
+build-type:    Simple
+cabal-version: >=1.8
+
+------------------------------------------------------------------------------
+executable xmonad-config
+  main-is:       xmonad.hs
+
+  ghc-options:   -Wall
+                 -Werror
+                 -fno-warn-missing-signatures
+                 -fno-warn-type-defaults
+
+  build-depends: base           >= 4.7  && < 5,
+                 xmonad         == 0.15,
+                 xmonad-contrib == 0.15,
+                 X11            == 1.9,
+                 data-default   == 0.7.1.1,
+                 containers     == 0.6.0.1
+

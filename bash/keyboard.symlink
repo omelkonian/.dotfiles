@@ -1,22 +1,11 @@
 alias fixKeyboard="ibus-daemon -rd"
 
-# Remap CapsLock as Ctrl/Escape
-# xmodmap -e "clear Lock"
-# setxkbmap -option ctrl:nocaps
-# xcape -e 'Control_L=Escape'
-setxkbmap -option caps:escape
-alias caps_off="xdotool key Caps_Lock"
-
-# Set ComposeKey
-input_module=xim
-export GTK_IM_MODULE=$input_module
-export XMODIFIERS=@im=$input_module
-export QT_IM_MODULE=$input_module
-export XCOMPOSEFILE='~/.XCompose'
-setxkbmap -option compose:menu
-
 # Set layout
 setxkbmap us
+
+# Remap CapsLock as Ctrl/Escape
+setxkbmap -option caps:escape
+alias caps_off="xdotool key Caps_Lock"
 
 # Language switch
 setxkbmap -layout us,gr -option grp:shifts_toggle # -option grp:rwin_toggle

@@ -75,8 +75,7 @@
 	"remember_open_folders": true,
 	"rulers":
 	[
-		80,
-		150
+		80
 	],
 	"shift_tab_unindent": true,
 	"show_full_path": true,

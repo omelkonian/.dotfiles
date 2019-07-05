@@ -34,6 +34,3 @@ eval "$(stack --bash-completion-script stack)"
 for file in ~/git/.dotfiles/bash/*.symlink ; do
     . $file
 done
-
-# OPAM configuration
-. /home/omelkonian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

@@ -4,25 +4,8 @@ add_to_path /usr/sbin
 add_to_path /usr/bin
 add_to_path /sbin
 add_to_path /bin
-add_to_path ~/bin
 add_to_path /opt/ros/indigo/bin
-add_to_path /usr/local/sbin:/usr/local/bin
-add_to_path /opt/idea-IU-141.2735.5/bin/
-
-# kwalitee binary file
-add_to_path ~/.local/bni
-
-# Play framework
-add_to_path /opt/Activator/bin/
-
-# EclipseCLP
-add_to_path ~/EclipseCLP/eclipse_basic/bin/x86_64_linux
-
-# Intellij
-add_to_path /home/orestis/Intellij/bin
-
-# idris
-add_to_path ~/Idris/.cabal-sandbox/bin
+add_to_path ~/bin
 
 # Haskell
 add_to_path ~/.local/bin
@@ -31,17 +14,15 @@ add_to_path ~/.cabal/bin
 #   add_to_LD_path $d
 # done
 
-# HOL
-add_to_path ~/HOL/bin
+#GHC
+add_to_path /opt/ghc/bin
 
 # GCC
 add_to_LD_path /usr/lib32
 add_to_LD_path /usr/lib
 
-add_to_path ~/MathSAT/bin
+# idris
+add_to_path ~/Idris/.cabal-sandbox/bin
 
-# Sencha
-add_to_path /usr/bin/Sencha/Cmd/4.0.5.87
-
-#GHC
-add_to_path /opt/ghc/bin
+# HOL
+add_to_path ~/HOL/bin

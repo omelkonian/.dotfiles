@@ -10,8 +10,52 @@ function mp3_to_wav {
 
 # Editing
 function extract_left_channel {
-  sox $1.wav -c 1 "$1"_L.wav remix 1
+  sox $1 -c 1 "${1%.*}"_L.wav remix 1
 }
 function extract_right_channel {
-  sox $1.wav -c 1 "$1"_R.wav remix 2
+  fname="${1%.*}"
+  sox $1 -c 1 "${1%.*}"_R.wav remix 2
 }
+
+# Speaker test
+alias check_channels="play ~/Sounds/hypnotic_L.wav && play ~/Sounds/hypnotic_R.wav"
+
+# Spotify
+alias rip='spotify-ripper -d $MUSIC_ROOT'
+alias rip_local='spotify-ripper -d $LOCAL_MUSIC_ROOT'
+
+# Sink management (Pulse Audio)
+function searchSink {
+  pactl list sinks | grep $1 -B 2 | grep 'Sink #' | grep -o -E '[[:digit:]]+'
+}
+
+function getSinkIndex {
+  internal=$(searchSink "Name:.*alsa_output.pci")
+  external=$(searchSink "Name:.*Saffire")
+  bluetooth=$(searchSink "Name:.*bluez")
+
+  if [[ $bluetooth ]]; then
+    i=$bluetooth
+  elif [[ $external ]]; then
+    i=$external
+  elif [[ $internal ]]; then
+    i=$internal
+  else
+    i=0
+  fi
+  echo $i
+}
+
+function getSinkVolume {
+  i=$(getSinkIndex)
+  pactl list sinks | grep "Sink #${i}" -A10 | grep -o -E '[[:digit:]]+%' | head -1
+}
+
+function setSinkVolume {
+  i=$(getSinkIndex)
+  pactl set-sink-volume $i $1
+}
+
+# function getDefaultSink {
+#   pacmd list-sinks | awk '$1 == "*" && $2 == "index:" {print $3}'
+# }

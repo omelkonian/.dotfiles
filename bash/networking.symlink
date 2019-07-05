@@ -1,7 +1,14 @@
+WIFI="wlp2s0"
+ETHERNET="eth0"
+
 alias fixBluetooth="sudo modprobe rtbth"
+alias lsNetwork="sudo lshw -C network"
+alias fixNetwork="sudo dpkg-reconfigure network-manager"
+
 function fixWifi {
-  sudo ifconfig eno1 up
+  sudo ifconfig $WIFI down
   sudo service network-manager restart
+  sudo ifconfig $WIFI up
 }
 
 # IP

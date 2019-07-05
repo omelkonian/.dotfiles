@@ -1,7 +1,7 @@
 # ROS
-export ROS_VERSION='kinetic'
-source /opt/ros/$ROS_VERSION/setup.zsh
-add_to_path /opt/ros/$ROS_VERSION/bin
+# export ROS_VERSION='kinetic'
+# source /opt/ros/$ROS_VERSION/setup.zsh
+# add_to_path /opt/ros/$ROS_VERSION/bin
 # export ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/orestis/rosjava/devel/share/maven
 # export ROS_MAVEN_PATH=/home/orestis/rosjava/devel/share/maven
 
@@ -32,8 +32,15 @@ eval "$(pyenv virtualenv-init -)"
 
 # OPAM (OCaml)
 eval $(opam config env)
+. /home/omelkonian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Spotify setup
 export SPOTIPY_CLIENT_ID='3035f03a789149968ccf80e5f0a824f4'
 export SPOTIPY_CLIENT_SECRET='3f200238bff34b9db8baa3b69bbb2f09'
 export SPOTIPY_REDIRECT_URI='http://www.purple.com'
+
+# Qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# npm
+add_to_path $HOME/.npm-global/bin
