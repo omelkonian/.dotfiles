@@ -24,7 +24,7 @@ alias check_channels="play ~/Sounds/hypnotic_L.wav && play ~/Sounds/hypnotic_R.w
 alias rip='spotify-ripper -d $MUSIC_ROOT'
 alias rip_local='spotify-ripper -d $LOCAL_MUSIC_ROOT'
 
-# Sink management (Pulse Audio)
+## Sink management (Pulse Audio)
 function searchSink {
   pactl list sinks | grep $1 -B 2 | grep 'Sink #' | grep -o -E '[[:digit:]]+'
 }
@@ -43,6 +43,7 @@ function getSinkIndex {
   else
     i=0
   fi
+  pacmd set-default-sink $i
   echo $i
 }
 
@@ -59,3 +60,34 @@ function setSinkVolume {
 # function getDefaultSink {
 #   pacmd list-sinks | awk '$1 == "*" && $2 == "index:" {print $3}'
 # }
+
+## Music controls
+function audio__play_pause {
+  if [ -n "$(pgrep clementine)" ] ; then
+    clementine --play-pause
+
+  fi
+  if [ -n "$(pgrep rhythmbox)" ] ; then
+    rhythmbox-client --play-pause
+  fi
+}
+
+function audio__next {
+  if [ -n "$(pgrep clementine)" ] ; then
+    clementine --next
+
+  fi
+  if [ -n "$(pgrep rhythmbox)" ] ; then
+    rhythmbox-client --next
+  fi
+}
+
+function audio__prev {
+  if [ -n "$(pgrep clementine)" ] ; then
+    clementine --prev
+
+  fi
+  if [ -n "$(pgrep rhythmbox)" ] ; then
+    rhythmbox-client --prev
+  fi
+}

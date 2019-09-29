@@ -43,3 +43,6 @@ function uuvm {
 
 # Storage IP
 export STORAGE_IP="137.224.145.233"
+
+# UoE Informatics Server
+alias ssh_uoe="ssh s2000146@ssh.inf.ed.ac.uk"

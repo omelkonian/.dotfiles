@@ -2,5 +2,5 @@ EDITOR='subl'
 VIEWER='evince'
 DROPBOX_BACKUP_FOLDER=~/Dropbox/Backup/
 MUSIC_ROOT='/media/omelkonian/TOSHIBA EXT/Music/'
-LOCAL_MUSIC_ROOT='~/Music'
+LOCAL_MUSIC_ROOT='home/omelkonian/Music'
 CPU_CORES=`nproc --all`

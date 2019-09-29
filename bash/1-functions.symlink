@@ -77,3 +77,34 @@ function makeAt {
   builtin cd "$1"
   make ; (evince --class='TeX' *.pdf &)
 }
+
+function list_repositories {
+  grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
+  cut -f2- -d: |\
+  cut -f2 -d' ' |\
+  sed -re 's#http://ppa\.launchpad\.net/([^/]+)/([^/]+)(.*?)$#ppa:\1/\2#g'
+}
+
+# List all PPA repositories
+function list_ppa {
+  grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
+  cut -f2- -d: |\
+  cut -f2 -d' ' |\
+  sed -re 's#http://ppa\.launchpad\.net/([^/]+)/([^/]+)(.*?)$#ppa:\1/\2#g' |\
+  grep '^ppa:'
+}
+
+# UoE Printing
+function print_bw {
+  for f in $@
+  do
+    lpr -P Cloud-Mono $f
+  done
+}
+
+function print_cl {
+  for f in $@
+  do
+    lpr -P Cloud-Colour $f
+  done
+}

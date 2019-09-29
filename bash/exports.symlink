@@ -44,3 +44,6 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 # npm
 add_to_path $HOME/.npm-global/bin
+
+# UoE printing username
+export CUPS_USER='s2000146'

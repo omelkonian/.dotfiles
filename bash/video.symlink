@@ -1,4 +1,27 @@
-alias restart_xserver="sudo systemctl restart lightdm.service"
+alias restart_xserver="sudo service lightdm.service restart"
+
+function getBuiltinScreen {
+  host=$(hostname)
+  case $host in
+    "omelkonian-XPS-15-9560") # Dell
+      echo "eDP1" ;;
+    *) # HP
+      echo "LVDS1" ;;
+  esac
+}
+
+# Setup screen variables, depending on host machine
+HDMI="HDMI1"
+BUILTIN=$(getBuiltinScreen)
+
+ # xrandr utilities
+function mirrorScreens {
+  xrandr --output $BUILTIN --auto --output $HDMI --auto
+}
+
+function setResolution {
+  xrandr --output $HDMI --mode $1
+}
 
 # Image editing
 function ogv2gif {
@@ -25,3 +48,9 @@ function rotate {
   ffmpeg -i "$2" -map_metadata 0 -metadata:s:v rotate="$1" -codec copy R"$2" \
    && mv R"$2" "$2"
 }
+
+function reminderAt {
+  sleep $*
+  notify-send "Friendly Reminder" "Time for questions!! Stop it!!"
+}
+
