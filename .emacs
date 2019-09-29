@@ -280,6 +280,8 @@
   "Face used for site command in LaTeX.")
 (defface my/todo '((t (:inherit font-lock-function-name-face :foreground "tomato")))
   "Face used for TODO command in LaTeX.")
+(defface my/alert '((t (:inherit font-lock-function-name-face :foreground "dark orange")))
+  "Face used for TODO command in LaTeX.")
 
 (add-hook 'latex-mode-hook (lambda ()
   ; remove keywords-3 (_ leading to suscript)
@@ -326,15 +328,20 @@
 	    ("\\textbf"   . "B")
 	    ))
 	(font-lock-add-keywords nil
-	 	'(("\\\\title{\\(.*\\)}" 1 'my/title t)
-      ("\\\\subtitle{\\(.*\\)}" 1 'my/section t)
-	 	  ("\\\\section{\\(.*\\)}" 1 'my/section t)
-	 	  ("\\\\subsection{\\(.*\\)}" 1 'my/subsection t)
+	 	'(; Basic
+      ("\\\\title{\\(.*\\)}"         1 'my/title t)
+      ("\\\\subtitle{\\(.*\\)}"      1 'my/section t)
+	 	  ("\\\\section{\\(.*\\)}"       1 'my/section t)
+	 	  ("\\\\subsection{\\(.*\\)}"    1 'my/subsection t)
 	 	  ("\\\\subsubsection{\\(.*\\)}" 1 'my/subsubsection t)
-	 	  ("\\\\paragraph{\\(.*\\)}" 1 'my/paragraph t)
-	 	  ("\\\\site{\\(.*\\)}" 1 'my/site t)
-	 	  ("\\\\TODO{\\(.*\\)}" 1 'my/todo t)
-      ("\\\\frame{\\(.*\\)}" 1 'my/section t)
+	 	  ("\\\\paragraph{\\(.*\\)}"     1 'my/paragraph t)
+      ; Beamer
+      ("\\\\begin{frame}{\\(.*\\)}"  1 'my/section t)
+      ("\\\\alert{\\(.*\\)}"         1 'my/alert t)
+      ("\\\\alertblock{\\(.*\\)}"    1 'my/alert t)
+      ; Custom macros
+      ("\\\\site{\\(.*\\)}"          1 'my/site t)
+      ("\\\\TODO{\\(.*\\)}"          1 'my/todo t)
 	 	  ))
 	(prettify-symbols-mode)))
 
@@ -377,10 +384,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq auto-mode-alist
  	(append
- 	 	'(("\\.tex\\'"   . latex-mode)
- 	 	  ("\\.lhs\\'"   . latex-mode)
- 	 	  ("\\.lagda\\'" . latex-mode)
- 	 	  ; '("\\.agda\\'"  . agda2-mode)
+ 	 	'(("\\.tex\\'"      . latex-mode)
+ 	 	  ("\\.lhs\\'"      . latex-mode)
+ 	 	  ("\\.lagda\\'"    . latex-mode)
+      ("\\.agda\\'"     . agda2-mode)
+      ("\\.lagda.md\\'" . agda2-mode)
  	 	  )
  	 	auto-mode-alist))
- 	 	; (delete '("\\.l?agda\\'" . agda2-mode) auto-mode-alist)))
