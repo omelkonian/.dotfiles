@@ -34,7 +34,7 @@ import XMonad.Layout.Fullscreen       (fullscreenEventHook)
 import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleStruts (..))
-import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
+-- import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
 import XMonad.Hooks.SetWMName         (setWMName)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
@@ -157,8 +157,8 @@ navigation = navigation2D def
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks =
-  [ isFullscreen --> doFullFloat
-  , appName   =? "synapse"         --> doIgnore
+  [ -- isFullscreen --> doFullFloat
+    appName   =? "synapse"         --> doIgnore
   , appName   =? "stalonetray"     --> doIgnore
   , appName   =? "zenity"          --> doFloat
   , appName   =? "Extract archive" --> doFloat
@@ -224,11 +224,9 @@ myKeys =
   , ((alt, xK_Page_Down),          spawn $ setVolume "-5%")
   , ((alt, xK_Page_Up),            spawn $ setVolume "+5%")
   -- Music controls
-  , ((alt, xK_Insert),              spawn "clementine --play-pause")
-  , ((alt, xK_End),                 spawn "clementine --next")
-  , ((alt, xK_Home),                spawn "clementine --prev")
-  , ((alt .|. shift, xK_Page_Up),   spawn "clementine --seek-by -5")
-  , ((alt .|. shift, xK_Page_Down), spawn "clementine --seek-by +5")
+  , ((alt, xK_Insert),              spawn $ musicCtrl "play/pause")
+  , ((alt, xK_End),                 spawn $ musicCtrl "next")
+  , ((alt, xK_Home),                spawn $ musicCtrl "prev")
   -- Brightness
   , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
   , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
@@ -259,6 +257,8 @@ myKeys =
 
     -- | Sound control.
     setVolume vol = "~/.xmonad/scripts/set_volume.sh " ++ vol
+    -- | Music control.
+    musicCtrl cmd = "~/.xmonad/scripts/audio_controls.sh " ++ cmd
 
 myMouseBindings :: XConfig Layout -> M.Map (ButtonMask, Button) (Window -> X ())
 myMouseBindings _ = M.fromList

@@ -17,28 +17,6 @@ start "thunderbird"
 slack &
 echo "Apps started"
 
-
-if [ "$(hostname)" == "omelkonian-XPS-15-9560" ]; then
-    # Dell
-    HDMI="HDMI1"
-    BUILTIN="eDP1"
-else
-    # HP
-    HDMI="HDMI1"
-    BUILTIN="LVDS1"
-fi
-echo "Laptop variables set"
-
-
-if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
-    # Docked
-    xrandr --output $BUILTIN --off --output $HDMI --auto
-else
-    # Undocked
-    xrandr --output $BUILTIN --auto
-fi
-echo "Monitors configured"
-
 if [ -n "$(pgrep trayer)" ] ; then
     kill $(pgrep trayer)
 fi
@@ -51,3 +29,17 @@ echo "Wallpaper set"
 
 source ~/.zshrc
 echo "ZSH run"
+
+# Setup screen variables, depending on host machine
+HDMI="HDMI1"
+BUILTIN=$(getBuiltinScreen)
+
+if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
+    # Docked
+    xrandr --output $BUILTIN --off --output $HDMI --auto
+else
+    # Undocked
+    xrandr --output $BUILTIN --auto
+fi
+
+echo "Screens configured"
