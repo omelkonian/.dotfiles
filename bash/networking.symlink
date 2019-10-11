@@ -46,3 +46,13 @@ export STORAGE_IP="137.224.145.233"
 
 # UoE Informatics Server
 alias ssh_uoe="ssh s2000146@ssh.inf.ed.ac.uk"
+
+# Transmission
+function transmission_safe {
+  case $(nordvpn status | head -n1) in
+    "Status: Connected")
+      transmission-gtk $@ ;;
+    *)
+      notify-send "NO VPN" ;;
+  esac
+}

@@ -1,8 +1,7 @@
 alias restart_xserver="sudo service lightdm.service restart"
 
 function getBuiltinScreen {
-  host=$(hostname)
-  case $host in
+  case $(hostname) in
     "omelkonian-XPS-15-9560") # Dell
       echo "eDP1" ;;
     *) # HP
