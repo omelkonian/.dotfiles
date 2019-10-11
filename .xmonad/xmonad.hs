@@ -33,6 +33,7 @@ import XMonad.Layout.Grid             (Grid (..))
 import XMonad.Layout.Fullscreen       (fullscreenEventHook)
 import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
+import XMonad.Hooks.EwmhDesktops      (ewmh)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleStruts (..))
 -- import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
@@ -49,6 +50,7 @@ main :: IO ()
 main = do
   xmproc <- spawnPipe "xmobar"
   xmonad
+    $ ewmh
     $ docks
     $ navigation
     $ withUrgencyHook myUrgencyHook

@@ -80,6 +80,9 @@ Config {
     -- Get current GPU
     Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_gpu.sh"] "gpu" 10,
 
+    -- Get VPN status
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_vpn.sh"] "vpn" 10,
+
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
     -- Run StdinReader
@@ -102,6 +105,7 @@ Config {
      \ | %memory% %swap%\
      \ | <icon=vol-hi.xbm/> %vol%\
      \ | <fc=#E6744C>%date%</fc>\
+     \ | VPN: %vpn%\
      \ | <action=spd-say 'bebop bebap bebop bop di bop di ba ba bebop bebap bebop bop di bop di ba ba'><icon=trumpet.xbm/></action>\
      \ | <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
      \    "
