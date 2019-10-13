@@ -5,16 +5,18 @@ alias unmute="pacmd set-sink-mute 0 0"
 
 # Conversion
 function mp3_to_wav {
-  lame --decode $1.mp3 $1.wav
+  fname=${1%.*}
+  lame --decode ${fname}.mp3 ${fname}.wav
 }
 
 # Editing
 function extract_left_channel {
-  sox $1 -c 1 "${1%.*}"_L.wav remix 1
+  fname="${1%.*}"
+  sox ${fname}.wav -c 1 ${fname}_L.wav remix 1
 }
 function extract_right_channel {
   fname="${1%.*}"
-  sox $1 -c 1 "${1%.*}"_R.wav remix 2
+  sox ${fname}.wav -c 1 ${fname}_R.wav remix 2
 }
 
 # Speaker test
