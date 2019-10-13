@@ -1,20 +1,12 @@
 #!/bin/bash
-
 function start {
-    if [ -z "$(pgrep $1)" ] ; then
-        $1 &
+  for p in $@
+    p_name=${p%% *}
+    if [ -z "$(pgrep $p_name)" ] ; then
+        $p &
     fi
 }
-if [ -z "$(pgrep nm-applet)" ] ; then
-    nm-applet --sm-disable &
-fi
-if [ -z "$(pgrep synapse)" ] ; then
-    synapse -s &
-fi
-# start email client
-start "thunderbird"
-# start Slack
-slack &
+start "thunderbird" "slack" "nm-applet --sm-disable" "synapse -s"
 echo "Apps started"
 
 if [ -n "$(pgrep trayer)" ] ; then
@@ -41,5 +33,4 @@ else
     # Undocked
     xrandr --output $BUILTIN --auto
 fi
-
 echo "Screens configured"

@@ -108,3 +108,22 @@ function print_cl {
     lpr -P Cloud-Colour $f
   done
 }
+
+function git_check_all_folders {
+  builtin cd $GIT_ROOT
+  for d in */
+  do
+    if [ ! -d $d/.git ]; then
+      for dd in $d*/
+      do
+        if [ -d $d/.git ] && [ -n "$(git -C $d status --porcelain)" ]; then
+          echo $dd
+        fi
+      done
+    else
+      if [ -n "$(git -C $d status --porcelain)" ]; then
+        echo $d
+      fi
+    fi
+  done
+}
