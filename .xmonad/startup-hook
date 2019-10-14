@@ -1,12 +1,14 @@
 #!/bin/bash
 function start {
-  for p in $@
-    p_name=${p%% *}
-    if [ -z "$(pgrep $p_name)" ] ; then
-        $p &
-    fi
+  p_name=${1%% *}
+  if [ -z "$(pgrep $p_name)" ] ; then
+    $1 &
+  fi
 }
-start "thunderbird" "slack" "nm-applet --sm-disable" "synapse -s"
+start "thunderbird"
+start "slack"
+start "nm-applet --sm-disable"
+start "synapse -s"
 echo "Apps started"
 
 if [ -n "$(pgrep trayer)" ] ; then
