@@ -33,6 +33,6 @@ if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
     xrandr --output $BUILTIN --off --output $HDMI --auto
 else
     # Undocked
-    xrandr --output $BUILTIN --auto
+    xrandr --output $BUILTIN --auto --output $HDMI --off
 fi
 echo "Screens configured"
