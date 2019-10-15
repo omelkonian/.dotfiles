@@ -110,13 +110,14 @@ function print_cl {
 }
 
 function git_check_all_folders {
+  curDir=$(pwd)
   builtin cd $GIT_ROOT
-  for d in */
+  for d in */ .*/
   do
     if [ ! -d $d/.git ]; then
       for dd in $d*/
       do
-        if [ -d $d/.git ] && [ -n "$(git -C $d status --porcelain)" ]; then
+        if [ -d $dd/.git ] && [ -n "$(git -C $dd status --porcelain)" ]; then
           echo $dd
         fi
       done
@@ -126,4 +127,5 @@ function git_check_all_folders {
       fi
     fi
   done
+  builtin cd $curDir
 }
