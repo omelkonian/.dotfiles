@@ -72,6 +72,9 @@ function audio__play_pause {
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --play-pause
   fi
+  if [ -n "$(pgrep yarock)" ] ; then
+    yarock --play-pause
+  fi
 }
 
 function audio__next {
@@ -82,6 +85,9 @@ function audio__next {
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --next
   fi
+  if [ -n "$(pgrep yarock)" ] ; then
+    yarock --next
+  fi
 }
 
 function audio__prev {
@@ -91,5 +97,8 @@ function audio__prev {
   fi
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --prev
+  fi
+  if [ -n "$(pgrep yarock)" ] ; then
+    yarock --previous
   fi
 }
