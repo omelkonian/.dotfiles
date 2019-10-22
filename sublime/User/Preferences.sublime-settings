@@ -85,7 +85,7 @@
 	"tab_size": 2,
 	"theme": "ayu-light.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"trim_trailing_white_space_on_save": true,
+	"trim_trailing_white_space_on_save": false,
 	"use_tab_stops": true,
 	"vintage_start_in_command_mode": true,
 	"vintageous_use_ctrl_keys": null,
