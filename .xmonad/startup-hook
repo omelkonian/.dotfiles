@@ -1,19 +1,15 @@
 #!/bin/bash
-function start {
-  p_name=${1%% *}
-  if [ -z "$(pgrep $p_name)" ] ; then
-    $1 &
-  fi
-}
-start "thunderbird"
-start "slack"
-start "nm-applet --sm-disable"
-start "synapse -s"
+
+source ~/.zshrc
+echo "ZSH run"
+
+start_app "thunderbird"
+start_app "slack"
+start_app "nm-applet --sm-disable"
+start_app "synapse -s"
 echo "Apps started"
 
-if [ -n "$(pgrep trayer)" ] ; then
-    kill $(pgrep trayer)
-fi
+kill_app "trayer"
 # trayer --edge top --monitor primary --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --height 12 --transparent true --tint 0x000000 &
 trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 19 --transparent true --alpha 0 --tint 0x000000 &
 echo "Icon tray spawned"
@@ -21,18 +17,6 @@ echo "Icon tray spawned"
 nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg
 echo "Wallpaper set"
 
-source ~/.zshrc
-echo "ZSH run"
-
-# Setup screen variables, depending on host machine
-HDMI="HDMI1"
-BUILTIN=$(getBuiltinScreen)
-
-if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
-    # Docked
-    xrandr --output $BUILTIN --off --output $HDMI --auto
-else
-    # Undocked
-    xrandr --output $BUILTIN --auto --output $HDMI --off
-fi
+# Setup screen variables
+setup_screens
 echo "Screens configured"

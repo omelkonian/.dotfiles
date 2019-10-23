@@ -75,7 +75,7 @@ Config {
     ] 10,
 
     -- Get current volume
-    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_volume.sh"] "vol" 10,
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/audio_controls.sh 'get_volume'"] "vol" 10,
 
     -- Get current GPU
     Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_gpu.sh"] "gpu" 10,

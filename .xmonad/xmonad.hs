@@ -219,19 +219,19 @@ myKeys =
     , confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
     )
   -- Volume control
-  , ((0, xF86XK_AudioMute),        spawn $ setVolume "0%")
-  , ((0, xF86XK_AudioLowerVolume), spawn $ setVolume "-5%")
-  , ((0, xF86XK_AudioRaiseVolume), spawn $ setVolume "+5%")
-  , ((alt, xK_Delete),             spawn $ setVolume "0%")
-  , ((alt, xK_Page_Down),          spawn $ setVolume "-5%")
-  , ((alt, xK_Page_Up),            spawn $ setVolume "+5%")
+  , ((0, xF86XK_AudioMute),        spawn $ audioCtrl "set_volume 0%")
+  , ((0, xF86XK_AudioLowerVolume), spawn $ audioCtrl "set_volume -5%")
+  , ((0, xF86XK_AudioRaiseVolume), spawn $ audioCtrl "set_volume +5%")
+  , ((alt, xK_Delete),             spawn $ audioCtrl "set_volume 0%")
+  , ((alt, xK_Page_Down),          spawn $ audioCtrl "set_volume -5%")
+  , ((alt, xK_Page_Up),            spawn $ audioCtrl "set_volume +5%")
   -- Music controls
-  , ((alt, xK_Insert),              spawn $ musicCtrl "play/pause")
-  , ((alt, xK_End),                 spawn $ musicCtrl "next")
-  , ((alt, xK_Home),                spawn $ musicCtrl "prev")
+  , ((alt, xK_Insert),              spawn $ audioCtrl "play/pause")
+  , ((alt, xK_End),                 spawn $ audioCtrl "next")
+  , ((alt, xK_Home),                spawn $ audioCtrl "prev")
   -- Brightness
-  , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight + 20")
-  , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight - 20")
+  , ((0, xF86XK_MonBrightnessUp),   spawn $ screenCtrl "brighten")
+  , ((0, xF86XK_MonBrightnessDown), spawn $ screenCtrl "darken")
   -- Mousepad
   , ((alt .|. shift, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
   -- Scroll-click emulation
@@ -257,10 +257,10 @@ myKeys =
             ++  "?\" && "
             ++ cmd
 
-    -- | Sound control.
-    setVolume vol = "~/.xmonad/scripts/set_volume.sh " ++ vol
-    -- | Music control.
-    musicCtrl cmd = "~/.xmonad/scripts/audio_controls.sh " ++ cmd
+    -- | Audio control.
+    audioCtrl cmd = "~/.xmonad/scripts/audio_controls.sh " ++ cmd
+    -- | Screen control.
+    screenCtrl cmd = "~/.xmonad/scripts/video_controls.sh " ++ cmd
 
 myMouseBindings :: XConfig Layout -> M.Map (ButtonMask, Button) (Window -> X ())
 myMouseBindings _ = M.fromList
