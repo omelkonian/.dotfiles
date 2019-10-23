@@ -113,6 +113,7 @@ function print_cl {
   done
 }
 
+# Checking all GIT repositories
 function git_check_all_folders {
   curDir=$(pwd)
   builtin cd $GIT_ROOT
@@ -132,4 +133,18 @@ function git_check_all_folders {
     fi
   done
   builtin cd $curDir
+}
+
+# Process handling
+function start_app {
+  p_name=${1%% *}
+  if [ -z "$(pgrep $p_name)" ] ; then
+    $1 &
+  fi
+}
+
+function kill_app {
+  if [ -n "$(pgrep $1)" ] ; then
+    kill $(pgrep $1)
+  fi
 }

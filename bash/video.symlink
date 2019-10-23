@@ -22,6 +22,23 @@ function setResolution {
   xrandr --output $HDMI --mode $1
 }
 
+# Setup screens, depending on host machine
+function setup_screens {
+  if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
+      # Docked
+      xrandr --output $BUILTIN --off --output $HDMI --auto
+  else
+      # Undocked
+      xrandr --output $BUILTIN --auto --output $HDMI --off
+  fi  
+}
+
+# Brightness control
+function changeBrightness {
+  setup_screens
+  xbacklight $@
+}
+
 # Image editing
 function ogv2gif {
   FPS=15
