@@ -118,7 +118,7 @@
 ;; Set font
 (defun set-font (height)
 	(set-face-attribute 'default nil
-    :family "DejaVu Sans Mono" ; Monospace ; Linux Libertine Mono O ; FreeMono
+    :family "mononoki" ; "DejaVu Sans Mono" ; Monospace ; Linux Libertine Mono O ; FreeMono
     :height height
     :weight 'normal
     :width  'normal))
