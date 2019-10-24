@@ -22,15 +22,24 @@ function setResolution {
   xrandr --output $HDMI --mode $1
 }
 
-# Setup screens, depending on host machine
+# Setup screens
 function setup_screens {
+  # Enable screens depending on host machine
   if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
       # Docked
       xrandr --output $BUILTIN --off --output $HDMI --auto
   else
       # Undocked
       xrandr --output $BUILTIN --auto --output $HDMI --off
-  fi  
+  fi
+
+  # Set background image
+  nitrogen --set-auto $BACKGROUND_IMAGE
+
+  # Spawn top icon tray
+  kill_app "trayer"
+  # trayer --edge top --monitor primary --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --height 12 --transparent true --tint 0x000000 &
+  trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 19 --transparent true --alpha 0 --tint 0x000000 &
 }
 
 # Brightness control

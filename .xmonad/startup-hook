@@ -9,14 +9,5 @@ start_app "nm-applet --sm-disable"
 start_app "synapse -s"
 echo "Apps started"
 
-kill_app "trayer"
-# trayer --edge top --monitor primary --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --height 12 --transparent true --tint 0x000000 &
-trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 19 --transparent true --alpha 0 --tint 0x000000 &
-echo "Icon tray spawned"
-
-nitrogen --set-auto ~/Wallpapers/discontinuous_plains.jpg
-echo "Wallpaper set"
-
-# Setup screen variables
 setup_screens
-echo "Screens configured"
+echo "Screens setup"
