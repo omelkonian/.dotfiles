@@ -237,14 +237,6 @@
 ;   ...
 ;   ))
 
-(defun-bind agda/frame "C-c r" ()
-  ;; Move AgdaInfo frame to the right
-  (delete-other-windows)
-  (split-window-right)
-  (windmove-right)
-  (switch-to-buffer "*Agda information*")
-  (windmove-left))
-
 ;; enable agda-mode
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
@@ -252,15 +244,21 @@
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
   (setq agda2-highlight-level 'interactive)
+  ;; set navigation keys
+  (defun-bind agda/go-to-definition "C-c g" ()
+    ;; Go to definition
+    (agda2-goto-definition-keyboard))
+  (defun-bind agda/go-back "C-c b" ()
+    ;; Go to definition
+    (agda2-go-back))
+  (defun-bind agda/frame "C-c r" ()
+    ;; Move AgdaInfo frame to the right
+    (delete-other-windows)
+    (split-window-right)
+    (windmove-right)
+    (switch-to-buffer "*Agda information*")
+    (windmove-left))
   ))
-
-(defun-bind agda/frame "C-c r" ()
-  ;; Move AgdaInfo frame to the right
-  (delete-other-windows)
-  (split-window-right)
-  (windmove-right)
-  (switch-to-buffer "*Agda information*")
-  (windmove-left))
 
 ;;;;;;;;;;;
 ;; LaTeX ;;
