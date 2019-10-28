@@ -1,5 +1,5 @@
 alias restart_xserver="sudo service lightdm.service restart"
-
+ 
 function getBuiltinScreen {
   case $(hostname) in
     "omelkonian-XPS-15-9560") # Dell
@@ -22,10 +22,19 @@ function setResolution {
   xrandr --output $HDMI --mode $1
 }
 
+function connected_HDMI {
+  [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]
+}
+
+function selected_HDMI {
+  [ -n "$(xrandr --listmonitors | grep $HDMI)" ]
+}
+
 # Setup screens
 function setup_screens {
   # Enable screens depending on host machine
   if [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]; then
+  # if connected_HDMI; then
       # Docked
       xrandr --output $BUILTIN --off --output $HDMI --auto
   else
@@ -34,7 +43,9 @@ function setup_screens {
   fi
 
   # Set background image
-  nitrogen --set-auto $BACKGROUND_IMAGE
+  if [ -f $BACKGROUND_IMAGE ]; then
+    nitrogen --set-auto $BACKGROUND_IMAGE
+  fi
 
   # Spawn top icon tray
   kill_app "trayer"
@@ -44,7 +55,9 @@ function setup_screens {
 
 # Brightness control
 function changeBrightness {
-  setup_screens
+  if (! connected_HDMI) && selected_HDMI; then
+    setup_screens
+  fi
   xbacklight $@
 }
 
