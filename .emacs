@@ -145,9 +145,9 @@
 (global-set-key (kbd "C->") 'indent-rigidly-right-to-tab-stop)
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
 
-;; Line/column numbering
-(global-linum-mode t)
-(column-number-mode)
+;; Line/column numbering (slows down Emacs...)
+; (global-linum-mode t)
+; (column-number-mode)
 
 ;; Color theme
 ; (load-theme
