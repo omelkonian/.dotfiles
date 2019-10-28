@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/bash -eu
 
 ################################################################################
 # The directory holding your source code and Cabal file:
@@ -17,11 +17,7 @@ output_file=$1; shift
 ################################################################################
 cd $SRC_DIR
 
-cabal new-configure \
-      --enable-optimization \
-      --enable-executable-stripping
-
-cabal new-build
+cabal build
 
 find dist-newstyle -type f -executable -name $EXE_NAME \
      -exec mv -u '{}' $output_file ';'

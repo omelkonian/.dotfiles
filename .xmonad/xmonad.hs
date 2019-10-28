@@ -31,13 +31,14 @@ import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
 import XMonad.Layout.NoBorders        (noBorders, smartBorders)
 import XMonad.Layout.Grid             (Grid (..))
 import XMonad.Layout.Fullscreen       (fullscreenEventHook)
-import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className)
+import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className) --, liftX)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.EwmhDesktops      (ewmh)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleStruts (..))
 -- import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
 import XMonad.Hooks.SetWMName         (setWMName)
+import XMonad.Hooks.WallpaperSetter   (Wallpaper(..), WallpaperConf (..), WallpaperList (..), wallpaperSetter)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
 import XMonad.Util.Run                (spawnPipe, hPutStrLn)
 import XMonad.Actions.SpawnOn         (manageSpawn)
@@ -71,7 +72,9 @@ main = do
                        <+> manageHook def
                        <+> composeAll myManagementHooks
                        <+> manageDocks
-    , logHook = dynamicLogWithPP (pp xmproc) <+> historyHook
+    , logHook            = dynamicLogWithPP (pp xmproc)
+                       <+> historyHook
+                       <+> setWallpaper
     }
     `additionalKeys` myKeys
     `removeKeys` (  [(alt, n) | n <- [xK_Left, xK_Right, xK_Up, xK_Down]]
@@ -90,6 +93,13 @@ main = do
       , ppSep     = " | "
       , ppLayout  = xmobarColor myLayoutColor ""
       }
+
+    -- Set the same wallpaper for all workspaces.
+    wallpaperDir = "~/Wallpapers"
+    setWallpaper = wallpaperSetter $ WallpaperConf {
+      wallpaperBaseDir = wallpaperDir
+    , wallpapers       = WallpaperList $ zip myWorkspaces (repeat $ WallpaperDir wallpaperDir)
+    }
 
 -------------------------------------------------------
 -- Styling.
@@ -156,10 +166,14 @@ navigation = navigation2D def
 -------------------------------------------------------
 -- Hooks.
 
+-- Hide the bar at the top of the screen.
+hideXmobar :: X ()
+hideXmobar = sendMessage ToggleStruts
+
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks =
-  [ -- isFullscreen --> doFullFloat
+  [ -- isFullscreen --> doFullFloat <* liftX hideXmobar
     appName   =? "synapse"         --> doIgnore
   , appName   =? "stalonetray"     --> doIgnore
   , appName   =? "zenity"          --> doFloat
@@ -177,7 +191,7 @@ myManagementHooks =
   , className =? "TeX"             --> goto 5
   , className =? "Eog"             --> goto 10
   ]
-  where goto = doF . W.shift . ws
+  where goto  = doF . W.shift . ws
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook
@@ -193,7 +207,7 @@ myKeys :: [((KeyMask, KeySym), X ())]
 myKeys =
   [ -- Layout management
     ((alt, xK_space), sendMessage NextLayout)
-  , ((alt, xK_b),     sendMessage ToggleStruts)
+  , ((alt, xK_b),     hideXmobar)
   , ((alt, xK_h),     sendMessage Shrink)
   , ((alt, xK_l),     sendMessage Expand)
   , ((alt, xK_a),     sendMessage MirrorShrink)

@@ -6,7 +6,7 @@ author:        Orestis Melkonian <melkon.or@gmail.com>
 maintainer:    Orestis Melkonian <melkon.or@gmail.com>
 category:      Configuration
 build-type:    Simple
-cabal-version: >=1.8
+cabal-version: >=2.0
 
 ------------------------------------------------------------------------------
 executable xmonad-config
@@ -19,7 +19,7 @@ executable xmonad-config
 
   build-depends: base           >= 4.7  && < 5,
                  xmonad         == 0.15,
-                 xmonad-contrib == 0.15,
+                 xmonad-contrib == 0.16,
                  X11            == 1.9,
                  data-default   == 0.7.1.1,
                  containers     == 0.6.0.1
