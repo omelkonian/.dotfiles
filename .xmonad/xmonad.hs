@@ -38,7 +38,6 @@ import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleSt
 -- import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
 import XMonad.Hooks.SetWMName         (setWMName)
-import XMonad.Hooks.WallpaperSetter   (Wallpaper(..), WallpaperConf (..), WallpaperList (..), wallpaperSetter)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
 import XMonad.Util.Run                (spawnPipe, hPutStrLn)
 import XMonad.Actions.SpawnOn         (manageSpawn)
@@ -74,7 +73,6 @@ main = do
                        <+> manageDocks
     , logHook            = dynamicLogWithPP (pp xmproc)
                        <+> historyHook
-                       <+> setWallpaper
     }
     `additionalKeys` myKeys
     `removeKeys` (  [(alt, n) | n <- [xK_Left, xK_Right, xK_Up, xK_Down]]
@@ -93,13 +91,6 @@ main = do
       , ppSep     = " | "
       , ppLayout  = xmobarColor myLayoutColor ""
       }
-
-    -- Set the same wallpaper for all workspaces.
-    wallpaperDir = "~/Wallpapers"
-    setWallpaper = wallpaperSetter $ WallpaperConf {
-      wallpaperBaseDir = wallpaperDir
-    , wallpapers       = WallpaperList $ zip myWorkspaces (repeat $ WallpaperDir wallpaperDir)
-    }
 
 -------------------------------------------------------
 -- Styling.
