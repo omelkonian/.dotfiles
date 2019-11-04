@@ -297,6 +297,11 @@
  	(setq TeX-parse-self t
 				TeX-save-query nil)
  	; keyboard macros
+  (setq shell-command-switch "-ic")
+  (defun-bind tex/build "C-c C-l" ()
+    (save-buffer)
+    (async-shell-command
+      (concat "makeAt '" (file-name-directory buffer-file-name) "'")))
  	(defun-bind insert/textit "C-S-i" ()
  	 	(insert "\\textit{"))
  	(defun-bind insert/textbf "C-S-b" ()
@@ -350,13 +355,6 @@
       ("\\\\TODO{\\(.*\\)}"          1 'my/todo t)
 	 	  ))
 	(prettify-symbols-mode)))
-
-;; lhs2Tex integration
-(setq shell-command-switch "-ic")
-(defun-bind tex/build "C-c l" ()
- 	(save-buffer)
- 	(async-shell-command
-    (concat "makeAt '" (file-name-directory buffer-file-name) "'")))
 
 ;;;;;;;;;;;;;;
 ;; Polymode ;;

@@ -79,7 +79,28 @@ function plfa {
 function makeAt {
   set -euxo pipefail
   builtin cd "$1"
-  make ; (evince --class='TeX' *.pdf &)
+  curDir=$(basename "$(pwd)")
+
+  # Set mode
+  if [ -f ./Makefile ]; then
+    mode="make"
+  elif [ -f ./${curDir}.tex ]; then
+    mode="tex"
+  else
+    mode="???"
+  fi
+
+  # Build and view output
+  case $mode in
+    "make")
+      make ; (evince --class='TeX' *.pdf &) ;;
+    "tex")
+      xelatex ${curDir}.tex
+      bibtex ${curDir}.aux
+      evince --class='TeX' ${curDir}.pdf & ;;
+    *)
+      echo "Cannot detect mode" ;;
+  esac
 }
 
 function list_repositories {
