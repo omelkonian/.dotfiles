@@ -6,15 +6,15 @@ import XMonad
   , Window, WorkspaceId
   , Layout (..)
   , ManageHook
-  , spawn , whenJust
+  , spawn--, whenJust
   , ButtonMask, Button, button1, button2, button3, button4, button5
   , (<+>), (.|.), (-->), (=?)
-  , KeyMask, mod1Mask, shiftMask, controlMask
+  , KeyMask, mod1Mask, shiftMask--, controlMask
   , KeySym
   , xK_Left, xK_Right, xK_Up, xK_Down, xK_Return, xK_space
   , xK_Page_Up, xK_Page_Down, xK_Home, xK_End, xK_Insert, xK_Delete
-  , xK_a, xK_b, xK_c, xK_e, xK_f, xK_h, xK_i, xK_l, xK_m, xK_p, xK_r
-  , xK_s, xK_u, xK_w, xK_z, xK_Tab, xK_F11, xK_F12
+  , xK_a, xK_b, xK_c, {-xK_e,-} xK_f, xK_h, xK_i, xK_l, xK_m, xK_p--, xK_r
+  , xK_s, xK_u, {-xK_w,-} xK_z, xK_Tab, xK_F11, xK_F12
   , xK_0, xK_1, xK_9
   )
 import Graphics.X11.ExtraTypes.XF86
@@ -25,7 +25,7 @@ import qualified Data.Map                      as M
 import qualified XMonad.StackSet               as W
 import qualified XMonad.Actions.FlexibleResize as Flex
 import Data.Default                   (def)
-import XMonad.Operations              (focus, mouseMoveWindow, sendMessage, kill, windows, withFocused, screenWorkspace)
+import XMonad.Operations              (focus, mouseMoveWindow, sendMessage, kill, windows, withFocused)--, screenWorkspace)
 import XMonad.Layout                  (Resize (..), Mirror (..), Full (..), (|||), ChangeLayout (..))
 import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
 import XMonad.Layout.NoBorders        (noBorders, smartBorders)
@@ -41,9 +41,9 @@ import XMonad.Hooks.SetWMName         (setWMName)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
 import XMonad.Util.Run                (spawnPipe, hPutStrLn)
 import XMonad.Actions.SpawnOn         (manageSpawn)
-import XMonad.Actions.Plane           (planeKeys, Lines (..), Limits (..))
 import XMonad.Actions.GroupNavigation (Direction (..), historyHook, nextMatch)
-import XMonad.Actions.Navigation2D    (navigation2D, windowGo, windowSwap)
+-- import XMonad.Actions.Plane           (planeKeys, Lines (..), Limits (..))
+-- import XMonad.Actions.Navigation2D    (navigation2D, windowGo, windowSwap)
 
 -- | Main configuration.
 main :: IO ()
@@ -52,7 +52,7 @@ main = do
   xmonad
     $ ewmh
     $ docks
-    $ navigation
+    -- $ navigation
     $ withUrgencyHook myUrgencyHook
     $ def {
       focusedBorderColor = myFocusedBorderColor
@@ -146,14 +146,6 @@ ws :: Int -> WorkspaceId
 ws 0 = last $ myWorkspaces
 ws i = myWorkspaces !! (i - 1)
 
-navigation :: XConfig l -> XConfig l
-navigation = navigation2D def
-  (xK_Up, xK_Left, xK_Down, xK_Right)
-  [ (alt .|. shift, windowGo),
-    (alt .|. controlMask .|. shift, windowSwap)
-  ]
-  True -- wrapping flag
-
 -------------------------------------------------------
 -- Hooks.
 
@@ -237,6 +229,7 @@ myKeys =
   -- Brightness
   , ((0, xF86XK_MonBrightnessUp),   spawn $ screenCtrl "brighten")
   , ((0, xF86XK_MonBrightnessDown), spawn $ screenCtrl "darken")
+  , ((alt .|. shift, xK_s),         spawn $ screenCtrl "setupScreens")
   -- Mousepad
   , ((alt .|. shift, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
   -- Scroll-click emulation
@@ -246,13 +239,6 @@ myKeys =
     ((m .|. alt, k), windows $ f i)
        | (i, k) <- zip myWorkspaces ([xK_1..xK_9] ++ [xK_0])
        , (f, m) <- [(W.greedyView, 0), (W.shift, shift)]
-  ] ++
-  M.toList (planeKeys alt (Lines 4) Finite) ++
-  [
-    ((m .|. alt, key), screenWorkspace sc
-      >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0, 1, 2]
-      , (f, m) <- [(W.view, 0), (W.shift, shift)]
   ]
   where
     -- | Spawn process with a confirm dialog.

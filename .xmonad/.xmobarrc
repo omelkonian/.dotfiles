@@ -99,7 +99,10 @@ Config {
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
    -- template = "%StdinReader% }{ %battery% | %cpu%"
-   template = "%UnsafeStdinReader% }{\
+   template = "\
+     \ <action=xdotool key alt+b><icon=quit.xbm/></action>\
+     \ | %UnsafeStdinReader%\
+     \ }{\
      \ %battery%\
      \ | %cpu%\
      \ | %memory% %swap%\
