@@ -145,6 +145,6 @@ function start_app {
 
 function kill_app {
   if [ -n "$(pgrep $1)" ] ; then
-    kill $(pgrep $1)
+    kill -9 $(pgrep $1)
   fi
 }
