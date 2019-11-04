@@ -5,6 +5,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(agda-input-user-translations
+	 (quote
+		(("Gh" "η")
+		 ("Gw" "ς")
+		 ("^v" "ᵛ")
+		 ("^l" "ˡ")
+		 ("^r" "ʳ")
+		 ("eq" "≟"))))
  '(agda2-program-args
 	 (quote
 		("+RTS" "-K256M" "-H3G" "-M3G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" ".")))
@@ -118,7 +126,7 @@
 ;; Set font
 (defun set-font (height)
 	(set-face-attribute 'default nil
-    :family "mononoki" ; "DejaVu Sans Mono" ; Monospace ; Linux Libertine Mono O ; FreeMono
+    :family "DejaVu Sans Mono" ; "mononoki" ; Monospace ; Linux Libertine Mono O ; FreeMono
     :height height
     :weight 'normal
     :width  'normal))
