@@ -70,10 +70,8 @@
   chm = checkout master
   chb = checkout -b
   chpr = "!f(){ \
-    if [ $(printf \"%s\" \"$2\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
-      git fetch $1 refs/pull/$2/head:pr/$2 && \
-      git checkout pr/$2; \
-    fi \
+    git fetch origin refs/pull/$1/head:pr/$1 && \
+    git checkout pr/$1; \
   }; f"
 
   # Stash
@@ -97,8 +95,9 @@
   # Undoing
   rsh = reset --hard
   rss = reset --soft
+  unstage = reset HEAD .
+  undoLastCommit = reset --soft HEAD~
   undoamend = !git reset --soft HEAD@{1} && git commit -s
-  undo = "!f() {git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}};}; f"
 
   # Ignore
   ignore = update-index --assume-unchanged
