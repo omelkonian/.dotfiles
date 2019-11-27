@@ -49,10 +49,9 @@ alias ssh_uoe="ssh s2000146@ssh.inf.ed.ac.uk"
 
 # Transmission
 function transmission_safe {
-  case $(nordvpn status | head -n1) in
-    "Status: Connected")
-      transmission-gtk $@ ;;
-    *)
-      notify-send "NO VPN" ;;
-  esac
+  if [ -n "$(nordvpn status | grep 'Status: Connected')" ] ; then
+    transmission-gtk $@ 
+  else
+    notify-send "NO VPN"
+  fi
 }
