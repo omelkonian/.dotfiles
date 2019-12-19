@@ -1,6 +1,8 @@
 #!/bin/bash
 source ~/git/.dotfiles/bash/audio.symlink
-case $1 in
+cmd=$1
+shift
+case "$cmd" in
   "play/pause")
     audio__play_pause ;;
   "next")
@@ -10,5 +12,7 @@ case $1 in
   "get_volume")
     getSinkVolume ;;
   "set_volume")
-    setSinkVolume $2 ;;
+    setSinkVolume $@ ;;
+  "extract_channels")
+    extract_channels "$@" ;;
 esac

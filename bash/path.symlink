@@ -26,3 +26,6 @@ add_to_path ~/Idris/.cabal-sandbox/bin
 
 # HOL
 add_to_path ~/HOL/bin
+
+# nix
+add_to_LD_path /lib/x86_64-linux-gnu/

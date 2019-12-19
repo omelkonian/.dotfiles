@@ -3,7 +3,15 @@ function cd {
 }
 
 function untar {
-  tar xvzf "$@"
+  for f in $@
+  do
+    case "${1##*.}" in
+      "gz")
+        tar xzvf $1 ;;
+      *)
+        tar xvf $1 ;;
+    esac
+  done
 }
 
 function mkcdir {
