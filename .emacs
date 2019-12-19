@@ -299,7 +299,7 @@
 				TeX-save-query nil)
  	; keyboard macros
   (setq shell-command-switch "-ic")
-  (defun-bind tex/build "C-c C-l" ()
+  (defun-bind tex/build "C-c l" ()
     (save-buffer)
     (async-shell-command
       (concat "makeAt '" (file-name-directory buffer-file-name) "'")))
