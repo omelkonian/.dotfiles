@@ -16,7 +16,7 @@
 		 ("eq" "≟"))))
  '(agda2-program-args
 	 (quote
-		("+RTS" "-K256M" "-H3G" "-M3G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" ".")))
+		("+RTS" "-K256M" "-H6G" "-M6G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" ".")))
  '(company-backends
 	 (quote
 		(company-semantic company-capf
