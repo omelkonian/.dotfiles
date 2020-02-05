@@ -15,27 +15,50 @@
 	"fade_fold_buttons": false,
 	"file_exclude_patterns":
 	[
-		"*.aux",
-		"*.glob",
-		"*.d",
-		"*.vo",
-		"#*",
+		// General
 		"*.DS_Store",
+		"*.glob",
+		"*.class",
+		"*.bin",
+		"*.bat",
+		"*_tmp",
+		// Emacs
+		".#*",
+		"#*",
+		"*~",
+		// Python
 		"*.pyc",
+		// Git
 		"*.git",
+		// Haskell
 		"*.hi",
 		"*.hi-boot",
 		"*.o",
 		"*.o-boot",
 		"*.dyn_*",
 		"*.p_*",
-		"*.class",
-		"*.bin",
-		"*.bat",
-		"*_tmp",
+		// Coq
+		"*.vo",
+		"*.d",
+		// Agda
 		"*.agdai",
 		"*.agda~",
-		".#*"
+		// TeX
+		"*.aux",
+		"*.lof",
+		"*.log",
+		"*.lot",
+		"*.fls",
+		"*.out",
+		"*.toc",
+		"*.fmt",
+		"*.fot",
+		"*.cb",
+		"*.cb2",
+		"*.ptb",
+		"*.lb",
+		"*.nav",
+		"*.snm"
 	],
 	"find_selected_text": true,
 	"fold_buttons": true,
