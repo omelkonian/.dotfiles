@@ -109,6 +109,7 @@ Config {
      \ | <icon=vol-hi.xbm/> %vol%\
      \ | <fc=#E6744C>%date%</fc>\
      \ | %vpn% VPN\
+     \ | GPU: %gpu%\
      \ | <action=play ~/Sounds/testLR.wav><icon=music.xbm/></action>\
      \ | <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
      \    "

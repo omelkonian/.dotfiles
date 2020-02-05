@@ -201,7 +201,8 @@ myKeys =
   -- Launcher
   , ((alt, xK_p), spawn "synapse")
   -- Specifix apps
-  , ((alt, xK_i), spawn "google-chrome-stable")
+  , ((alt,           xK_i), spawn "google-chrome-stable")
+  , ((alt .|. shift, xK_i), spawn "google-chrome-stable --incognito")
   , ((alt, xK_s), spawn "subl")
   , ((alt, xK_f), spawn "nautilus --new-window")
   -- Focus
