@@ -2,6 +2,15 @@
 alias lt="ll -tr"
 alias s=subl
 
+# APT
+alias apt-up="sudo apt-get update"
+alias apt-in="sudo apt-get install"
+alias apt-rm="sudo apt-get remove"
+alias apt-arm="sudo apt-get autoremove"
+alias apt-pg="sudo apt-get purge"
+alias apt-rad="sudo add-apt-repository"
+alias apt-rrm="sudo apt-apt-repository --remove"
+
 # Config
 alias zshconfig="edit ~/.zshrc"
 alias ohmyzsh="edit ~/.oh-my-zsh"
