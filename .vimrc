@@ -21,6 +21,13 @@ call plug#end()
 
 colo github
 
+""" Cursor
+
+if &term =~ "xterm\\|rxvt"
+  let &t_SI = "\e[6 q"
+  let &t_EI = "\e[2 q"
+endif
+
 """ General options
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
@@ -40,4 +47,3 @@ set incsearch           " search as characters are entered
 set hlsearch            " highlight matches
 set ignorecase          " do case insensitive matching
 set smartcase           " do smart case matching
-
