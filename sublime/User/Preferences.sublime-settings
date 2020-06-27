@@ -7,7 +7,7 @@
 	"auto_match_enabled": true,
 	"bold_folder_labels": true,
 	"caret_style": "phase",
-	"color_scheme": "Themes/ayu-light.sublime-color-scheme",
+	"color_scheme": "Packages/ayu/ayu-light.sublime-color-scheme",
 	"detect_indentation": true,
 	"draw_indent_guides": true,
 	"draw_white_space": "selection",
@@ -15,35 +15,27 @@
 	"fade_fold_buttons": false,
 	"file_exclude_patterns":
 	[
-		// General
 		"*.DS_Store",
 		"*.glob",
 		"*.class",
 		"*.bin",
 		"*.bat",
 		"*_tmp",
-		// Emacs
 		".#*",
 		"#*",
 		"*~",
-		// Python
 		"*.pyc",
-		// Git
 		"*.git",
-		// Haskell
 		"*.hi",
 		"*.hi-boot",
 		"*.o",
 		"*.o-boot",
 		"*.dyn_*",
 		"*.p_*",
-		// Coq
 		"*.vo",
 		"*.d",
-		// Agda
 		"*.agdai",
 		"*.agda~",
-		// TeX
 		"*.aux",
 		"*.lof",
 		"*.log",

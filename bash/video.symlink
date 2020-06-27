@@ -51,14 +51,6 @@ function setup_screens {
   fi
 }
 
-# Brightness control
-function changeBrightness {
-  if ((! connected_HDMI) && selected_HDMI) || (connected_HDMI && (! selected_HDMI)); then
-    setup_screens
-  fi
-  xbacklight $@
-}
-
 # Image editing
 function ogv2gif {
   FPS=15
@@ -90,3 +82,15 @@ function reminderAt {
   notify-send "Friendly Reminder" "Time for questions!! Stop it!!"
 }
 
+function swfToAvi {
+  f="$1"
+  ffmpeg -i "$f" -strict -2 "${f%.*}".mp4 -y
+}
+
+# Brightness control
+function changeBrightness {
+  if ((! connected_HDMI) && selected_HDMI) || (connected_HDMI && (! selected_HDMI)); then
+    setup_screens
+  fi
+  xbacklight $@
+}

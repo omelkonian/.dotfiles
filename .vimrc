@@ -23,10 +23,10 @@ colo github
 
 """ Cursor
 
-if &term =~ "xterm\\|rxvt"
-  let &t_SI = "\e[6 q"
-  let &t_EI = "\e[2 q"
-endif
+" if &term =~ "xterm\\|rxvt"
+"   let &t_SI = "\e[6 q"
+"   let &t_EI = "\e[2 q"
+" endif
 
 """ General options
 set tabstop=4       " number of visual spaces per TAB

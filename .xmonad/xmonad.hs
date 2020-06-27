@@ -29,13 +29,12 @@ import XMonad.Operations              (focus, mouseMoveWindow, sendMessage, kill
 import XMonad.Layout                  (Resize (..), Mirror (..), Full (..), (|||), ChangeLayout (..))
 import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
 import XMonad.Layout.NoBorders        (noBorders, smartBorders)
-import XMonad.Layout.Grid             (Grid (..))
 import XMonad.Layout.Fullscreen       (fullscreenEventHook)
-import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className) --, liftX)
+import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, liftX)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.EwmhDesktops      (ewmh)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, ToggleStruts (..))
--- import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen)
+import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen, isDialog, doCenterFloat)
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
 import XMonad.Hooks.SetWMName         (setWMName)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
@@ -119,7 +118,7 @@ myUrgentWSRight  = "}"
 myLayouts
   = smartBorders
   $ avoidStruts
-  $ tall ||| Mirror tall ||| full ||| Grid
+  $ tall ||| Mirror tall ||| full
   where
     tall = ResizableTall 1 (3/100) (1/2) []
     full = noBorders Full
@@ -156,11 +155,13 @@ hideXmobar = sendMessage ToggleStruts
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks =
-  [ -- isFullscreen --> doFullFloat <* liftX hideXmobar
-    appName   =? "synapse"         --> doIgnore
+  [ isFullscreen                   --> doFullFloat <* liftX hideXmobar
+  , isDialog                       --> doCenterFloat
+  , appName   =? "synapse"         --> doIgnore
   , appName   =? "stalonetray"     --> doIgnore
   , appName   =? "zenity"          --> doFloat
   , appName   =? "Extract archive" --> doFloat
+  , appName   =? "Transmission"    --> goto 9
   , className =? "Pdfpc"           --> doFloat
   , className =? "Thunderbird"     --> goto 1
   , className =? "Nautilus"        --> goto 2
@@ -170,6 +171,7 @@ myManagementHooks =
   , className =? "totem"           --> goto 8
   , className =? "Spotify"         --> goto 9
   , className =? "Slack"           --> goto 9
+  , className =? "Zulip"           --> goto 9
   , className =? "Evince"          --> goto 10
   , className =? "TeX"             --> goto 5
   , className =? "Eog"             --> goto 10

@@ -3,10 +3,11 @@
 source ~/.zshrc
 echo "ZSH run"
 
+start_app "synapse -s"
+start_app "nm-applet --sm-disable"
 start_app "thunderbird"
 start_app "slack"
-start_app "nm-applet --sm-disable"
-start_app "synapse -s"
+start_app "zulip"
 echo "Apps started"
 
 setup_screens

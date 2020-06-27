@@ -12,11 +12,10 @@
 		 ("^v" "ᵛ")
 		 ("^l" "ˡ")
 		 ("^r" "ʳ")
-     ("_v" "ᵥ")
-		 ("eq" "≟"))))
- '(agda2-program-args
-	 (quote
-		("+RTS" "-K256M" "-H6G" "-M6G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" ".")))
+		 ("_v" "ᵥ")
+		 ("eq" "≟")
+     ; ("*" "✴")
+     )))
  '(company-backends
 	 (quote
 		(company-semantic company-capf
@@ -34,7 +33,7 @@
 		 ("melpa" . "http://melpa.org/packages/"))))
  '(package-selected-packages
 	 (quote
-		(polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil)))
+		(markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil)))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
 	 (quote
@@ -116,6 +115,9 @@
 ;; Basic ;;
 ;;;;;;;;;;;
 
+;; Get access to $PATH
+(exec-path-from-shell-initialize)
+
 ;; Evil mode
 (require 'evil)
 (evil-mode 1)
@@ -126,8 +128,8 @@
 
 ;; Set font
 (defun set-font (height)
-	(set-face-attribute 'default nil
-    :family "DejaVu Sans Mono" ; "mononoki" ; Monospace ; Linux Libertine Mono O ; FreeMono
+  (set-face-attribute 'default nil
+    :family "DejaVu Sans Mono" ; "Fira Code" ; "mononoki" ; Monospace ; Linux Libertine Mono O ; FreeMono
     :height height
     :weight 'normal
     :width  'normal))
@@ -145,10 +147,13 @@
 (require 'sublimity)
 (require 'sublimity-scroll)
 
+;; automatically wrap lines
+; (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
 ;; Cua mode (ctrl-c, ctrl-v and friends)
-(defun-bind cua/enable "C-c C-u C-a" ()
-	(cua-mode t))
-(cua/enable)
+; (defun-bind cua/enable "C-c C-u C-a" ()
+; 	(cua-mode t))
+; (cua/enable)
 
 ;; Keybindings for line indentation
 (global-set-key (kbd "C->") 'indent-rigidly-right-to-tab-stop)
@@ -214,7 +219,8 @@
 
 ;; Buffer positioning
 (setq shackle-rules '(("*Async Shell Command*" :align 'below :size 0.15)
-                      ("*Quail Completions*"   :size 0.2)))
+                      ("*Quail Completions*"   :size 0.2)
+                      ("*compilation*"         :size 0.2)))
 (shackle-mode)
 
 ;; Keep history of recent files
@@ -316,7 +322,7 @@
  	; (load-theme 'solarized-light t)
 	; spelling
 	(setq ispell-program-name "aspell"
-				ispell-dictionary   "english")
+				ispell-dictionary   "british")
 	(flyspell-mode)
 	(flyspell-buffer)
 	; unicode input
@@ -349,7 +355,7 @@
 	 	  ("\\\\subsubsection{\\(.*\\)}" 1 'my/subsubsection t)
 	 	  ("\\\\paragraph{\\(.*\\)}"     1 'my/paragraph t)
       ; Beamer
-      ("\\\\begin{frame}{\\(.*\\)}"  1 'my/section t)
+      ("\\\\begin\[.*\]{frame}{\\(.*\\)}"  1 'my/section t)
       ("\\\\alert{\\(.*\\)}"         1 'my/alert t)
       ("\\\\alertblock{\\(.*\\)}"    1 'my/alert t)
       ; Custom macros

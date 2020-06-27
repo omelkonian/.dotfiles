@@ -1,15 +1,21 @@
 # General
 alias lt="ll -tr"
 alias s=subl
+alias show_storage="df -h"
 
 # APT
 alias apt-up="sudo apt-get update"
+alias apt-upg="sudo apt-get upgrade"
 alias apt-in="sudo apt-get install"
+alias apt-in-upg="sudo apt-get install --upgrade"
 alias apt-rm="sudo apt-get remove"
 alias apt-arm="sudo apt-get autoremove"
 alias apt-pg="sudo apt-get purge"
 alias apt-rad="sudo add-apt-repository"
-alias apt-rrm="sudo apt-apt-repository --remove"
+alias apt-rrm="sudo add-apt-repository --remove"
+
+# SNAP
+alias snap-in="sudo snap install"
 
 # Config
 alias zshconfig="edit ~/.zshrc"
@@ -47,5 +53,5 @@ alias grepBash="grepOn symlink"
 alias grepScala="grepOn scala"
 alias grepAgda="grepOn agda"
 alias grepMd="grepOn md"
-alias grepAgdaHoles="grepOn agda '{!.*!}'"
+alias grepAgdaHoles="grepAgda -C 6 '\({!.*!}\|OPTIONS --allow-unsolved\|postulate\)'"
 alias grepTex="grepOn tex"

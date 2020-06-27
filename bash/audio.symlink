@@ -18,6 +18,13 @@ function extract_right_channel {
   fname="${1%.*}"
   sox "${fname}".wav -c 1 "${fname}"_R.wav remix 2
 }
+function adjust_tempo {
+  factor=$(zenity --entry --text 'What percentage of the original tempo? (eg 0.8)')
+  fname="${1%.*}"
+  ext="${1##*.}"
+  echo "fname: $fname, ext: $ext"
+  sox "$1" "$fname"-"$factor"."$ext" tempo "$factor"
+}
 
 function extract_channels {
   ext="${1##*.}"
@@ -30,10 +37,14 @@ function extract_channels {
 }
 
 # Speaker test
-alias check_channels="play ~/Sounds/hypnotic_L.wav && play ~/Sounds/hypnotic_R.wav"
+function check_channels {
+  # play ~/Sounds/testLR.wav
+  speaker-test -t wav -c 2 &
+}
 
 # Spotify
 alias rip='spotify-ripper -d $MUSIC_ROOT'
+alias rip-from-file='spotify-ripper -d $MUSIC_ROOT ~/Dropbox/toRip.txt'
 alias rip_local='spotify-ripper -d $LOCAL_MUSIC_ROOT'
 
 ## Sink management (Pulse Audio)
@@ -77,7 +88,6 @@ function setSinkVolume {
 function audio__play_pause {
   if [ -n "$(pgrep clementine)" ] ; then
     clementine --play-pause
-
   fi
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --play-pause
@@ -85,12 +95,14 @@ function audio__play_pause {
   if [ -n "$(pgrep yarock)" ] ; then
     yarock --play-pause
   fi
+  if [ -n "$(pgrep totem)" ] ; then
+    totem --play-pause
+  fi
 }
 
 function audio__next {
   if [ -n "$(pgrep clementine)" ] ; then
     clementine --next
-
   fi
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --next
@@ -98,17 +110,22 @@ function audio__next {
   if [ -n "$(pgrep yarock)" ] ; then
     yarock --next
   fi
+  if [ -n "$(pgrep totem)" ] ; then
+    totem --next
+  fi
 }
 
 function audio__prev {
   if [ -n "$(pgrep clementine)" ] ; then
     clementine --prev
-
   fi
   if [ -n "$(pgrep rhythmbox)" ] ; then
     rhythmbox-client --prev
   fi
   if [ -n "$(pgrep yarock)" ] ; then
     yarock --previous
+  fi
+  if [ -n "$(pgrep totem)" ] ; then
+    totem --previous
   fi
 }

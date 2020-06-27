@@ -83,6 +83,9 @@ Config {
     -- Get VPN status
     Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_vpn.sh"] "vpn" 10,
 
+    -- Check stereo channels
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/check_channels.sh"] "check" 10,
+
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
     -- Run StdinReader
@@ -110,7 +113,7 @@ Config {
      \ | <fc=#E6744C>%date%</fc>\
      \ | %vpn% VPN\
      \ | GPU: %gpu%\
-     \ | <action=play ~/Sounds/testLR.wav><icon=music.xbm/></action>\
+     \ | %check%\
      \ | <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
      \    "
 }

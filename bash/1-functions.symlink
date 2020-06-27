@@ -66,7 +66,9 @@ function grepAll {
 }
 
 function grepOn {
-  grep -nr "$2" **/**."$1"
+  ext=$1
+  shift
+  grep -nr $@ **/**.$ext
 }
 
 # Dyck
@@ -83,32 +85,29 @@ function plfa {
   bundle exec jekyll serve
 }
 
+# Build TeX with references + view rendered PDF
+function makeTex {
+  set -euxo pipefail
+  xelatex $1.tex
+  bibtex $1.aux
+  evince --class='TeX' $1.pdf &
+}
+
 # cd + make + view PDFs
 function makeAt {
   set -euxo pipefail
   builtin cd "$1"
   curDir=$(basename "$(pwd)")
 
-  # Set mode
-  if [ -f ./Makefile ]; then
-    mode="make"
-  elif [ -f ./${curDir}.tex ]; then
-    mode="tex"
-  else
-    mode="???"
-  fi
-
   # Build and view output
-  case $mode in
-    "make")
-      make ; (evince --class='TeX' *.pdf &) ;;
-    "tex")
-      xelatex ${curDir}.tex
-      bibtex ${curDir}.aux
-      evince --class='TeX' ${curDir}.pdf & ;;
-    *)
-      echo "Cannot detect mode" ;;
-  esac
+  if [ -f ./${curDir}.tex ]; then
+    makeTex $curDir
+  elif [ -f ./Makefile ]; then
+    make
+    evince --class='TeX' *.pdf &
+  else
+    echo "Cannot detect mode"
+  fi
 }
 
 function list_repositories {

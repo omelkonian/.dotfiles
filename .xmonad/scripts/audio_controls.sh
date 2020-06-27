@@ -15,4 +15,6 @@ case "$cmd" in
     setSinkVolume $@ ;;
   "extract_channels")
     extract_channels "$@" ;;
+  "adjust_tempo")
+    adjust_tempo "$@" ;;
 esac
