@@ -1,4 +1,11 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE TypeApplications #-}
+
+import Data.Default   (def)
+import qualified Data.Map  as M
+import qualified Data.Char as C
+
 import XMonad
   ( X
   , XConfig (..)
@@ -11,6 +18,7 @@ import XMonad
   , (<+>), (.|.), (-->), (=?)
   , KeyMask, mod1Mask, shiftMask--, controlMask
   , KeySym
+  , Typeable, ExtensionClass, initialValue, extensionType, StateExtension (..)
   , xK_Left, xK_Right, xK_Up, xK_Down, xK_Return, xK_space
   , xK_Page_Up, xK_Page_Down, xK_Home, xK_End, xK_Insert, xK_Delete
   , xK_a, xK_b, xK_c, {-xK_e,-} xK_f, xK_h, xK_i, xK_l, xK_m, xK_p--, xK_r
@@ -21,10 +29,10 @@ import Graphics.X11.ExtraTypes.XF86
   ( xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume
   , xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
   )
-import qualified Data.Map                      as M
+import qualified XMonad                        as X
 import qualified XMonad.StackSet               as W
 import qualified XMonad.Actions.FlexibleResize as Flex
-import Data.Default                   (def)
+import qualified XMonad.Util.ExtensibleState   as XS
 import XMonad.Operations              (focus, mouseMoveWindow, sendMessage, kill, windows, withFocused)--, screenWorkspace)
 import XMonad.Layout                  (Resize (..), Mirror (..), Full (..), (|||), ChangeLayout (..))
 import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
@@ -38,7 +46,7 @@ import XMonad.Hooks.ManageHelpers     (doFullFloat, isFullscreen, isDialog, doCe
 import XMonad.Hooks.UrgencyHook       (withUrgencyHook, NoUrgencyHook (..), focusUrgent)
 import XMonad.Hooks.SetWMName         (setWMName)
 import XMonad.Util.EZConfig           (additionalKeys, removeKeys)
-import XMonad.Util.Run                (spawnPipe, hPutStrLn)
+import XMonad.Util.Run                (spawnPipe, hPutStrLn, runProcessWithInput)
 import XMonad.Actions.SpawnOn         (manageSpawn)
 import XMonad.Actions.GroupNavigation (Direction (..), historyHook, nextMatch)
 -- import XMonad.Actions.Plane           (planeKeys, Lines (..), Limits (..))
@@ -146,6 +154,15 @@ ws 0 = last $ myWorkspaces
 ws i = myWorkspaces !! (i - 1)
 
 -------------------------------------------------------
+-- Persitent user state.
+data MyState = MyState { muted :: Maybe Int } 
+  deriving (Typeable, Read, Show)
+
+instance ExtensionClass MyState where
+  initialValue  = MyState Nothing
+  extensionType = PersistentExtension
+
+-------------------------------------------------------
 -- Hooks.
 
 -- Hide the bar at the top of the screen.
@@ -191,59 +208,99 @@ shift = shiftMask
 myKeys :: [((KeyMask, KeySym), X ())]
 myKeys =
   [ -- Layout management
-    ((alt, xK_space), sendMessage NextLayout)
-  , ((alt, xK_b),     hideXmobar)
-  , ((alt, xK_h),     sendMessage Shrink)
-  , ((alt, xK_l),     sendMessage Expand)
-  , ((alt, xK_a),     sendMessage MirrorShrink)
-  , ((alt, xK_z),     sendMessage MirrorExpand)
-  , ((alt, xK_Tab),   nextMatch History (return True))
+    (alt, xK_space) ~>
+      sendMessage NextLayout
+  , (alt, xK_b) ~>
+      hideXmobar
+  , (alt, xK_h) ~>
+      sendMessage Shrink
+  , (alt, xK_l) ~>
+      sendMessage Expand
+  , (alt, xK_a) ~>
+      sendMessage MirrorShrink
+  , (alt, xK_z) ~>
+      sendMessage MirrorExpand
+  , (alt, xK_Tab) ~>
+      nextMatch History (return True)
   -- Kill
-  , ((alt, xK_c), kill)
+  , (alt, xK_c) ~>
+      kill
   -- Launcher
-  , ((alt, xK_p), spawn "synapse")
+  , (alt, xK_p) ~>
+      spawn "synapse"
   -- Specifix apps
-  , ((alt,           xK_i), spawn "google-chrome-stable")
-  , ((alt .|. shift, xK_i), spawn "google-chrome-stable --incognito")
-  , ((alt, xK_s), spawn "subl")
-  , ((alt, xK_f), spawn "nautilus --new-window")
+  , (alt, xK_i) ~>
+      spawn "google-chrome-stable"
+  , (alt .|. shift, xK_i) ~>
+      spawn "google-chrome-stable --incognito"
+  , (alt, xK_s) ~>
+      spawn "subl"
+  , (alt, xK_f) ~>
+      spawn "nautilus --new-window"
   -- Focus
-  , ((alt, xK_u), focusUrgent)
+  , (alt, xK_u) ~>
+      focusUrgent
   -- Lock
-  , ((alt .|. shift, xK_l), spawn "slock")
+  , (alt .|. shift, xK_l) ~>
+      spawn "slock"
   -- Shutdown/Restart
-  , ( (alt .|. shift, xK_F11)
-    , confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now"
-    )
-  , ( (alt .|. shift, xK_F12)
-    , confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
-    )
+  , (alt .|. shift, xK_F11) ~>
+      confirmSpawn "restart" "notify-send \"OS Alert\" \"Restarting...\" && shutdown -r now"
+  , (alt .|. shift, xK_F12) ~>
+      confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
   -- Volume control
-  , ((0, xF86XK_AudioMute),        spawn $ audioCtrl "set_volume 0%")
-  , ((0, xF86XK_AudioLowerVolume), spawn $ audioCtrl "set_volume -5%")
-  , ((0, xF86XK_AudioRaiseVolume), spawn $ audioCtrl "set_volume +5%")
-  , ((alt, xK_Delete),             spawn $ audioCtrl "set_volume 0%")
-  , ((alt, xK_Page_Down),          spawn $ audioCtrl "set_volume -5%")
-  , ((alt, xK_Page_Up),            spawn $ audioCtrl "set_volume +5%")
+  , (0, xF86XK_AudioMute) ~>
+      spawn (audioCtrl "set_volume 0%")
+  , (0, xF86XK_AudioLowerVolume) ~>
+      spawn (audioCtrl "set_volume -5%")
+  , (0, xF86XK_AudioRaiseVolume) ~>
+      spawn (audioCtrl "set_volume +5%")
+  , (alt, xK_Delete) ~> do      
+      s <- XS.get
+      X.trace ("state: " ++ show s)
+      case muted s of
+        Nothing -> do
+          ret <- runProcessWithInput "/home/omelkonian/.xmonad/scripts/audio_controls.sh" ["get_volume"] ""
+          X.trace ("ret: " ++ ret)
+          let n = read @Int $ filter C.isNumber ret
+          X.trace ("getVolume: " ++ show n ++ "%")
+          XS.put $ s {muted = Just n}
+          spawn $ audioCtrl "set_volume 0%"
+        Just n  -> do
+          XS.put $ s {muted = Nothing}
+          spawn $ audioCtrl ("set_volume " ++ show n ++ "%")
+  , (alt, xK_Page_Down) ~>
+      spawn (audioCtrl "set_volume -5%")
+  , (alt, xK_Page_Up) ~>
+      spawn (audioCtrl "set_volume +5%")
   -- Music controls
-  , ((alt, xK_Insert),              spawn $ audioCtrl "play/pause")
-  , ((alt, xK_End),                 spawn $ audioCtrl "next")
-  , ((alt, xK_Home),                spawn $ audioCtrl "prev")
+  , (alt, xK_Insert) ~>
+      spawn (audioCtrl "play/pause")
+  , (alt, xK_End) ~>
+      spawn (audioCtrl "next")
+  , (alt, xK_Home) ~>
+      spawn (audioCtrl "prev")
   -- Brightness
-  , ((0, xF86XK_MonBrightnessUp),   spawn $ screenCtrl "brighten")
-  , ((0, xF86XK_MonBrightnessDown), spawn $ screenCtrl "darken")
-  , ((alt .|. shift, xK_s),         spawn $ screenCtrl "setupScreens")
+  , (0, xF86XK_MonBrightnessUp) ~>
+      spawn (screenCtrl "brighten")
+  , (0, xF86XK_MonBrightnessDown) ~>
+      spawn (screenCtrl "darken")
+  , (alt .|. shift, xK_s) ~>
+      spawn (screenCtrl "setupScreens")
   -- Mousepad
-  , ((alt .|. shift, xK_m), spawn "~/.xmonad/scripts/toggle_mousepad.sh")
+  , (alt .|. shift, xK_m) ~>
+      spawn "~/.xmonad/scripts/toggle_mousepad.sh"
   -- Scroll-click emulation
-  , ((alt .|. shift, xK_u), withFocused $ windows . W.sink)
+  , (alt .|. shift, xK_u) ~>
+      withFocused (windows . W.sink)
   ] ++
-  [
-    ((m .|. alt, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces ([xK_1..xK_9] ++ [xK_0])
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shift)]
+  [ (m .|. alt, k) ~> windows (f i)
+  | (i, k) <- zip myWorkspaces ([xK_1..xK_9] ++ [xK_0])
+  , (f, m) <- [(W.greedyView, 0), (W.shift, shift)]
   ]
   where
+    (~>) = (,)
+
     -- | Spawn process with a confirm dialog.
     confirmSpawn msg cmd =
       spawn $ "zenity --question --text \"Are you sure you want to "
