@@ -250,25 +250,13 @@ myKeys =
       confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
   -- Volume control
   , (0, xF86XK_AudioMute) ~>
-      spawn (audioCtrl "set_volume 0%")
+      toggleMute
   , (0, xF86XK_AudioLowerVolume) ~>
       spawn (audioCtrl "set_volume -5%")
   , (0, xF86XK_AudioRaiseVolume) ~>
       spawn (audioCtrl "set_volume +5%")
-  , (alt, xK_Delete) ~> do      
-      s <- XS.get
-      X.trace ("state: " ++ show s)
-      case muted s of
-        Nothing -> do
-          ret <- runProcessWithInput "/home/omelkonian/.xmonad/scripts/audio_controls.sh" ["get_volume"] ""
-          X.trace ("ret: " ++ ret)
-          let n = read @Int $ filter C.isNumber ret
-          X.trace ("getVolume: " ++ show n ++ "%")
-          XS.put $ s {muted = Just n}
-          spawn $ audioCtrl "set_volume 0%"
-        Just n  -> do
-          XS.put $ s {muted = Nothing}
-          spawn $ audioCtrl ("set_volume " ++ show n ++ "%")
+  , (alt, xK_Delete) ~>
+      toggleMute
   , (alt, xK_Page_Down) ~>
       spawn (audioCtrl "set_volume -5%")
   , (alt, xK_Page_Up) ~>
@@ -300,6 +288,23 @@ myKeys =
   ]
   where
     (~>) = (,)
+
+    -- | mute/unmute
+    toggleMute :: X ()
+    toggleMute = do      
+      s <- XS.get
+      X.trace ("state: " ++ show s)
+      case muted s of
+        Nothing -> do
+          ret <- runProcessWithInput "/home/omelkonian/.xmonad/scripts/audio_controls.sh" ["get_volume"] ""
+          X.trace ("ret: " ++ ret)
+          let n = read @Int $ filter C.isNumber ret
+          X.trace ("getVolume: " ++ show n ++ "%")
+          XS.put $ s {muted = Just n}
+          spawn $ audioCtrl "set_volume 0%"
+        Just n  -> do
+          XS.put $ s {muted = Nothing}
+          spawn $ audioCtrl ("set_volume " ++ show n ++ "%")
 
     -- | Spawn process with a confirm dialog.
     confirmSpawn msg cmd =
