@@ -370,8 +370,8 @@
 (define-hostmode poly-latex-hostmode
  	:mode 'latex-mode)
 
-(define-innermode poly-haskell-innermode
-  :mode 'haskell-mode
+(define-innermode poly-agda-innermode
+  :mode 'agda2-mode
   :head-matcher "\\\\begin{code}"
   :tail-matcher "\\\\end{code}"
   :head-mode 'host
@@ -379,7 +379,7 @@
 
 (define-polymode poly-latex-mode
   :hostmode 'pm-host/latex
-  :innermodes '(poly-haskell-innermode))
+  :innermodes '(poly-agda-innermode))
 
 ;;;;;;;;;
 ;; Coq ;;
@@ -398,7 +398,7 @@
  	(append
  	 	'(("\\.tex\\'"      . latex-mode)
  	 	  ("\\.lhs\\'"      . latex-mode)
- 	 	  ("\\.lagda\\'"    . latex-mode)
+ 	 	  ("\\.lagda\\'"    . poly-latex-mode)
       ("\\.agda\\'"     . agda2-mode)
       ("\\.lagda.md\\'" . agda2-mode)
  	 	  )
