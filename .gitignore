@@ -1,5 +1,76 @@
-sublime/User/*last-run
-sublime/User/*cache/
-sublime/User/Package Control.merged-ca-bundle
-sublime/User/Package Control.user-ca-bundle
-.xmonad/xmonad.state
+# Custom
+**/.orestis/
+
+# General
+**/*.lock
+**/*.dat
+**/*.log
+**/*.out
+**/out/
+
+# Haskell
+**/*.hi
+**/*.o
+
+# GHC
+**.dump-*
+**/ghc/test.hs
+**/ghc/test*.out
+**/ghc/test
+**/libiserv/GNUmakefile
+
+# Cabal
+**/.ghc.environment.*
+**/dist/
+**/dist-newstyle/
+**/cabal-config-flags
+**/cabal.config
+**/cabal.*.freeze
+**/*.local
+
+# Coq
+**/_CoqProject
+
+# Tex
+**/*.aux
+**/*.bbl
+**/*.blg
+**/*.lof
+**/*.lot
+**/*.pyg
+**/*.gz
+**/*.toc
+**/*.ptb
+**/*.dvi
+**/*.xcp
+**/*.snm
+**/*.nav
+**/*.fls
+**/*.fdb_latexmk
+**/*.dvi
+
+# Tex-minted
+**/_minted*/
+
+# Agda
+**/*.agdai
+**/*.agda~
+**/latex/
+**/_build/
+
+# R
+**/*.Rproj*
+**/*.Rhistory
+**/*.RData
+**/*.Ruserdata
+
+# Vim
+**/*.swp
+
+# Emacs
+**/#*#
+**/.#*
+**/*~
+
+# MacOS
+**/*.DS_STORE
