@@ -6,92 +6,71 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(agda-input-user-translations
-	 (quote
-		(("Gh" "η")
-		 ("Gw" "ς")
-		 ("^v" "ᵛ")
-		 ("^l" "ˡ")
-		 ("^r" "ʳ")
-		 ("_v" "ᵥ")
-		 ("eq" "≟")
-     ; ("*" "✴")
-     )))
+   '(("Gh" "η")
+     ("Gw" "ς")
+     ("^v" "ᵛ")
+     ("^l" "ˡ")
+     ("^r" "ʳ")
+     ("_v" "ᵥ")
+     ("eq" "≟")))
  '(company-backends
-	 (quote
-		(company-semantic company-capf
-											(company-dabbrev-code company-gtags company-etags company-keywords)
-											company-dabbrev)))
+   '(company-semantic company-capf
+		      (company-dabbrev-code company-gtags company-etags company-keywords)
+		      company-dabbrev))
  '(coq-prog-name "/home/omelkonian/.opam/4.06.0/bin/coqtop")
  '(custom-safe-themes
-	 (quote
-		("0daf22a3438a9c0998c777a771f23435c12a1d8844969a28f75820dd71ff64e1" "5057614f7e14de98bbc02200e2fe827ad897696bfd222d1bcab42ad8ff313e20" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "170bb47b35baa3d2439f0fd26b49f4278e9a8decf611aa33a0dad1397620ddc3" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "392395ee6e6844aec5a76ca4f5c820b97119ddc5290f4e0f58b38c9748181e8d" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default)))
+   '("0daf22a3438a9c0998c777a771f23435c12a1d8844969a28f75820dd71ff64e1" "5057614f7e14de98bbc02200e2fe827ad897696bfd222d1bcab42ad8ff313e20" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "170bb47b35baa3d2439f0fd26b49f4278e9a8decf611aa33a0dad1397620ddc3" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "392395ee6e6844aec5a76ca4f5c820b97119ddc5290f4e0f58b38c9748181e8d" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default))
  '(inhibit-startup-screen t)
  '(package-archives
-	 (quote
-		(("gnu" . "http://elpa.gnu.org/packages/")
-		 ("melpa-stable" . "http://stable.melpa.org/packages/")
-		 ("melpa" . "http://melpa.org/packages/"))))
+   '(("gnu" . "http://elpa.gnu.org/packages/")
+     ("melpa-stable" . "http://stable.melpa.org/packages/")
+     ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-	 (quote
-		(markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil)))
+   '(markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
-	 (quote
-		((eval let*
-					 ((Workshops-topdir
-						 (expand-file-name
-							(locate-dominating-file buffer-file-name ".dir-locals.el")))
-						(unimath-topdir
-						 (concat Workshops-topdir "UniMath/")))
-					 (setq fill-column 100)
-					 (make-local-variable
-						(quote coq-use-project-file))
-					 (setq coq-use-project-file nil)
-					 (make-local-variable
-						(quote coq-prog-args))
-					 (setq coq-prog-args
-								 (\`
-									("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q"
-									 (\,
-										(concat unimath-topdir "UniMath"))
-									 "UniMath" "-R" "." "Top")))
-					 (make-local-variable
-						(quote coq-prog-name))
-					 (setq coq-prog-name
-								 (concat unimath-topdir "sub/coq/bin/coqtop"))
-					 (make-local-variable
-						(quote before-save-hook))
-					 (add-hook
-						(quote before-save-hook)
-						(quote delete-trailing-whitespace))
-					 (modify-syntax-entry 39 "w")
-					 (modify-syntax-entry 95 "w")
-					 (if
-							 (not
-								(memq
-								 (quote agda-input)
-								 features))
-							 (load
-								(concat unimath-topdir "emacs/agda/agda-input")))
-					 (if
-							 (not
-								(member
-								 (quote
-									("chimney" "╝"))
-								 agda-input-user-translations))
-							 (progn
-								 (setq agda-input-user-translations
-											 (cons
-												(quote
-												 ("chimney" "╝"))
-												agda-input-user-translations))
-								 (setq agda-input-user-translations
-											 (cons
-												(quote
-												 ("==>" "⟹"))
-												agda-input-user-translations))
-								 (agda-input-setup)))
-					 (set-input-method "Agda"))))))
+   '((TeX-master . t)
+     (eval let*
+	   ((Workshops-topdir
+	     (expand-file-name
+	      (locate-dominating-file buffer-file-name ".dir-locals.el")))
+	    (unimath-topdir
+	     (concat Workshops-topdir "UniMath/")))
+	   (setq fill-column 100)
+	   (make-local-variable 'coq-use-project-file)
+	   (setq coq-use-project-file nil)
+	   (make-local-variable 'coq-prog-args)
+	   (setq coq-prog-args
+		 `("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q" ,(concat unimath-topdir "UniMath")
+		   "UniMath" "-R" "." "Top"))
+	   (make-local-variable 'coq-prog-name)
+	   (setq coq-prog-name
+		 (concat unimath-topdir "sub/coq/bin/coqtop"))
+	   (make-local-variable 'before-save-hook)
+	   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+	   (modify-syntax-entry 39 "w")
+	   (modify-syntax-entry 95 "w")
+	   (if
+	       (not
+		(memq 'agda-input features))
+	       (load
+		(concat unimath-topdir "emacs/agda/agda-input")))
+	   (if
+	       (not
+		(member
+		 '("chimney" "╝")
+		 agda-input-user-translations))
+	       (progn
+		 (setq agda-input-user-translations
+		       (cons
+			'("chimney" "╝")
+			agda-input-user-translations))
+		 (setq agda-input-user-translations
+		       (cons
+			'("==>" "⟹")
+			agda-input-user-translations))
+		 (agda-input-setup)))
+	   (set-input-method "Agda")))))
 (package-initialize)
 
 (custom-set-faces
@@ -172,6 +151,7 @@
 ;   flatui
 ;   misterioso
 ;  )
+(set-face-attribute 'region nil :background "#fff3e6") ; #ffe6cc ; #ffdab3 ; #ffce99
 
 ;; No bars
 (menu-bar-mode -1)
@@ -318,8 +298,6 @@
  	;  	(execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
  	; font size
  	(set-font 80)
- 	; color theme
- 	; (load-theme 'solarized-light t)
 	; spelling
 	(setq ispell-program-name "aspell"
 				ispell-dictionary   "british")
@@ -327,7 +305,7 @@
 	(flyspell-buffer)
 	; unicode input
 	(require 'agda-input)
-	(set-input-method "Agda") ; use C-\ to toggle-input
+	; (set-input-method "Agda") ; use C-\ to toggle-input
 	; prettify symbols
 	(setq prettify-symbols-alist '())
 	(mapc (lambda (pair) (push pair prettify-symbols-alist))
@@ -403,3 +381,8 @@
       ("\\.lagda.md\\'" . agda2-mode)
  	 	  )
  	 	auto-mode-alist))
+
+;; openwith
+(require 'openwith)
+(openwith-mode t)
+(setq openwith-associations '(("\\.pdf\\'" "evince --class='Emacs'" (file))))
