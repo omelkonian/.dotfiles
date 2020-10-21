@@ -64,7 +64,7 @@
 	[
 		"subpixel_antialias"
 	],
-	"font_size": 10,
+	"font_size": 11,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
@@ -86,6 +86,15 @@
 	"match_selection": true,
 	"match_tags": true,
 	"neovintageous_build_version": 11100,
+	"open_externally_patterns":
+	[
+		"*.jpg",
+		"*.jpeg",
+		"*.png",
+		"*.gif",
+		"*.zip",
+		"*.pdf"
+	],
 	"remember_open_files": true,
 	"remember_open_folders": true,
 	"rulers":

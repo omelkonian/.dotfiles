@@ -5,6 +5,7 @@
 	],
 	"installed_packages":
 	[
+		"A File Icon",
 		"ayu",
 		"Better CoffeeScript",
 		"Coq",
@@ -13,6 +14,7 @@
 		"HoogleSearch",
 		"MarkdownPreview",
 		"NeoVintageous",
+		"Non Text Files",
 		"Package Control",
 		"PackageResourceViewer",
 		"Prolog",
