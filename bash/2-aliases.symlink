@@ -16,6 +16,11 @@ alias apt-rrm="sudo add-apt-repository --remove"
 
 # SNAP
 alias snap-in="sudo snap install"
+alias snap-up="snap refresh"
+alias snap-rm="sudo snap remove"
+alias snap-ls="snap list"
+alias snap-i="snap info"
+alias snap-find="snap find"
 
 # Config
 alias zshconfig="edit ~/.zshrc"
@@ -23,6 +28,10 @@ alias ohmyzsh="edit ~/.oh-my-zsh"
 alias gitconfig="edit ~/.gitconfig"
 alias xconfig="edit ~/.xmonad"
 alias dotconfig="edit ~/git/.dotfiles"
+
+# Gnome settings
+alias resetGnomeSettings='dconf reset -f /org/gnome/control-center/'
+alias resetGnomeSettings2="gsettings set org.gnome.ControlCenter last-panel ''"
 
 # History
 alias hist="edit ~/.histfile"

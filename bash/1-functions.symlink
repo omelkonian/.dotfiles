@@ -89,7 +89,9 @@ function plfa {
 function makeTex {
   set -euxo pipefail
   xelatex $1.tex
-  bibtex $1.aux
+  if [ -f $1.bib ]; then
+    bibtex $1.aux
+  fi
   evince --class='TeX' $1.pdf &
 }
 
@@ -100,11 +102,11 @@ function makeAt {
   curDir=$(basename "$(pwd)")
 
   # Build and view output
-  if [ -f ./${curDir}.tex ]; then
-    makeTex $curDir
-  elif [ -f ./Makefile ]; then
+  if [ -f ./Makefile ]; then
     make
     evince --class='TeX' *.pdf &
+  elif [ -f ./${curDir}.tex ]; then
+    makeTex $curDir
   else
     echo "Cannot detect mode"
   fi

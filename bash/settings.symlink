@@ -1,0 +1,2 @@
+alias resetGnomeSettings='dconf reset -f /org/gnome/control-center/'
+alias resetGnomeSettings2="gsettings set org.gnome.ControlCenter last-panel ''"

@@ -1,7 +1,27 @@
 alias fixSound="pactl exit"
 alias fixSound2="amixer -D pulse set Master 1+ toggle"
+alias restartAlsa='sudo alsa force-reload'
 alias restart_sound="pulseaudio -k && sudo alsa force-reload"
-alias unmute="pacmd set-sink-mute 0 0"
+alias unmute="pacmd sfet-sink-mute 0 0"
+
+### Troubleshooting ###
+
+# -- install common Sound card drivers and needed packages in Ubuntu.
+# $ apt-in build-essential linux-headers-`uname -r` alsa-base alsa-firmwa
+
+# -- reinstall Alsa and Pulseaudio
+# $ sudo apt-get remove --purge alsa-base pulseaudio
+# $ apt-in alsa-base pulseaudio
+
+# -- listing devices/etc
+# $ aplay -l
+# $ aplay -L
+# $ lspci -b -vv
+# $ lspci -nnk | grep -A2 Audio
+
+# -- timidity/alsa problems
+# $ sudo fuser -v /dev/snd/*
+# $ killall timidity
 
 # Conversion
 function mp3_to_wav {
