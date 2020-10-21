@@ -21,7 +21,7 @@ Config {
 
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
-  font = "xft:Monospace-10",
+  font = "xft:Monospace-11",
   additionalFonts = [],
 
   bgColor = "black",

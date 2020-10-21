@@ -8,6 +8,7 @@ start_app "nm-applet --sm-disable"
 start_app "thunderbird"
 start_app "slack"
 start_app "zulip"
+# start_app "pcloud"
 echo "Apps started"
 
 setup_screens

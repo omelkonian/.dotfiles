@@ -1,4 +1,4 @@
 #!/bin/bash
 signal0=`awk 'NR==3 {print $3}''' /proc/net/wireless`
-signal=${signal0:0:-1}
-echo "<icon=net-wifi.xbm/> ${signal}%"
+signal=`echo "10/7 * ${signal0:0:-1}" | bc -l`
+printf "<icon=net-wifi.xbm/> %0.1f%%\n" $signal

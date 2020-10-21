@@ -25,10 +25,7 @@ import XMonad
   , xK_s, xK_u, {-xK_w,-} xK_z, xK_Tab, xK_F11, xK_F12
   , xK_0, xK_1, xK_9
   )
-import Graphics.X11.ExtraTypes.XF86
-  ( xF86XK_AudioMute, xF86XK_AudioRaiseVolume, xF86XK_AudioLowerVolume
-  , xF86XK_MonBrightnessUp, xF86XK_MonBrightnessDown
-  )
+import qualified Graphics.X11.ExtraTypes.XF86 as X11
 import qualified XMonad                        as X
 import qualified XMonad.StackSet               as W
 import qualified XMonad.Actions.FlexibleResize as Flex
@@ -183,14 +180,17 @@ myManagementHooks =
   , className =? "Thunderbird"     --> goto 1
   , className =? "Nautilus"        --> goto 2
   , className =? "Atom"            --> goto 5
+  , className =? "TeX"             --> goto 5
   , className =? "Google-chrome"   --> goto 6
+  , className =? "Firefox"         --> goto 6
   , className =? "vlc"             --> goto 8
   , className =? "totem"           --> goto 8
   , className =? "Spotify"         --> goto 9
   , className =? "Slack"           --> goto 9
   , className =? "Zulip"           --> goto 9
+  -- , className =? "pcloud"          --> goto 9
+  -- , className =? "pCloud"          --> goto 9
   , className =? "Evince"          --> goto 10
-  , className =? "TeX"             --> goto 5
   , className =? "Eog"             --> goto 10
   ]
   where goto  = doF . W.shift . ws
@@ -227,12 +227,12 @@ myKeys =
       kill
   -- Launcher
   , (alt, xK_p) ~>
-      spawn "synapse"
+      spawn "kupfer"
   -- Specifix apps
   , (alt, xK_i) ~>
-      spawn "google-chrome-stable"
+      spawn "firefox"
   , (alt .|. shift, xK_i) ~>
-      spawn "google-chrome-stable --incognito"
+      spawn "firefox --private-window"
   , (alt, xK_s) ~>
       spawn "subl"
   , (alt, xK_f) ~>
@@ -249,29 +249,35 @@ myKeys =
   , (alt .|. shift, xK_F12) ~>
       confirmSpawn "shutdown"  "notify-send \"OS Alert\" \"Shutting down...\" && shutdown -h now"
   -- Volume control
-  , (0, xF86XK_AudioMute) ~>
+  , (0, X11.xF86XK_AudioMute) ~>
       toggleMute
-  , (0, xF86XK_AudioLowerVolume) ~>
-      spawn (audioCtrl "set_volume -5%")
-  , (0, xF86XK_AudioRaiseVolume) ~>
-      spawn (audioCtrl "set_volume +5%")
   , (alt, xK_Delete) ~>
       toggleMute
+  , (0, X11.xF86XK_AudioLowerVolume) ~>
+      spawn (audioCtrl "set_volume -5%")
   , (alt, xK_Page_Down) ~>
       spawn (audioCtrl "set_volume -5%")
+  , (0, X11.xF86XK_AudioRaiseVolume) ~>
+      spawn (audioCtrl "set_volume +5%")
   , (alt, xK_Page_Up) ~>
       spawn (audioCtrl "set_volume +5%")
   -- Music controls
+  , (0, X11.xF86XK_AudioPlay) ~>
+      spawn (audioCtrl "play/pause")
   , (alt, xK_Insert) ~>
       spawn (audioCtrl "play/pause")
+  , (0, X11.xF86XK_AudioNext) ~>
+      spawn (audioCtrl "next")
   , (alt, xK_End) ~>
       spawn (audioCtrl "next")
+  , (0, X11.xF86XK_AudioPrev) ~>
+      spawn (audioCtrl "prev")
   , (alt, xK_Home) ~>
       spawn (audioCtrl "prev")
   -- Brightness
-  , (0, xF86XK_MonBrightnessUp) ~>
+  , (0, X11.xF86XK_MonBrightnessUp) ~>
       spawn (screenCtrl "brighten")
-  , (0, xF86XK_MonBrightnessDown) ~>
+  , (0, X11.xF86XK_MonBrightnessDown) ~>
       spawn (screenCtrl "darken")
   , (alt .|. shift, xK_s) ~>
       spawn (screenCtrl "setupScreens")
