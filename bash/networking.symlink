@@ -4,10 +4,11 @@ ETHERNET="eth0"
 alias fixBluetooth="sudo modprobe rtbth"
 alias lsNetwork="sudo lshw -C network"
 alias fixNetwork="sudo dpkg-reconfigure network-manager"
+alias restartWifi="sudo service network-manager restart"
 
 function fixWifi {
   sudo ifconfig $WIFI down
-  sudo service network-manager restart
+  restartWifi
   sudo ifconfig $WIFI up
 }
 

@@ -1,10 +1,12 @@
+# GHC: General
+alias ghci-nodot="ghci -ignore-dot-ghci"
+
 # GHC: devel2
 alias ghc2="~/ghc/inplace/bin/ghc-stage2"
 alias ghc2i="ghc2 --interactive"
 alias ghc2make="make -j8 -C ~/ghc/ghc"
 alias ghc2reset="(cd ~/ghc && ./boot && ./configure)"
 alias cabal_fix="cabal new-build all --write-ghc-environment-file=always"
-
 
 # GHC: Flags
 export DEBUG="-debug"
@@ -29,3 +31,7 @@ export ASM="-dasm-lint"
 export WALL="-Wall"
 export CORE_D="-ddump-simpl"
 export CORE_DS="-ddump-ds"
+
+if [ -e /home/omelkonian/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/omelkonian/.nix-profile/etc/profile.d/nix.sh;
+fi # added by Nix installer

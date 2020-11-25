@@ -1,7 +1,8 @@
+alias restartPulse='pulseaudio -k'
+alias restartAlsa='sudo alsa force-reload'
+alias restart_sound='restartPulse && restartAlsa'
 alias fixSound="pactl exit"
 alias fixSound2="amixer -D pulse set Master 1+ toggle"
-alias restartAlsa='sudo alsa force-reload'
-alias restart_sound="pulseaudio -k && sudo alsa force-reload"
 alias unmute="pacmd sfet-sink-mute 0 0"
 
 ### Troubleshooting ###
@@ -63,9 +64,18 @@ function check_channels {
 }
 
 # Spotify
-alias rip='spotify-ripper -d $MUSIC_ROOT'
-alias rip-from-file='spotify-ripper -d $MUSIC_ROOT ~/Dropbox/toRip.txt'
-alias rip_local='spotify-ripper -d $LOCAL_MUSIC_ROOT'
+function toSpotifyURI {
+  echo spotify:album:$(echo "$1" | cut -d/ -f5 | cut -d\? -f1 | cut -d: -f3)
+}
+
+function ripAt {
+  folder=$1 && shift
+  map toSpotifyURI $* | xargs --open-tty spotify-ripper -d $folder
+}
+
+alias rip='ripAt $MUSIC_ROOT'
+alias rip_local='ripAt $LOCAL_MUSIC_ROOT'
+alias rip_from_file='rip ~/Dropbox/toRip.txt'
 
 ## Sink management (Pulse Audio)
 function searchSink {

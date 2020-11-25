@@ -2,6 +2,8 @@
 alias lt="ll -tr"
 alias s=subl
 alias show_storage="df -h"
+alias diff="diff --color"
+alias xargs="xargs " # this way, `xargs` will work for aliases as well
 
 # APT
 alias apt-up="sudo apt-get update"
@@ -13,6 +15,7 @@ alias apt-arm="sudo apt-get autoremove"
 alias apt-pg="sudo apt-get purge"
 alias apt-rad="sudo add-apt-repository"
 alias apt-rrm="sudo add-apt-repository --remove"
+alias apt-version="apt-cache policy"
 
 # SNAP
 alias snap-in="sudo snap install"
@@ -64,3 +67,5 @@ alias grepAgda="grepOn agda"
 alias grepMd="grepOn md"
 alias grepAgdaHoles="grepAgda -C 6 '\({!.*!}\|OPTIONS --allow-unsolved\|postulate\)'"
 alias grepTex="grepOn tex"
+alias grepJs="grepOn js"
+alias grepTs="grepOn ts"

@@ -87,7 +87,7 @@ function plfa {
 
 # Build TeX with references + view rendered PDF
 function makeTex {
-  set -euxo pipefail
+  set -exo pipefail
   xelatex $1.tex
   if [ -f $1.bib ]; then
     bibtex $1.aux
@@ -97,7 +97,7 @@ function makeTex {
 
 # cd + make + view PDFs
 function makeAt {
-  set -euxo pipefail
+  set -exo pipefail
   builtin cd "$1"
   curDir=$(basename "$(pwd)")
 
@@ -111,6 +111,8 @@ function makeAt {
     echo "Cannot detect mode"
   fi
 }
+
+alias makeHere='makeAt .'
 
 function list_repositories {
   grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
@@ -177,4 +179,20 @@ function kill_app {
   if [ -n "$(pgrep $1)" ] ; then
     kill -9 $(pgrep $1)
   fi
+}
+
+# Functional Bash
+function map {
+  local f="$1" && shift
+  for arg; do
+    "$f" "$arg"
+  done
+}
+
+function compose {
+  setopt aliases
+  local f="$1" && shift
+  local g="$1" && shift
+  $g $($f $*)
+  unsetopt aliases
 }
