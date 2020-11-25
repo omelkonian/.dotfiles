@@ -21,7 +21,7 @@
 
 # Cabal
 **/.ghc.environment.*
-**/dist/
+#**/dist/
 **/dist-newstyle/
 **/cabal-config-flags
 **/cabal.config
