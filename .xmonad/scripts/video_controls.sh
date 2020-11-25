@@ -1,6 +1,7 @@
 #!/bin/bash
 source ~/git/.dotfiles/bash/1-functions.symlink
 source ~/git/.dotfiles/bash/video.symlink
+source ~/git/.dotfiles/bash/keyboard.symlink
 op=$1
 shift
 case $op in

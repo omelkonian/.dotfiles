@@ -35,6 +35,7 @@ import XMonad.Layout                  (Resize (..), Mirror (..), Full (..), (|||
 import XMonad.Layout.ResizableTile    (ResizableTall (..), MirrorResize (..))
 import XMonad.Layout.NoBorders        (noBorders, smartBorders)
 import XMonad.Layout.Fullscreen       (fullscreenEventHook)
+import XMonad.Layout.PerWorkspace     (onWorkspaces)
 import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, liftX)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.EwmhDesktops      (ewmh)
@@ -105,7 +106,7 @@ myBorderWidth        = 2              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
 
 myTitleColor     = "#eeeeee"  -- color of window title
-myTitleLength    = 50         -- truncate window title to this length
+myTitleLength    = 200        -- truncate window title to this length
 myCurrentWSColor = "#e6744c"  -- color of active workspace
 myVisibleWSColor = "#c185a7"  -- color of inactive workspace
 myUrgentWSColor  = "#cc0000"  -- color of workspace with 'urgent' window
@@ -123,10 +124,13 @@ myUrgentWSRight  = "}"
 myLayouts
   = smartBorders
   $ avoidStruts
-  $ tall ||| Mirror tall ||| full
+  $ onWorkspaces (ws <$> [7..9]) fullFirst tallFirst
   where
     tall = ResizableTall 1 (3/100) (1/2) []
     full = noBorders Full
+
+    tallFirst = tall ||| Mirror tall ||| full
+    fullFirst = full ||| tall ||| Mirror tall
 
 -------------------------------------------------------
 -- Workspaces.
@@ -134,9 +138,10 @@ myLayouts
 myWorkspaces :: [WorkspaceId]
 myWorkspaces =
   clickable . (map xmobarEscape) $
-    [ "1:Mail",   "2:Files",   "3:Edit"
-    , "4:Term",   "5:Dev",     "6:Web"
-    , "7:Chat",   "8:Video",  "9:Music"
+    map (take 1)
+    [ "1:Mail", "2:Files", "3:Edit"
+    , "4:Term", "5:Dev",   "6:Web"
+    , "7:Dev",  "8:Video", "9:Chat"
     , "0:PDF"
     ]
     where
@@ -178,7 +183,7 @@ myManagementHooks =
   , appName   =? "Transmission"    --> goto 9
   , className =? "Pdfpc"           --> doFloat
   , className =? "Thunderbird"     --> goto 1
-  , className =? "Nautilus"        --> goto 2
+  , className =? "org.gnome.Nautilus" --> goto 2
   , className =? "Atom"            --> goto 5
   , className =? "TeX"             --> goto 5
   , className =? "Google-chrome"   --> goto 6
