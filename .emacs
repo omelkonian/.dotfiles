@@ -187,10 +187,13 @@
 (global-set-key (kbd "C-S-w") 'delete-window)
 
 ;; Window resizing
-; (global-set-key (kbd "C-A-<up>")    'enlarge-window)
-; (global-set-key (kbd "C-A-<down>")  'shrink-window)
-; (global-set-key (kbd "C-A-<right>") 'enlarge-window-horizontally)
-; (global-set-key (kbd "C-A-<left>")  'shrink-window-horizontally)
+(require 'windsize)
+; (windsize-default-keybindings)
+(global-set-key (kbd "C-M-<left>")  'windsize-left)
+(global-set-key (kbd "C-M-<right>") 'windsize-right)
+(global-set-key (kbd "C-M-<up>")    'windsize-up)
+(global-set-key (kbd "C-M-<down>")  'windsize-down)
+; (evil-define-key 'normal emacs-windsize-map (kbd "C-S-<left>") 'windsize-left)
 
 ;; Font resizing
 (global-set-key (kbd "C-+") 'text-scale-increase)
