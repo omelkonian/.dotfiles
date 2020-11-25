@@ -11,6 +11,7 @@
 		"Coq",
 		"Ethereum",
 		"Git Config",
+		"Highlight",
 		"HoogleSearch",
 		"MarkdownPreview",
 		"NeoVintageous",
@@ -22,6 +23,7 @@
 		"Racket",
 		"SideBarEnhancements",
 		"TikZ",
+		"TypeScript Syntax",
 		"UnicodeMath"
 	]
 }
