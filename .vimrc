@@ -22,11 +22,17 @@ call plug#end()
 colo github
 
 """ Cursor
+if &term =~ "xterm\\|rxvt"
+  let &t_SI = "\e[6 q"
+  let &t_EI = "\e[2 q"
+endif
 
-" if &term =~ "xterm\\|rxvt"
-"   let &t_SI = "\e[6 q"
-"   let &t_EI = "\e[2 q"
-" endif
+" Optionally reset the cursor on start/exit
+augroup RestoreCursorShape
+    autocmd!
+    autocmd VimEnter * silent !echo -ne "\e[2 q"
+    autocmd VimLeave * silent !echo -ne "\e[6 q"
+augroup END
 
 """ General options
 set tabstop=4       " number of visual spaces per TAB
