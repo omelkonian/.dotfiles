@@ -72,6 +72,10 @@ function agdac {
   GHC_ENVIRONMENT=agda agda --compile-dir=target -c $1 \
    && ./$fname
 }
+function agdaViz {
+  agda --dependency-graph=dependencies.dot $1
+  dot -Tpng dependencies.dot > dependencies.png
+}
 
 # Grep
 alias grepHs="grepOn hs"
