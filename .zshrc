@@ -1,8 +1,8 @@
-export ZSH=~/.oh-my-zsh
+export ZSH=/home/omelkonian/.oh-my-zsh
 # ZSH_THEME="random"
 
 CASE_SENSITIVE="true"
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 # COMPLETION_WAITING_DOTS="true"
 
 plugins=(git
@@ -16,12 +16,12 @@ plugins=(git
 
 source $ZSH/oh-my-zsh.sh
 
-HISTFILE=~/.histfile
+HISTFILE=/home/omelkonian/.histfile
 HISTSIZE=999999999
 SAVEHIST=$HISTSIZE
 setopt appendhistory autocd beep extendedglob nomatch notify
 bindkey -e
-zstyle :compinstall filename '~/.zshrc'
+zstyle :compinstall filename '/home/omelkonian/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -31,6 +31,8 @@ autoload -U +X bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script stack)"
 
 # Imports
-for file in ~/git/.dotfiles/bash/*.symlink ; do
-    . $file
+for file in /home/omelkonian/git/.dotfiles/bash/*.symlink; do
+    if [[ $file != *"controls"* ]]; then
+      . $file
+    fi
 done
