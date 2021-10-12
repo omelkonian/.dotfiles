@@ -118,7 +118,7 @@
 	],
 	"bold_folder_labels": true,
 	"caret_style": "phase",
-	"color_scheme": "Packages/ayu/ayu-dark.sublime-color-scheme",
+	"color_scheme": "Packages/ayu/ayu-light.sublime-color-scheme",
 	"detect_indentation": true,
 	"draw_indent_guides": true,
 	"draw_white_space": "selection",
@@ -154,7 +154,6 @@
 		"*.fls",
 		"*.out",
 		"*.toc",
-		"*.fmt",
 		"*.fot",
 		"*.cb",
 		"*.cb2",
@@ -175,14 +174,14 @@
 	[
 		"subpixel_antialias"
 	],
-	"font_size": 10,
+	"font_size": 9,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
 		"Six",
 		"Vintage",
-		"Vintageous"
+		"Vintageous",
 	],
 	"indent_guide_options":
 	[
@@ -218,7 +217,7 @@
 	"sublimelinter": true,
 	"tab_completion": true,
 	"tab_size": 2,
-	"theme": "ayu-dark.sublime-theme",
+	"theme": "ayu-light.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_trailing_white_space_on_save": false,
 	"use_tab_stops": true,
@@ -226,5 +225,14 @@
 	"vintageous_use_ctrl_keys": null,
 	"vintageous_use_super_keys": null,
 	"vintageous_use_sys_clipboard": true,
-	"word_wrap": "auto"
+	"word_wrap": "auto",
+	// Haskell
+	"clients": {
+    "haskell-language-server": {
+      "command": ["haskell-language-server-wrapper", "--lsp"],
+      "scopes": ["source.haskell"],
+      "syntaxes": ["Packages/Haskell/Haskell.sublime-syntax"],
+      "languageId": "haskell",
+  	},
+	},
 }
