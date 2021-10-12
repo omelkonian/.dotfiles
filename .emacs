@@ -12,7 +12,11 @@
      ("^l" "ˡ")
      ("^r" "ʳ")
      ("_v" "ᵥ")
-     ("eq" "≟")))
+     ("eq" "≟")
+     ("bx" "𝕩")))
+ '(agda2-backend "GHC")
+ '(agda2-program-args nil)
+ '(agda2-program-name "agda")
  '(company-backends
    '(company-semantic company-capf
 		      (company-dabbrev-code company-gtags company-etags company-keywords)
@@ -26,7 +30,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -94,6 +98,10 @@
 ;; Basic ;;
 ;;;;;;;;;;;
 
+(defun reload-emacs ()
+  (interactive)
+  (load-file user-init-file))
+
 ;; Get access to $PATH
 (exec-path-from-shell-initialize)
 
@@ -105,21 +113,40 @@
 (global-unset-key (kbd "C-p"))
 (global-unset-key (kbd "C-z"))
 
+
 ;; Set font
-(defun set-font (height)
+(defun set-font (family fallback height)
   (set-face-attribute 'default nil
-    :family "DejaVu Sans Mono" ; "Fira Code" ; "mononoki" ; Monospace ; Linux Libertine Mono O ; FreeMono
+    :family family
     :height height
     :weight 'normal
-    :width  'normal))
-(set-font 100) ; default font size
+    :width  'normal)
+  (dolist (ft (fontset-list))
+    (set-fontset-font ft 'unicode (font-spec :name family))
+    (set-fontset-font ft 'unicode (font-spec :name fallback) nil 'append))
+  )
+(set-font
+  "DejaVu Sans Mono" ; main font family
+  "Asanb Math monospacified for DejaVu Sans Mono" ; fallback font family
+  ; default font size
+  ; 80
+  100
+  ; 120
+  )
 
 ;; Save command
 (defun-bind save "C-s" ()
- (save-some-buffers t))
+  (save-some-buffers t))
+
+;; Spawn new Emacs instance command
+(defun-bind spawnEmacs "C-S-n" ()
+  (call-process "sh" nil nil nil "-c" "emacs &"))
 
 ;; Company (auto-completion)
-(add-hook 'after-init-hook 'global-company-mode)
+; (add-hook 'after-init-hook 'global-company-mode)
+
+;; Ivy (auto-completion)
+; (ivy-mode 1)
 
 ;; Sublimity (smooth scrolling)
 (add-to-list 'load-path "~/.emacs.d/sublimity/")
@@ -139,8 +166,8 @@
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
 
 ;; Line/column numbering (slows down Emacs...)
-; (global-linum-mode t)
-; (column-number-mode)
+(global-linum-mode t)
+(column-number-mode)
 
 ;; Color theme
 ; (load-theme
@@ -158,7 +185,8 @@
 (tool-bar-mode -1)
 
 ;; Tabs
-(setq default-tab-width 2)
+(setq indent-tabs-mode nil)
+; (setq default-tab-width 2)
 (setq tab-width 2)
 
 ;; Window title
@@ -212,8 +240,22 @@
 (setq recentf-max-saved-items 25)
 (global-set-key (kbd "C-S-t") 'recentf-open-files)
 
-;; Ivy (auto-completion)
-;; (ivy-mode 1)
+;; Folding
+
+; (require 'origami)
+(require 'yafolding)
+
+(global-set-key (kbd "s-d y") 'yafolding-discover)
+
+(add-hook 'prog-mode-hook
+          (lambda () (yafolding-mode)))
+(add-hook 'latex-mode-hook
+          (lambda () (yafolding-mode)))
+
+(define-key yafolding-mode-map (kbd "<C-S-return>") 'yafolding-hide-parent-element)
+(define-key yafolding-mode-map (kbd "<C-M-return>") 'yafolding-toggle-all)
+(define-key yafolding-mode-map (kbd "<C-return>") 'yafolding-toggle-element)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile (project management) ;;
@@ -227,21 +269,39 @@
       projectile-enable-caching t
       projectile-project-search-path '("~/git/"))
 
-;;;;;;;;;;;;;;;;;;;;;;
-;; Agda (+ Haskell) ;;
-;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;; Haskell ;;
+;;;;;;;;;;;;;
 
-; (add-hook 'haskell-mode-hook (lambda ()
-;   ...
-;   ))
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
+
+;;;;;;;;;;
+;; Agda ;;
+;;;;;;;;;;
+
+;; Set custom GHC environment
+(setenv "GHC_ENVIRONMENT" "agda")
 
 ;; enable agda-mode
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+;; enable agda-input everywhere ; use C-\ to toggle-input
+(require 'agda-input)
+(set-input-method "Agda")
+
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
   (setq agda2-highlight-level 'interactive)
+  (defun-bind agda/run "C-c C-x C-x" ()
+    ;; run compiled GHC file 
+    (save-buffer)
+    (async-shell-command (concat "./" (file-name-base buffer-file-name))))
+  ;   (save-buffer)
+  ;   (async-shell-command
+  ;     (concat "\./" (file-name-base buffer-file-name))))
+  ;   (agda2-goto-definition-keyboard))
   ;; set navigation keys
   (defun-bind agda/go-to-definition "C-c g" ()
     ;; Go to definition
@@ -256,6 +316,10 @@
     (windmove-right)
     (switch-to-buffer "*Agda information*")
     (windmove-left))
+  ;; also enable agda-input in command buffers
+  (add-hook 'isearch-mode-hook (lambda () (set-input-method "Agda")))
+  ;; fix Evil shifts
+  (setq evil-shift-width 2)
   ))
 
 ;;;;;;;;;;;
@@ -307,8 +371,9 @@
 	(flyspell-mode)
 	(flyspell-buffer)
 	; unicode input
-	(require 'agda-input)
-	; (set-input-method "Agda") ; use C-\ to toggle-input
+	; (require 'agda-input)
+  (set-input-method nil)
+	; (set-input-method "Agda")
 	; prettify symbols
 	(setq prettify-symbols-alist '())
 	(mapc (lambda (pair) (push pair prettify-symbols-alist))
@@ -389,3 +454,21 @@
 (require 'openwith)
 (openwith-mode t)
 (setq openwith-associations '(("\\.pdf\\'" "evince --class='Emacs'" (file))))
+
+;; Backup files
+(defvar --backup-directory (concat user-emacs-directory "backups"))
+(if (not (file-exists-p --backup-directory))
+        (make-directory --backup-directory t))
+(setq backup-directory-alist `(("." . ,--backup-directory)))
+(setq make-backup-files t               ; backup of a file the first time it is saved.
+      backup-by-copying t               ; don't clobber symlinks
+      version-control t                 ; version numbers for backup files
+      delete-old-versions t             ; delete excess backup files silently
+      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+      )
+;; Autosaves
+; (setq auto-save-default t               ; auto-save every buffer that visits a file
+;       auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+;       auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+;       )
