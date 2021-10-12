@@ -48,6 +48,9 @@
 **/*.fls
 **/*.fdb_latexmk
 **/*.dvi
+**/*.vrb
+**/*.run.xml
+**/*-blx.bib
 
 # Tex-minted
 **/_minted*/
@@ -57,6 +60,8 @@
 **/*.agda~
 **/latex/
 **/_build/
+**/MAlonzo/
+**/agda/target/
 
 # R
 **/*.Rproj*
@@ -74,3 +79,12 @@
 
 # MacOS
 **/*.DS_STORE
+
+# Visual Studio Code
+**/*.code-workspace
+
+# Control bash files (generated from cmd-center)
+**/*-controls.*
+
+# Xmonad
+**/prompt-history
