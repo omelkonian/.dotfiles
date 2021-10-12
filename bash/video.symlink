@@ -1,3 +1,6 @@
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+source $MEHOME/git/.dotfiles/bash/1-functions.symlink
+
 alias restart_xserver="sudo service lightdm.service restart"
  
 function getBuiltinScreen {
@@ -9,49 +12,87 @@ function getBuiltinScreen {
   esac
 }
 
+# GPUs
+GPU1='intel'
+GPU2='nvidia'
+
+function video__switchGPU {
+  if [[ $(echo `prime-select query`) == $GPU2 ]]; then
+    prime-select $GPU1
+  else
+    prime-select $GPU2
+  fi
+}
+## [ProTip] to use `prime-select` without root you need to do the following:
+# 1. NVIDIA: $ sudo chown user:user` /etc/prime-discrete
+# 2. INTEL:  $ sudo chown user:user` /etc/prime-discrete
+# 3. ... and comment out `def check_root():` in `which prime-select`
+
+
 # Setup screen variables, depending on host machine
-HDMI="HDMI1"
 BUILTIN=$(getBuiltinScreen)
+HDMI="HDMI1"
+DPORT="DP2"
 
  # xrandr utilities
 function mirrorScreens {
-  xrandr --output $BUILTIN --auto --output $HDMI --auto
+  xrandr --output $BUILTIN --auto --output $HDMI --auto --output $DPORT --auto
+}
+
+function rotatedScreen {
+  xrandr | grep -q "connected .* left (.*"
+}
+
+function rotateScreen {
+  rotatedScreen && xrandr -o normal || xrandr -o left
 }
 
 function setResolution {
   xrandr --output $HDMI --mode $1
 }
 
-function connected_HDMI {
-  [ -n "$(xrandr | grep $HDMI | grep " connected ")" ]
+function connected {
+  [ -n "$(xrandr | grep $1 | grep " connected ")" ]
 }
 
 function selected_HDMI {
   [ -n "$(xrandr --listmonitors | grep $HDMI)" ]
 }
 
+function undockedScreens {
+  xrandr --output $BUILTIN --auto --primary\
+         --output $HDMI --off \
+         --output $DPORT --off
+}
+
+function dockedScreens {
+  xrandr --output $BUILTIN --off \
+         --output $HDMI --primary --auto \
+         --output $DPORT --auto --rotate left --left-of $HDMI 
+}
+
 # Setup screens
 function setup_screens {
-  # Spawn top icon tray
-  kill_app "trayer"
-  trayer --edge top --align right --monitor primary --widthtype percent --width 10 --height 22 --transparent true --alpha 0 --tint 0x000000 &
+  # Enable screens depending on host machine
+  (connected $HDMI || connected $DPORT) && dockedScreens || undockedScreens 
 
   # Set background image
-  if [ -f $BACKGROUND_IMAGE ]; then
-    nitrogen --set-auto $BACKGROUND_IMAGE
-  fi
+  nitrogen --restore
 
-  # Enable screens depending on host machine
-  if connected_HDMI; then
-      # Docked
-      xrandr --output $BUILTIN --off --output $HDMI --auto
-  else
-      # Undocked
-      xrandr --output $BUILTIN --auto --output $HDMI --off
-  fi
+  # Spawn top icon tray
+  kill_app "trayer"
+  trayer --edge top --align right --monitor primary --widthtype percent --width 5 --height 22 --transparent true --alpha 0 --tint 0x000000 &
+
+  # De-activate screen locking (~ enable screen inhibitor)
+  inhibitor__enable
 }
 
 # Image editing
+
+function imgs2pdf {
+  convert $@ output.pdf
+}
+
 function ogv2gif {
   FPS=15
   WIDTH=1920
@@ -59,7 +100,6 @@ function ogv2gif {
   for inputFile in $@
   do
     outputFile="${inputFile%.*}"
-
 
     #Generate palette for better quality
     ffmpeg -i $inputFile -vf fps=$FPS,scale=$WIDTH:-1:flags=lanczos,palettegen $tmp
@@ -71,10 +111,26 @@ function ogv2gif {
   done
 }
 
+function video2gif {
+  ffmpeg -ss 0 -t 5 -i "$1" -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 output.gif
+}
+
 # Rotate a video file by the given degrees (clockwise)
 function rotate {
   ffmpeg -i "$2" -map_metadata 0 -metadata:s:v rotate="$1" -codec copy R"$2" \
    && mv R"$2" "$2"
+}
+
+function compressMp4 {
+  local in=$1 && shift
+  local out="${1:-$in}" && shift
+  ffmpeg -i "$in" -vcodec h264 -acodec mp2 $@ "$out"
+}
+
+function compressImg {
+  local in=$1 && shift;
+  local out="${1:-$in}" && shift
+  convert "$in" -resize 720x -quality 50% $@ "$out"
 }
 
 function reminderAt {
@@ -83,14 +139,51 @@ function reminderAt {
 }
 
 function swfToAvi {
-  f="$1"
+  f="$@"
   ffmpeg -i "$f" -strict -2 "${f%.*}".mp4 -y
 }
 
 # Brightness control
 function changeBrightness {
-  if ((! connected_HDMI) && selected_HDMI) || (connected_HDMI && (! selected_HDMI)); then
-    setup_screens
-  fi
+  (! connected $HDMI) && setup_screens
   xbacklight $@
 }
+
+# Lock screen / inhibit screen-saver
+SCREENSAVER_TIME=$((5 * 60)) # in seconds
+LOCK_TIME=30 # in minutes
+MARGIN_LOCK_TIME=60 # in seconds
+SUSPEND_TIME=30 # in minutes, after LOCK_TIME
+alias lockScreen=slock
+
+function inhibitor__enable {
+  if [ -n "$(pgrep xautolock)" ]; then 
+    xset s 0
+    pkill xautolock
+    notify-send "Screen inhibitor enabled."
+  fi
+}
+
+function inhibitor__disable {
+  if [ -z "$(pgrep xautolock)" ]; then 
+    xset s $SCREENSAVER_TIME
+    xautolock -time $LOCK_TIME -locker 'slock' \
+      -notify $MARGIN_LOCK_TIME \
+      -notifier "notify-send 'Locker' 'Locking screen in $MARGIN_LOCK_TIME seconds'" \
+      -killtime $SUSPEND_TIME -killer "systemctl suspend" &
+    notify-send "Screen inhibitor disabled."
+  fi
+}
+
+function inhibitor__toggle {
+  [ -z "$(pgrep xautolock)" ] && inhibitor__disable || inhibitor__enable
+}
+
+# Droidcam (T0D0)
+function droidcam__connect {
+  ip=$1 && shift
+  port=${1:-4747}
+  droidcam-cli -nocontrols 192.168.1.$ip $port &
+}
+
+

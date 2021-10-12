@@ -1,3 +1,5 @@
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+
 alias restartPulse='pulseaudio -k'
 alias restartAlsa='sudo alsa force-reload'
 alias restart_sound='restartPulse && restartAlsa'
@@ -41,20 +43,21 @@ function extract_right_channel {
 }
 function adjust_tempo {
   factor=$(zenity --entry --text 'What percentage of the original tempo? (eg 0.8)')
-  fname="${1%.*}"
-  ext="${1##*.}"
-  echo "fname: $fname, ext: $ext"
-  sox "$1" "$fname"-"$factor"."$ext" tempo "$factor"
+  f="$@"
+  fname="${f%.*}"
+  ext="${f##*.}"
+  sox "$f" "$fname"-"$factor"."$ext" tempo "$factor"
 }
 
 function extract_channels {
-  ext="${1##*.}"
+  f="$@"
+  ext="${f##*.}"
   case $ext in
     "mp3")
-      mp3_to_wav "$@" ;;
+      mp3_to_wav $f ;;
   esac
-  extract_left_channel "$@"
-  extract_right_channel "$@"
+  extract_left_channel "$f"
+  extract_right_channel "$f"
 }
 
 # Speaker test
@@ -62,6 +65,9 @@ function check_channels {
   # play ~/Sounds/testLR.wav
   speaker-test -t wav -c 2 &
 }
+
+# Mic test
+alias recordVoice='sox -t alsa default test.wav && play test.wav && rm test.wav'
 
 # Spotify
 function toSpotifyURI {
@@ -75,9 +81,71 @@ function ripAt {
 
 alias rip='ripAt $MUSIC_ROOT'
 alias rip_local='ripAt $LOCAL_MUSIC_ROOT'
-alias rip_from_file='rip ~/Dropbox/toRip.txt'
+alias rip_temp='ripAt $TEMP_MUSIC_ROOT'
+alias rip_from_file='rip $MEHOME/Dropbox/toRip.txt'
 
-## Sink management (Pulse Audio)
+# Playlists
+function printPlaylist {
+  echo '<playlist>'
+  echo '  <trackList>'
+  for f in "$@"; do
+    echo '    <track>'
+    echo "      <location>$f</location>"
+    echo '    </track>'
+  done
+  echo '  </trackList>'
+  echo '</playlist>'
+}
+
+function mkPlaylist {
+  # inputs are a list of file URIs, e.g. file:///path/to/file.mid
+  out=$(zenity --entry --text 'Give output filename for .xspf playlist:')
+  printPlaylist $@ > "$out.xspf"
+}
+
+## PulseAudio (card management)
+CARD_ID=0
+CARD_PATH="/sys/class/drm/card$CARD_ID/"
+HDMI_CARD="card$CARD_ID-HDMI-A-1"
+AUDIO_INPUT="analog-stereo"
+AUDIO_OUTPUT_ANALOG="analog-stereo"
+AUDIO_OUTPUT_HDMI="hdmi-stereo"
+PULSE_SERVER="unix:/run/user/$USER_ID/pulse/native"
+
+function audio__set_card_profile {
+  local AUDIO_OUTPUT=$1 && shift
+  sudo -u "$USER" pactl --server $PULSE_SERVER \
+    set-card-profile $CARD_ID output:"$AUDIO_OUTPUT"+input:"$AUDIO_INPUT"
+}
+
+function connected_HDMI_sound {
+  [ $(<$CARD_PATH/$HDMI_CARD/status) == connected ]
+}
+
+function audio__selected {
+  pacmd list-cards | grep -q "active profile: <output:$1"
+}
+
+function selected_HDMI_sound {
+  audio__selected "$AUDIO_OUTPUT_HDMI"
+}
+
+function toggle_HDMI {
+  selected_HDMI_sound && \
+    audio__set_card_profile "$AUDIO_OUTPUT_ANALOG" || \
+    audio__set_card_profile "$AUDIO_OUTPUT_HDMI"
+}
+
+function setup_audio {
+  audio__set_card_profile "$AUDIO_OUTPUT_ANALOG"
+  # if [ connected_HDMI_sound ]; then
+  #   audio__set_card_profile "$AUDIO_OUTPUT_HDMI" 
+  # else
+  #   audio__set_card_profile "$AUDIO_OUTPUT_ANALOG"
+  # fi
+}
+
+## PulseAudio (sink management)
 function searchSink {
   pactl list sinks | grep $1 -B 2 | grep 'Sink #' | grep -o -E '[[:digit:]]+'
 }
@@ -147,15 +215,72 @@ function audio__next {
 
 function audio__prev {
   if [ -n "$(pgrep clementine)" ] ; then
-    clementine --prev
+    clementine --previous
   fi
   if [ -n "$(pgrep rhythmbox)" ] ; then
-    rhythmbox-client --prev
+    rhythmbox-client --previous
   fi
   if [ -n "$(pgrep yarock)" ] ; then
     yarock --previous
   fi
   if [ -n "$(pgrep totem)" ] ; then
     totem --previous
+  fi
+}
+
+# Bluetooth speakers
+JBL_CHARGE_4="98:52:3D:C4:9B:12"
+MI_EARPHONES="6C:CE:44:FC:C8:AA"
+
+function bluetooth__enabled {
+  # [ -n $(systemctl status bluetooth.service | grep "active (running)") ]
+  [ $(systemctl is-enabled bluetooth.service) == "enabled" ]
+}
+
+function bluetooth__connected {
+  device="$1" && shift
+  hcitool con | grep -q $device
+}
+
+function bluetooth__reset {
+  device="$1" && shift
+  (
+   echo -e "remove $device \n scan on \n"
+   sleep 10
+   echo -e "pair $device \n trust $device \n connect $device \n scan off \n"
+   sleep 10
+   echo -e "quit \n"
+  ) | bluetoothctl
+}
+
+function bluetooth__disconnect {
+  device="$1" && shift
+  (
+   echo -e "disconnect $device \n"
+   sleep 5
+   echo -e "quit \n"
+  ) | bluetoothctl
+}
+
+function bluetooth__connect {
+  device="$1" && shift
+  (
+   echo -e "connect $device \n"
+   sleep 10
+   echo -e "quit \n"
+  ) | bluetoothctl
+}
+
+function bluetooth__toggle {
+  device="$1" && shift
+  if bluetooth__connected $device; then
+    bluetooth__disconnect $device
+  else
+    bluetooth__connect $device
+    # Reset if connection fails
+    if ! bluetooth__connected $device; then
+      zenity --question --text "Connection failed: reset $device?" && \
+        bluetooth__reset $device
+    fi
   fi
 }

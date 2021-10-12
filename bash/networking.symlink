@@ -1,10 +1,15 @@
-WIFI="wlp2s0"
-ETHERNET="eth0"
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+
+WIFI='wlp2s0'
+ETHERNET='eth0'
+WIFI_DRIVER='ath10k_pci'
 
 alias fixBluetooth="sudo modprobe rtbth"
 alias lsNetwork="sudo lshw -C network"
 alias fixNetwork="sudo dpkg-reconfigure network-manager"
 alias restartWifi="sudo service network-manager restart"
+
+alias restartWifiDriver="kernel__restart_module $WIFI_DRIVER"
 
 function fixWifi {
   sudo ifconfig $WIFI down
@@ -38,7 +43,7 @@ export UUVM_URLB="science-vs159.science.uu.nl"
 export UUVM_USER="orestis"
 function uuvm {
     ssh-agent
-    ssh-add ~/.ssh/id_rsa
+    ssh-add $MEHOME/.ssh/id_rsa
     ssh -A ${UUVM_USER}@${UUVM_URLA}
 }
 

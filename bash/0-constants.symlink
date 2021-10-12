@@ -1,8 +1,13 @@
+USER_ID=$(id -u $USER)
 EDITOR='subl'
 VIEWER='evince'
 DROPBOX_BACKUP_FOLDER=~/Dropbox/Backup/
-MUSIC_ROOT='/media/omelkonian/TOSHIBA EXT/Music/'
-LOCAL_MUSIC_ROOT=/home/omelkonian/Music
-GIT_ROOT=/home/omelkonian/git
+MEHOME='/home/omelkonian'
+MEDIA='/media/omelkonian'
+HD="$MEDIA/TOSHIBA EXT"
+SSD="$MEDIA/SSD 1TB"
+MUSIC_ROOT="$HD/Music/"
+LOCAL_MUSIC_ROOT="$SSD/Music"
+TEMP_MUSIC_ROOT="$SSD/Music/\$Temp"
+GIT_ROOT="$MEHOME/git"
 CPU_CORES=`nproc --all`
-BACKGROUND_IMAGE=~/Wallpapers/discontinuous_plains.jpg

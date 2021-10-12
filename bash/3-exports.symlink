@@ -1,3 +1,5 @@
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+
 # ROS
 # export ROS_VERSION='kinetic'
 # source /opt/ros/$ROS_VERSION/setup.zsh
@@ -32,7 +34,7 @@ export RSTUDIO_WHICH_R=`which R`
 
 # OPAM (OCaml)
 eval $(opam config env)
-. /home/omelkonian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+. $MEHOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # Spotify setup
 export SPOTIPY_CLIENT_ID='3035f03a789149968ccf80e5f0a824f4'
@@ -43,7 +45,7 @@ export SPOTIPY_REDIRECT_URI='http://www.purple.com'
 export QT_QPA_PLATFORMTHEME=qt5ct
 
 # npm
-add_to_path $HOME/.npm-global/bin
+add_to_path $MEHOME/.npm-global/bin
 
 # UoE printing username
 export CUPS_USER='s2000146'

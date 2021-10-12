@@ -9,3 +9,37 @@ alias caps_off="xdotool key Caps_Lock"
 
 # Language switch
 setxkbmap -layout us,gr -option grp:shifts_toggle # -option grp:rwin_toggle
+
+# Touchpad
+TOUCHPAD=$(($(xinput list | grep TouchPad | cut -d= -f2 | cut -d\[ -f1)))
+function touchpad__toggle {
+  # T0D0 fix
+  if [ $(xinput list-props $TOUCHPAD | grep "Enabled" | cut -d ':' -f 2 | grep -oe '\([0-9.]*\)') = 1 ]; then
+    echo "Y"
+    xinput --disable $TOUCHPAD
+  else
+    echo "N"
+    xinput --enable $TOUCHPAD
+  fi
+}
+
+# Remote touchpad
+function remote-touchpad__disable {
+  pkill remote-touchpad
+}
+
+function remote-touchpad__enable {
+  remote-touchpad -bind ":7777" -secret "8888"
+}
+
+function remote-touchpad__enabled {
+  [ -z "$(pgrep remote-touchpad)" ]
+}
+
+function remote-touchpad__toggle {
+  if [ -n "$(pgrep remote-touchpad)" ] ; then
+    remote-touchpad__disable
+  else
+    remote-touchpad__enable
+  fi
+}

@@ -1,3 +1,5 @@
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+
 function cd {
   builtin cd "$@" && ls
 }
@@ -66,10 +68,23 @@ function grepAll {
 }
 
 function grepOn {
-  ext=$1
-  shift
+  ext=$1 && shift
   grep -nr $@ **/**.$ext
+  # T0D0 multiple extensions should be separated by '|', e.g. `grepOn hs|lhs`
+  # exts=$(echo $1 | tr '|' ' ') && shift
+  # setopt shwordsplit
+  # incl=""
+  # for ext in $exts; do
+  #   incl="$incl -name=\"*.$ext\" -or"
+  # done
+  # incl=${incl%????} # remove last `-or`
+  # unsetopt shwordsplit
+  # echo "includes: $incl"
+  # find . $incl" | xargs grep -nr $@
 }
+# function grepFormal {
+#   grep -nr $@ **/formal-*/**.agda
+# }
 
 # Dyck
 function dyckdot {
@@ -167,6 +182,14 @@ function git_check_all_folders {
   builtin cd $curDir
 }
 
+# Cloning
+
+# GITHUB='github'
+# GITLAB='gitlab'
+# GIT_SITE=$GITHUB
+# function git__clone {}
+
+
 # Process handling
 function start_app {
   p_name=${1%% *}
@@ -195,4 +218,198 @@ function compose {
   local g="$1" && shift
   $g $($f $*)
   unsetopt aliases
+}
+
+
+# Mutex
+function mutex {
+  me="${0##*/}"
+  local lock="/var/lock/$fn.lock"
+  if mkdir "$lock"; then
+    bash -c $@
+    rmdir "$lock"
+  else
+    echo "$fn" already running, only one instance allowed
+    exit 1
+  fi
+}
+
+# Throttling issues
+
+function prochot_fix {
+  # set CPU profile to 'performance' 
+  for i in {0..7}; do
+    sudo cpufreq-set -c $i -g performance
+  done
+
+  # handle BD PROCHOT
+  BD_PROCHOT="0x1FC"
+  sudo modprobe msr
+  r="0x$(sudo rdmsr $BD_PROCHOT)"
+  f=$(($r&0xFFFFE)) # turn off
+  # f=$(($r|0x00001)) # turn on
+  sudo wrmsr $BD_PROCHOT "obase=16;$f"|bc
+
+  # undervolt (disabled after BIOS > 1.18.0)
+  # sudo undervolt --core -135 --cache -135
+
+  setCpuTurbo enable
+}
+
+function getCpuFreqMin {
+  freq=$(cat /proc/cpuinfo | grep MHz | cut -d: -f2 | sort -n | head -n1 | cut -d. -f1)
+  printf "%.1fMHz" "$((10**3 * $freq/1000))e-3\n"
+}
+
+function getTempMax {
+  echo $(sensors | grep -wo '+.*°C' | cut -d+ -f2 | cut -d '.' -f1 | sort -rn | head -n1)°C
+}
+
+function getCpuVoltage {
+  sudo dmidecode --type processor | grep Volt | cut -d: -f2
+}
+
+function getCpuTurbo {
+  case $(cat /sys/devices/system/cpu/intel_pstate/no_turbo) in
+    "0") echo "enabled" ;;
+    "1") echo "disabled"
+  esac
+}
+
+function turbo__enabled {
+  getCpuTurbo | grep -q 'enabled'
+}
+
+function setCpuTurbo {
+  noTurbo='/sys/devices/system/cpu/intel_pstate/no_turbo'
+  case "$1" in
+    'disable'|'off'|0) echo "1" | sudo tee $noTurbo ;;
+    'enable'|'on'|1)   echo "0" | sudo tee $noTurbo ;;
+  esac
+}
+
+function turbo__toggle {
+  if turbo__enabled; then
+    setCpuTurbo disable
+  else
+    setCpuTurbo enable
+  fi
+}
+
+# time: format used as in 1h25m30s
+
+function time__getUnit {
+  local units
+  units=$(echo "$2" | grep -o "[0-9]*$1" | tr -d "$1")
+  echo ${units:-0}
+}
+
+function time__normalize {
+  local h m s
+  h=$(time__getUnit 'h' $1)
+  m=$(time__getUnit 'm' $1)
+  s=$(time__getUnit 's' $1)
+  echo "$(( $h + ($m / 60) ))h$(( ($m % 60) + ($s / 60) ))m$(($s % 60))s"
+}
+
+function time__add {
+  local h1 h2 m1 m2 s1 s2
+  h1=$(time__getUnit 'h' $1)
+  h2=$(time__getUnit 'h' $2)
+  m1=$(time__getUnit 'm' $1)
+  m2=$(time__getUnit 'm' $2)
+  s1=$(time__getUnit 's' $1)
+  s2=$(time__getUnit 's' $2)
+  echo "$(($h1 + $h2))h$(($m1 + $m2))m$(($s1 + $s2))s"
+}
+
+# arbtt
+ARBTT_LOGDIR=~/Dropbox/Migamake/reviews
+function arbtt__capture {
+  # in=$(zenity --entry --text "Basename of logfile:")
+  arbtt-capture -f "${ARBTT_LOGDIR}/$(date +'%d-%m').log" &
+}
+
+alias arbtt__stop='pkill arbtt-capture'
+
+function arbtt__getTotalTime {
+  arbtt-stats --logfile "$1" -i &>/dev/null | grep 'Total time recorded' |\
+    cut -d '|' -f2 | tr -d ' ' | sed 's/00s//g'
+}
+
+function arbtt__report {
+  fname="${1%.*}"
+  ext="${1##*.}"
+  if [ $ext != 'log' ]; then
+    echo "$1 is not a .log file produced by arbtt"
+  else
+    arbtt-dump -f "$1" \
+    | grep -E -v 'slack|zulip|Current Desktop|spotify|rhythm|agda|personal-pract' \
+    | sed 's/terminator:.*/terminator/g' \
+    > "$fname.log.report"
+  fi
+}
+
+function migamake__report {
+  cd $ARBTT_LOGDIR
+
+  minDay="${1%-*}"
+  minMonth="${1##*-}"
+
+  outDir="\$REPORTS/$1 until $(date +'%d-%m')"
+  mkdir -p $outDir
+
+  totalTime=0h0m0s
+  toInclude=()
+  for project in */; do
+    [ $project != '$REPORTS/' ] && echo "$project"
+    # create curated logs
+    setopt nullglob
+    for log in "$project"/*.log; do
+      dayMonth=$(echo $log | grep -o '[0-9][0-9]-[0-9][0-9]')
+      day="${dayMonth%-*}"
+      month="${dayMonth##*-}"
+      if [[ ($minMonth -lt $month) || (($minMonth -eq $month) && ($minDay -le $day)) ]]; then
+        arbtt__report $log
+        time=$(arbtt__getTotalTime $log)
+        echo "\t$dayMonth: $time"
+        totalTime=$(time__add $totalTime $time)
+        mkdir -p "$outDir/$(dirname "$log")" \
+          && cp "$log.report" "$outDir/$log.report" \
+          && mv "$log" "$log.done"
+      fi
+    done
+    setopt nonullglob
+    # paste *.reportLog > report.log
+  done
+  echo "Total time: $(time__normalize $totalTime)"
+
+  # move them to report directory
+  # rsync -ar --exclude '$REPORTS/' --exclude '*.log' --exclude '*.done' ./ $outDir
+
+  # cleanup generated reports
+  # find -type f -name '*.report' -not -path '\$REPORTS' -exec rm '{}' ';'
+}
+
+function toAbsolutePath {
+  echo "$(builtin cd $(dirname "$1"); pwd)/$(basename "$1")"
+}
+
+function callFun {
+  script=$(toAbsolutePath "$1") && shift
+  cmd-center $script
+  controls="${script%.*}-controls.${script##*.}"
+  source $controls $@
+  # NB: do not remove generated file, effectively caching
+  # rm $controls 
+}
+
+function kernel__restart_module {
+  sudo modprobe -r "$1" && sudo modprobe "$1"
+}
+
+# General cleanup
+function cleanup {
+  sudo rm /var/lib/snapd/cache/*
+  sudo find /var/spool/cups -type f -mtime +14 -print0 | xargs -r0 rm
 }

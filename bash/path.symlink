@@ -1,3 +1,5 @@
+source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+
 add_to_path /usr/local/sbin
 add_to_path /usr/local/bin
 add_to_path /usr/sbin
@@ -5,11 +7,11 @@ add_to_path /usr/bin
 add_to_path /sbin
 add_to_path /bin
 add_to_path /opt/ros/indigo/bin
-add_to_path ~/bin
+add_to_path $MEHOME/bin
 
 # Haskell
-add_to_path ~/.local/bin
-add_to_path ~/.cabal/bin
+add_to_path $MEHOME/.local/bin
+add_to_path $MEHOME/.cabal/bin
 # for d in ~/.cabal/store/*/*/lib/; do
 #   add_to_LD_path $d
 # done
@@ -22,10 +24,10 @@ add_to_LD_path /usr/lib32
 add_to_LD_path /usr/lib
 
 # idris
-add_to_path ~/Idris/.cabal-sandbox/bin
+add_to_path $MEHOME/Idris/.cabal-sandbox/bin
 
 # HOL
-add_to_path ~/HOL/bin
+add_to_path $MEHOME/HOL/bin
 
 # Isabelle
 add_to_path /opt/Isabelle2020/bin
