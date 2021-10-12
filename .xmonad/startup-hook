@@ -5,11 +5,14 @@ echo "ZSH run"
 
 start_app "synapse -s"
 start_app "nm-applet --sm-disable"
-start_app "thunderbird"
+start_app "birdtray" # "thunderbird"
 start_app "slack"
 start_app "zulip"
-# start_app "pcloud"
+start_app "pcloud"
 echo "Apps started"
 
 setup_screens
 echo "Screens setup"
+
+remote-touchpad__enable
+echo "Remote touchpad enabled"

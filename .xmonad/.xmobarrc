@@ -4,7 +4,7 @@ Config {
   -- General options
   lowerOnStart     = False,
   hideOnStart      = False,
-  -- overrideRedirect = False,
+  -- overrideRedirect = True,
   -- persistent       = False,
   -- wmClass          = "xmobar",
   -- wmName           = "xmobar",
@@ -15,7 +15,7 @@ Config {
   -- textOffsets      = [],
   -- iconOffset       = -1,
   -- allDesktops      = True,
-  -- pickBroadest     = False,
+  pickBroadest     = True,
   -- alpha            = 255,
   -- verbose          = True,
 
@@ -33,13 +33,11 @@ Config {
   -- of your screen to make it play nicely with stalonetray, which we
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
-  position = TopW L 90,
+  position = TopW L 95,
 
   -- list of commands which gather information about your system for
   -- presentation in the bar.
   commands = [
-    -- Gather and format CPU usage information.
-    -- If it's above 50%, we consider it high usage and make it red.
     Run Cpu [
       "-t","<icon=cpu.xbm/> <total>%",
       "--low","white",
@@ -47,7 +45,6 @@ Config {
       "--high","red"
     ] 10,
 
-    -- Gather and format memory usage information
     Run Memory [
       "-t","<icon=mem.xbm/> <usedratio>%",
       "--low","white",
@@ -57,12 +54,16 @@ Config {
 
     Run Swap ["-t", "<icon=left-right-cursor.xbm/> <usedratio>%"] 10,
 
-    -- Date formatting
     Run Date "%a %b %_d %l:%M:%S" "date" 10,
 
-    -- Battery information. This is likely to require some customization
-    -- based upon your specific hardware. Or, for a desktop you may want
-    -- to just remove this section entirely.
+    Run DynNetwork [
+      "-t", "↓<rx> ↑<tx>",
+      "-w", "7",
+      -- "-c", ".",
+      "-a", "r",
+      "-S", "True"
+    ] 10,
+
     Run BatteryP ["BAT0"] [
       "-t", "<acstatus> <left>%",
       "--low", "red",
@@ -74,20 +75,50 @@ Config {
       "-o", "<icon=power-bat2.xbm/>"
     ] 10,
 
+    -- Run WeatherX "EGPH"
+    Run WeatherX "LGAV"
+      [ ("clear", "<icon=clear.xbm/>")
+      , ("sunny", "<icon=sunny.xbm/>")
+      , ("mostly clear", "<icon=mostly-clear.xbm/>")
+      , ("mostly sunny", "<icon=mostly-sunny.xbm/>")
+      , ("partly sunny", "<icon=partly-cloudy.xbm/>")
+      -- , ("fair", "🌑")
+      , ("cloudy","<icon=cloudy.xbm/>")
+      , ("overcast","☁")
+      , ("partly cloudy", "<icon=partly-cloudy.xbm/>")
+      , ("mostly cloudy", "<icon=mostly-cloudy.xbm/>")
+      ]
+      ["-t", "<skyConditionS> <tempC>°"
+      , "-L","10", "-H", "25"
+      , "--high", "lightgoldenrod4", "--low", "darkseagreen4"
+      ] 10,
+
     -- Get current volume
-    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/audio_controls.sh 'get_volume'"] "vol" 10,
+    Run Com "/bin/bash" ["-c", "callFun.sh ~/git/.dotfiles/bash/audio.symlink getSinkVolume"] "vol" 10,
 
     -- Get current GPU
-    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_gpu.sh"] "gpu" 10,
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/video_bar.sh"] "video" 10,
 
     -- Get VPN status
     Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/get_vpn.sh"] "vpn" 10,
 
     -- Check stereo channels
-    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/check_channels.sh"] "check" 10,
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/audio_bar.sh"] "audio" 10,
     
     -- Monitor WiFi signal strength
     Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/monitorWifi.sh"] "wifi" 10,
+
+    -- Bluetooth
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/bluetooth.sh"] "bt" 10,
+
+    -- Monitor
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/monitorCPU.sh"] "mon" 10,
+
+    -- arbtt
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/arbtt.sh"] "arb" 10,
+
+    -- inhibit screen
+    Run Com "/bin/bash" ["-c", "~/.xmonad/scripts/inhibit.sh"] "inh" 10,
 
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
@@ -107,17 +138,10 @@ Config {
    -- template = "%StdinReader% }{ %battery% | %cpu%"
    template = "\
      \ <action=xdotool key alt+b><icon=quit.xbm/></action>\
-     \ | %UnsafeStdinReader%\
+     \ %UnsafeStdinReader%\
      \ }{\
-     \ %battery%\
-     \ | %cpu%\
-     \ | %memory% %swap%\
-     \ | <icon=vol-hi.xbm/> %vol%\
-     \ | <fc=#E6744C>%date%</fc>\
-     \ | %vpn% VPN\
-     \ | %wifi%\
-     \ | GPU: %gpu%\
-     \ | %check%\
-     \ | <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
-     \    "
+     \ | <fc=#E6744C>%date%</fc> | %LGAV% %battery% %cpu% %mon% %memory% %swap%\
+     \ %bt% %inh% %vpn%VPN %arb%arbtt %wifi% %dynnetwork% %video% %audio% %vol%\
+     \ <action=zenity \-\-question \-\-text 'Are you sure you want to shutdown?' && notify-send 'OS Alert' 'Shutting down...' && shutdown -h now><icon=pacman.xbm/></action>\
+     \ "
 }
