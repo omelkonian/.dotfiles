@@ -38,7 +38,9 @@
   brsu = branch --set-upstream-to
   rrm = remote rm
   rad = "!f() { git remote add origin git@github.com:"$1"/"$2".git; }; f"
+  rad2 = "!f() { git remote add origin git@gitlab.com:"$1"/"$2".git; }; f"
   rau = "!f() { git remote add upstream git@github.com:"$1"/"$2".git; }; f"
+  rau2 = "!f() { git remote add upstream git@gitlab.com:"$1"/"$2".git; }; f"
   fall = fetch --all
 
   # Pull
@@ -51,6 +53,8 @@
   pf = push -f origin
   pu = push -u origin master
   pa = !git all && git can && git pf
+  wip = !git all && git cm '[WIP]'
+  wipm = !git all && git cm '[WIP]' && git ca
 
   # Rebase
   r = rebase
@@ -77,8 +81,11 @@
 
   # Clone
   cl = "!f() { git clone git@github.com:"$1"/"$2".git; }; f"
+  cl2 = "!f() { git clone git@gitlab.com:"$1"/"$2".git; }; f"
   cld = "!f() { git clone git@github.com:"$1"/"$2".git "$3"; }; f"
+  cld2 = "!f() { git clone git@gitlab.com:"$1"/"$2".git "$3"; }; f"
   clr = "!f() { git clone --recursive git@github.com:"$1"/"$2".git; }; f"
+  clr2 = "!f() { git clone --recursive git@gitlab.com:"$1"/"$2".git; }; f"
   cls = "!f() { \
     org="$1"; shift; \
     for repo in "$@"; do \
@@ -90,6 +97,7 @@
   rsh = reset --hard
   rss = reset --soft
   unstage = reset HEAD .
+  undoCommit = reset HEAD^
   undoLastCommit = reset --soft HEAD~
   undoamend = !git reset --soft HEAD@{1} && git commit -s
 
@@ -97,6 +105,12 @@
   ignore = update-index --assume-unchanged
   unignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
+
+  # Tags
+  tagLast = "!f() { git tag -fam \"Version $1\" v$1; }; f"
+  ptags = !git p --tags
+  pftags = !git pf --tags
+  dtag = !git tag -d
 
   # Logging
   l = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
