@@ -413,3 +413,13 @@ function cleanup {
   sudo rm /var/lib/snapd/cache/*
   sudo find /var/spool/cups -type f -mtime +14 -print0 | xargs -r0 rm
 }
+
+# Re-plug USB ports
+function usb__bind {
+  echo "$1" >/sys/bus/usb/drivers/usb/bind
+}
+function usb__unbind {
+  echo "$1" >/sys/bus/usb/drivers/usb/unbind
+}
+
+

@@ -13,7 +13,8 @@
      ("^r" "ʳ")
      ("_v" "ᵥ")
      ("eq" "≟")
-     ("bx" "𝕩")))
+     ("bx" "𝕩")
+     ("z;" "⨟")))
  '(agda2-backend "GHC")
  '(agda2-program-args nil)
  '(agda2-program-name "agda")
@@ -472,3 +473,7 @@
 ;       auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
 ;       auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
 ;       )
+
+
+; Raise undo-limit to 100Mb
+(setq undo-limit 100000000)

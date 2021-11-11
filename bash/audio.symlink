@@ -1,6 +1,6 @@
 source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
 
-alias restartPulse='pulseaudio -k'
+alias restartPulse='pulseaudio -k && pulseaudio --start'
 alias restartAlsa='sudo alsa force-reload'
 alias restart_sound='restartPulse && restartAlsa'
 alias fixSound="pactl exit"
@@ -266,7 +266,7 @@ function bluetooth__connect {
   device="$1" && shift
   (
    echo -e "connect $device \n"
-   sleep 10
+   sleep 5
    echo -e "quit \n"
   ) | bluetoothctl
 }
