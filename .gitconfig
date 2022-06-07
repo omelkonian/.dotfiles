@@ -84,6 +84,8 @@
   cl2 = "!f() { git clone git@gitlab.com:"$1"/"$2".git; }; f"
   cld = "!f() { git clone git@github.com:"$1"/"$2".git "$3"; }; f"
   cld2 = "!f() { git clone git@gitlab.com:"$1"/"$2".git "$3"; }; f"
+  clbd = "!f() { git clone -b "$3" git@github.com:"$1"/"$2".git "$4"; }; f"
+  clbd2 = "!f() { git clone -b "$3" git@gitlab.com:"$1"/"$2".git "$4"; }; f"
   clr = "!f() { git clone --recursive git@github.com:"$1"/"$2".git; }; f"
   clr2 = "!f() { git clone --recursive git@gitlab.com:"$1"/"$2".git; }; f"
   cls = "!f() { \
@@ -136,3 +138,5 @@
 	insteadOf = ssh://git@github.com/ghc/packages/
 [url "git\\@github.com:/ghc/packages-"]
 	insteadOf = git@github.com:/ghc/packages/
+[safe]
+	directory = *
