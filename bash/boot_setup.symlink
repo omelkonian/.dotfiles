@@ -3,3 +3,6 @@ synclient HorizTwoFingerScroll=1
 
 # Nautilus list-view
 gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'
+
+# Disable screen monitoring
+gsettings set org.gnome.desktop.session idle-delay 0

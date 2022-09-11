@@ -82,9 +82,11 @@ function grepOn {
   # echo "includes: $incl"
   # find . $incl" | xargs grep -nr $@
 }
-# function grepFormal {
-#   grep -nr $@ **/formal-*/**.agda
-# }
+function grepOnSubfolder {
+  ext=$1 && shift
+  d=$1 && shift
+  grep -nr $@ **/$d**/**/**.$ext
+}
 
 # Dyck
 function dyckdot {
@@ -111,6 +113,11 @@ function makeTex {
 }
 
 # cd + make + view PDFs
+function viewMostRecentPDF {
+  pdf=$(ls -la | grep .pdf | awk '{print $NF}' | head -n1)
+  evince --class='TeX' "$pdf" &
+}
+
 function makeAt {
   set -exo pipefail
   builtin cd "$1"
@@ -119,9 +126,10 @@ function makeAt {
   # Build and view output
   if [ -f ./Makefile ]; then
     make
-    evince --class='TeX' *.pdf &
+    viewMostRecentPDF
   elif [ -f ./${curDir}.tex ]; then
     makeTex $curDir
+    viewMostRecentPDF
   else
     echo "Cannot detect mode"
   fi
@@ -144,6 +152,14 @@ function list_ppa {
   sed -re 's#http://ppa\.launchpad\.net/([^/]+)/([^/]+)(.*?)$#ppa:\1/\2#g' |\
   grep '^ppa:'
 }
+
+# Possible locations of repositories
+# 1. Keys embedded in /etc/apt/trusted.gpg
+#    $ apt-key list >> sudo apt-key del <id>
+# 2. Keys in /etc/apt/trusted.gpg.d/
+#    $ sudo rm etc/apt/trusted.gpg.d/<repo>.gpg/asc
+# 3. Sources list
+#    $ vim /etc/apt/sources.list
 
 # UoE Printing
 function print_bw {
@@ -337,6 +353,12 @@ function arbtt__getTotalTime {
     cut -d '|' -f2 | tr -d ' ' | sed 's/00s//g'
 }
 
+function arbtt__getTotalTimes {
+  for f in **/*.log; do
+    arbtt__getTotalTime $f
+  done
+}
+
 function arbtt__report {
   fname="${1%.*}"
   ext="${1##*.}"
@@ -344,7 +366,7 @@ function arbtt__report {
     echo "$1 is not a .log file produced by arbtt"
   else
     arbtt-dump -f "$1" \
-    | grep -E -v 'slack|zulip|Current Desktop|spotify|rhythm|agda|personal-pract' \
+    | grep -E -v 'slack|zulip|Current Desktop|Spotify|spotify|rhythm|Rhythm|Tech Talk|agda|personal-pract|sisterity|Downloads|transmission|Transmission' \
     | sed 's/terminator:.*/terminator/g' \
     > "$fname.log.report"
   fi
@@ -422,4 +444,8 @@ function usb__unbind {
   echo "$1" >/sys/bus/usb/drivers/usb/unbind
 }
 
+# Backup
 
+function backup {
+  rsync -av $SSD/BACKUP/  $HD/BACKUP/
+}

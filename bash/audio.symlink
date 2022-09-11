@@ -104,7 +104,7 @@ function mkPlaylist {
 }
 
 ## PulseAudio (card management)
-CARD_ID=0
+CARD_ID=$(pactl list cards | grep 'Card #' | cut -d '#' -f2 | tail -n1)
 CARD_PATH="/sys/class/drm/card$CARD_ID/"
 HDMI_CARD="card$CARD_ID-HDMI-A-1"
 AUDIO_INPUT="analog-stereo"
@@ -137,12 +137,11 @@ function toggle_HDMI {
 }
 
 function setup_audio {
-  audio__set_card_profile "$AUDIO_OUTPUT_ANALOG"
-  # if [ connected_HDMI_sound ]; then
-  #   audio__set_card_profile "$AUDIO_OUTPUT_HDMI" 
-  # else
-  #   audio__set_card_profile "$AUDIO_OUTPUT_ANALOG"
-  # fi
+  if [ connected_HDMI_sound ]; then
+    audio__set_card_profile "$AUDIO_OUTPUT_HDMI" 
+  else
+    audio__set_card_profile "$AUDIO_OUTPUT_ANALOG"
+  fi
 }
 
 ## PulseAudio (sink management)
@@ -231,6 +230,7 @@ function audio__prev {
 # Bluetooth speakers
 JBL_CHARGE_4="98:52:3D:C4:9B:12"
 MI_EARPHONES="6C:CE:44:FC:C8:AA"
+LP_EARPHONES="90:3F:C7:8F:00:D8"
 
 function bluetooth__enabled {
   # [ -n $(systemctl status bluetooth.service | grep "active (running)") ]

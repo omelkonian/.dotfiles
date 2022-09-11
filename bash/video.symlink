@@ -81,7 +81,9 @@ function setup_screens {
 
   # Spawn top icon tray
   kill_app "trayer"
-  trayer --edge top --align right --monitor primary --widthtype percent --width 5 --height 22 --transparent true --alpha 0 --tint 0x000000 &
+  sleep 2 && \
+   trayer --edge top --align right --monitor primary --widthtype percent \
+          --width 5 --height 22 --transparent true --alpha 0 --tint 0x000000 &
 
   # De-activate screen locking (~ enable screen inhibitor)
   inhibitor__enable

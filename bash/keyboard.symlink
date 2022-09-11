@@ -1,13 +1,10 @@
 alias fixKeyboard="ibus-daemon -rd"
 
-# Set layout
-setxkbmap us
-
 # Remap CapsLock as Ctrl/Escape
 setxkbmap -option caps:escape
 alias caps_off="xdotool key Caps_Lock"
 
-# Language switch
+# Set layout & language switch
 setxkbmap -layout us,gr -option grp:shifts_toggle # -option grp:rwin_toggle
 
 # Touchpad

@@ -49,3 +49,9 @@ add_to_path $MEHOME/.npm-global/bin
 
 # UoE printing username
 export CUPS_USER='s2000146'
+
+# Nix
+function fixNix {
+  LD_LIBRARY_PATH=''
+  LD_PRELOAD=''
+}

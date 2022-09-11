@@ -13,6 +13,7 @@ alias apt-up="sudo apt-get update"
 alias apt-upg="sudo apt-get upgrade"
 alias apt-in="sudo apt-get install"
 alias apt-in-upg="sudo apt-get install --upgrade"
+alias apt-in-only-upg="sudo apt-get install --only-upgrade"
 alias apt-rm="sudo apt-get remove"
 alias apt-arm="sudo apt-get autoremove"
 alias apt-pg="sudo apt-get purge"
@@ -65,6 +66,12 @@ alias udevReloadRules='sudo udevadm control --reload-rules'
 alias udevMonitor='udevadm monitor'
 alias udevMonitorProp='udevadm monitor --property'
 
+# Cabal
+alias cabal-in='cabal install'
+alias cabal-in2='cabal new-install'
+alias cabal-in-overwrite='cabal install --overwrite-policy=always'
+alias cabal-in2-overwrite='cabal new-install --overwrite-policy=always'
+
 # Agda
 # alias agda='GHC_ENVIRONMENT=agda agda'
 function agdac {
@@ -76,6 +83,9 @@ function agdaViz {
   agda --dependency-graph=dependencies.dot $1
   dot -Tpng dependencies.dot > dependencies.png
 }
+function agdaInterfaceTimes {
+  ls -hlt --full-time **/*.agdai
+}
 
 # Grep
 alias grepHs="grepOn hs"
@@ -86,11 +96,13 @@ alias grepBash="grepOn symlink"
 alias grepScala="grepOn scala"
 alias grepAgda="grepOn agda"
 alias grepLagda="grepOn lagda"
-alias grepMd="grepOn md"
 alias grepAgdaHoles="grepAgda -C 6 '\({!.*!}\|OPTIONS --allow-unsolved\|postulate\)'"
 alias grepAgdaTermination="grepAgda -C 6 'TERMINATING'"
+alias grepFormal="grepOnSubfolder agda ~/git/formal-"
+alias grepMd="grepOn md"
 alias grepTex="grepOn tex"
 alias grepJs="grepOn js"
 alias grepTs="grepOn ts"
 alias grepElm="grepOn elm"
 alias grepPurs="grepOn purs"
+alias grepCoq="grepOn v"
