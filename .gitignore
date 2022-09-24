@@ -51,6 +51,7 @@
 **/*.vrb
 **/*.run.xml
 **/*-blx.bib
+**/*.vtc
 
 # Tex-minted
 **/_minted*/
@@ -62,6 +63,7 @@
 **/_build/
 **/MAlonzo/
 **/agda/target/
+**/test/Succeed/exec-tc/executables
 
 # R
 **/*.Rproj*
@@ -88,3 +90,6 @@
 
 # Xmonad
 **/prompt-history
+
+# Projectile (emacs)
+**/.projectile
