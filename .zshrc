@@ -13,7 +13,6 @@ plugins=(git
          pip
          zsh-syntax-highlighting)
 
-
 source $ZSH/oh-my-zsh.sh
 
 HISTFILE=/home/omelkonian/.histfile
@@ -29,6 +28,8 @@ compinit
 # Stack auto-completion
 autoload -U +X bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script stack)"
+
+unalias gr
 
 # Imports
 for file in /home/omelkonian/git/.dotfiles/bash/*.symlink; do
