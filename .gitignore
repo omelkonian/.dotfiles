@@ -93,3 +93,6 @@
 
 # Projectile (emacs)
 **/.projectile
+
+# agda2hs (subdir in agda-erased)
+agda2hs/
