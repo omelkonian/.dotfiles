@@ -42,7 +42,7 @@ import XMonad.Layout.Fullscreen       (fullscreenEventHook)
 import XMonad.Layout.PerWorkspace     (onWorkspace, onWorkspaces)
 import XMonad.Layout.PerScreen        (ifWider, PerScreen)
 
-import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, liftX)
+import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, appName, liftX)
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.EwmhDesktops      (ewmh)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, AvoidStruts, ToggleStruts (..))
@@ -244,7 +244,8 @@ hideXmobar = sendMessage ToggleStruts
 
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
-myManagementHooks =
+myManagementHooks = let goto = doF . W.shift . ws in
+  map (\i -> appName =? ("at" ++ show i) --> goto i) [0..9] ++
   [ isFullscreen                   --> doFullFloat <* liftX hideXmobar
   , isDialog                       --> doCenterFloat
   , appName   =? "synapse"         --> doIgnore
@@ -254,7 +255,7 @@ myManagementHooks =
   , appName   =? "Transmission"    --> goto 9
   , appName   =? "Transmission-gtk" --> goto 9
   , className =? "Pdfpc"           --> doFloat
-  , className =? "Thunderbird"     --> goto 1
+  , className =? "thunderbird"     --> goto 1
   -- , className =? "org.gnome.Nautilus" --> goto 2
   , className =? "Atom"            --> goto 5
   , className =? "TeX"             --> goto 5
@@ -270,7 +271,6 @@ myManagementHooks =
   , className =? "Evince"          --> goto 10
   , className =? "Eog"             --> goto 10
   ]
-  where goto  = doF . W.shift . ws
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook

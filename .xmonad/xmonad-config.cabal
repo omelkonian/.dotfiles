@@ -1,5 +1,5 @@
 name:          xmonad-config
-version:       0.15
+version:       0.17.0
 synopsis:      My XMonad Configuration
 homepage:      https://github.com/omelkonian/.dotfiles
 author:        Orestis Melkonian <melkon.or@gmail.com>
@@ -17,10 +17,10 @@ executable xmonad-config
                  -fno-warn-missing-signatures
                  -fno-warn-type-defaults
 
-  build-depends: base           >= 4.7  && < 5,
-                 xmonad         == 0.15,
-                 xmonad-contrib == 0.16,
-                 X11            == 1.9,
+  build-depends: base           >=4.11 && <5,
+                 xmonad         == 0.17.0,
+                 xmonad-contrib == 0.17.0,
+                 X11            == 1.10,
                  data-default   == 0.7.1.1,
-                 containers     == 0.6.0.1
+                 containers     >=0.5 && <0.7
 
