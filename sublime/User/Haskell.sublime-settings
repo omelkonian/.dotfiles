@@ -6,6 +6,9 @@
 		"agda",
 		"ag",
 		"out",
-		"hs-boot"
-	]
+		"hs-boot",
+		"gr",
+		"y",
+		"2ltt",
+	],
 }

@@ -118,7 +118,7 @@
 	],
 	"bold_folder_labels": true,
 	"caret_style": "phase",
-	"color_scheme": "Packages/ayu/ayu-light.sublime-color-scheme",
+	"color_scheme": "ayu-light.sublime-color-scheme",
 	"detect_indentation": true,
 	"draw_indent_guides": true,
 	"draw_white_space": "selection",
@@ -195,7 +195,7 @@
 	"match_brackets_square": true,
 	"match_selection": true,
 	"match_tags": true,
-	"neovintageous_build_version": 11100,
+	"neovintageous_build_version": 12700,
 	"open_externally_patterns":
 	[
 		"*.jpg",
@@ -219,7 +219,8 @@
 	"tab_size": 2,
 	"theme": "ayu-light.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"trim_trailing_white_space_on_save": false,
+	"trim_trailing_white_space_on_save": "all",
+	"trim_only_modified_white_space": true,
 	"use_tab_stops": true,
 	"vintage_start_in_command_mode": true,
 	"vintageous_use_ctrl_keys": null,
