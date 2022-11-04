@@ -76,13 +76,22 @@ function toSpotifyURI {
 
 function ripAt {
   folder=$1 && shift
-  map toSpotifyURI $* | xargs --open-tty spotify-ripper -d $folder
+  spotdl --output "$folder/{album-artist}/{album}/{track-number}-{title}.{output-ext}" download $*
+}
+
+function ripPlaylistsAt {
+  folder=$1 && shift
+  spotdl --output "$folder/\$PLAYLISTS/{list-name}/{list-position}-{title}.{output-ext}" download $*
 }
 
 alias rip='ripAt $MUSIC_ROOT'
+alias ripPlaylists='ripPlaylistsAt $MUSIC_ROOT'
 alias rip_local='ripAt $LOCAL_MUSIC_ROOT'
+alias ripPlaylists_local='ripPlaylistsAt $LOCAL_MUSIC_ROOT'
 alias rip_temp='ripAt $TEMP_MUSIC_ROOT'
+alias ripPlaylists_temp='ripPlaylistsAt $TEMP_MUSIC_ROOT'
 alias rip_from_file='rip $MEHOME/Dropbox/toRip.txt'
+alias ripPlaylists_from_file='ripPlaylists $MEHOME/Dropbox/toRip.txt'
 
 # Playlists
 function printPlaylist {

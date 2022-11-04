@@ -23,7 +23,7 @@ alias apt-version="apt-cache policy"
 
 # SNAP
 alias snap-in="sudo snap install"
-alias snap-up="snap refresh"
+alias snap-up="sudo snap refresh"
 alias snap-rm="sudo snap remove"
 alias snap-ls="snap list"
 alias snap-i="snap info"
@@ -73,6 +73,8 @@ alias cabal-in-overwrite='cabal install --overwrite-policy=always'
 alias cabal-in2-overwrite='cabal new-install --overwrite-policy=always'
 
 # Agda
+
+alias agdaLarge='agda +RTS -K256M -H1G -M8G -A128M -S/var/tmp/agda/AgdaRTS.log -RTS'
 # alias agda='GHC_ENVIRONMENT=agda agda'
 function agdac {
   fname="${1%.*}"
@@ -83,8 +85,32 @@ function agdaViz {
   agda --dependency-graph=dependencies.dot $1
   dot -Tpng dependencies.dot > dependencies.png
 }
+function displayTimeDiff {
+  diff=$(($1 - $2))
+  echo "$(($diff / 60))m$(($diff % 60))s"
+}
 function agdaInterfaceTimes {
-  ls -hlt --full-time **/*.agdai
+  main=$1
+  echo "Typechecking from scratch..."
+  out='typecheck.time'
+  start=$(date +%s)
+  agda --ignore-interfaces $main > /dev/null
+  echo "...done!"
+  end=$(date +%s)
+  echo "Writing individual times to: $out..."
+  echo "TOTAL: $(displayTimeDiff $end $start)" > $out
+  is=`ls -hltr --full-time _build/**/*.agdai | awk '{
+    printf("%s>%s %s\n", $9, $6, $7)
+  }'`
+  cur=$start
+  while IFS= read -r i; do
+    f=`echo $i | cut -d'>' -f1 | cut -d'/' -f4- | cut -d'.' -f1`
+    tv=`echo $i | cut -d'>' -f2`
+    t=`date "+%s" -d "$tv"`
+    echo "$f: $(displayTimeDiff $t $cur)" >> $out
+    cur=$t
+  done <<< "$is"
+  echo "...done!"
 }
 
 # Grep
@@ -106,3 +132,4 @@ alias grepTs="grepOn ts"
 alias grepElm="grepOn elm"
 alias grepPurs="grepOn purs"
 alias grepCoq="grepOn v"
+

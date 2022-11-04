@@ -354,7 +354,8 @@ function arbtt__getTotalTime {
 }
 
 function arbtt__getTotalTimes {
-  for f in **/*.log; do
+  for f in $ARBTT_LOGDIR/**/*.log; do
+    echo -n "${f#$ARBTT_LOGDIR}:"
     arbtt__getTotalTime $f
   done
 }
