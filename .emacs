@@ -14,15 +14,23 @@
      ("_v" "ᵥ")
      ("eq" "≟")
      ("bx" "𝕩")
-     ("z;" "⨟")))
+     ("z;" "⨟")
+     ("rn" "И")
+     ("rg" "⅁")
+     ("({" "｛")
+     (")}" "｝")
+     (".." "·")
+     ("check" "✓")
+     ("cross" "✖")))
  '(agda2-backend "GHC")
- '(agda2-program-args nil)
+ '(agda2-program-args
+   '("+RTS" "-K256M" "-H1G" "-M8G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
  '(agda2-program-name "agda")
  '(company-backends
    '(company-semantic company-capf
 		      (company-dabbrev-code company-gtags company-etags company-keywords)
 		      company-dabbrev))
- '(coq-prog-name "/home/omelkonian/.opam/4.06.0/bin/coqtop")
+ '(coq-prog-name "/home/omelkonian/.opam/4.05.0/bin/coqtop")
  '(custom-safe-themes
    '("0daf22a3438a9c0998c777a771f23435c12a1d8844969a28f75820dd71ff64e1" "5057614f7e14de98bbc02200e2fe827ad897696bfd222d1bcab42ad8ff313e20" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "170bb47b35baa3d2439f0fd26b49f4278e9a8decf611aa33a0dad1397620ddc3" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "392395ee6e6844aec5a76ca4f5c820b97119ddc5290f4e0f58b38c9748181e8d" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default))
  '(inhibit-startup-screen t)
@@ -31,7 +39,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -75,7 +83,8 @@
 			'("==>" "⟹")
 			agda-input-user-translations))
 		 (agda-input-setup)))
-	   (set-input-method "Agda")))))
+	   (set-input-method "Agda"))))
+ '(warning-suppress-log-types '((comp))))
 (package-initialize)
 
 (custom-set-faces
@@ -127,12 +136,15 @@
     (set-fontset-font ft 'unicode (font-spec :name fallback) nil 'append))
   )
 (set-font
+  ; "Everson Mono Bold"
   "DejaVu Sans Mono" ; main font family
-  "Asanb Math monospacified for DejaVu Sans Mono" ; fallback font family
+  "Julia Mono"
+  ; "Asanb Math monospacified for DejaVu Sans Mono" ; fallback font family
   ; default font size
   ; 80
-  100
-  ; 120
+  ; 90
+  ; 100
+  120
   )
 
 ;; Save command
@@ -170,6 +182,10 @@
 (global-linum-mode t)
 (column-number-mode)
 
+;; Vertical column rule
+; (setq fci-rule-column 80)
+; (fci-mode)
+
 ;; Color theme
 ; (load-theme
 ;  	'solarized-light t
@@ -187,8 +203,9 @@
 
 ;; Tabs
 (setq indent-tabs-mode nil)
-; (setq default-tab-width 2)
+(setq default-tab-width 2)
 (setq tab-width 2)
+(setq evil-shift-width 4)
 
 ;; Window title
 (setq-default frame-title-format '("%b [%m]"))
@@ -296,7 +313,7 @@
   ;; set interactive highlighting
   (setq agda2-highlight-level 'interactive)
   (defun-bind agda/run "C-c C-x C-x" ()
-    ;; run compiled GHC file 
+    ;; run compiled GHC file
     (save-buffer)
     (async-shell-command (concat "./" (file-name-base buffer-file-name))))
   ;   (save-buffer)
@@ -425,7 +442,7 @@
   :tail-mode 'host)
 
 (define-polymode poly-latex-mode
-  :hostmode 'pm-host/latex
+  :hostmode 'poly-latex-hostmode
   :innermodes '(poly-agda-innermode))
 
 ;;;;;;;;;
@@ -443,11 +460,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq auto-mode-alist
  	(append
- 	 	'(("\\.tex\\'"      . latex-mode)
- 	 	  ("\\.lhs\\'"      . latex-mode)
- 	 	  ("\\.lagda\\'"    . poly-latex-mode)
-      ("\\.agda\\'"     . agda2-mode)
-      ("\\.lagda.md\\'" . agda2-mode)
+    '(("\\.lagda.tex\\'" . poly-latex-mode)
+      ("\\.lagda.md\\'"  . agda2-mode)
+      ("\\.lagda\\'"     . poly-latex-mode)
+      ("\\.agda\\'"      . agda2-mode)
+      ("\\.lhs\\'"       . latex-mode)
+      ("\\.tex\\'"       . latex-mode)
  	 	  )
  	 	auto-mode-alist))
 
@@ -474,6 +492,12 @@
 ;       auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
 ;       )
 
-
 ; Raise undo-limit to 100Mb
 (setq undo-limit 100000000)
+
+; Quickstart project
+(defun quickstart (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
+  (execute-kbd-macro (read-kbd-macro
+    "C-c C-l")))
