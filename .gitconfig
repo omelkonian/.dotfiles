@@ -140,3 +140,7 @@
 	insteadOf = git@github.com:/ghc/packages/
 [safe]
 	directory = *
+
+# Gitlab: references to MRs
+[remote "origin"]
+  fetch = +refs/merge-requests/*:refs/remotes/origin/merge-requests/*
