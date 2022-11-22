@@ -28,7 +28,7 @@ case $1 in
   sep|hoare|Hoare)
     emacs --name=at8 --eval '(quickstart "formal-prelude" "Prelude/Main")' &
     sleep 2 && \ 
-      emacs --name=at5 --eval '(quickstart "hoare-ledgers" "ValueSep/Main")' & ;;
+      emacs --name=at5 --eval '(quickstart "hoare-ledgers" "Main")' & ;;
   nom|nominal|Nominal)
     emacs --name=at8 --eval '(quickstart "formal-prelude" "Prelude/Main")' &
     sleep 2 && \ 
