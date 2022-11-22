@@ -1,0 +1,4 @@
+# key: data
+# --
+data ${1:type} : Type where
+  $2 : $1

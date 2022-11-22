@@ -1,0 +1,3 @@
+# key: deriveDecEq
+# --
+unquoteDecl DecEq-${1:type} = DERIVE DecEq [ quote $1 , DecEq-$1 ]

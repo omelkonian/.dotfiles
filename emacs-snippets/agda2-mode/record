@@ -1,0 +1,6 @@
+# key: record
+# --
+record ${1:type} : Type where
+  constructor $2
+  field $3
+open $1 public

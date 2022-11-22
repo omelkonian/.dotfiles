@@ -39,7 +39,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(yasnippet-snippets docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -154,6 +154,12 @@
 ;; Spawn new Emacs instance command
 (defun-bind spawnEmacs "C-S-n" ()
   (call-process "sh" nil nil nil "-c" "emacs &"))
+
+;; YASnippet
+(require 'yasnippet)
+(yas-global-mode 1)
+; (add-hook 'prog-mode-hook #'yas-minor-mode)
+(setq yas-snippet-dir "~/.emacs.d/snippets")
 
 ;; Company (auto-completion)
 ; (add-hook 'after-init-hook 'global-company-mode)
