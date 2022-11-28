@@ -188,8 +188,9 @@
 ;; Vertical column rule
 ; (setq fci-rule-column 80)
 ; (fci-mode)
-(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-(setq display-fill-column-indicator-column 80)
+(add-hook 'prog-mode-hook (lambda ()
+  (display-fill-column-indicator-mode)
+  (setq display-fill-column-indicator-column 85)))
 
 ;; Color theme
 ; (load-theme
