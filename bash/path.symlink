@@ -18,6 +18,7 @@ add_to_path $MEHOME/.cabal/bin
 
 #GHC
 add_to_path /opt/ghc/bin
+add_to_path $MEHOME/.ghcup/bin
 
 # GCC
 add_to_LD_path /usr/lib32
