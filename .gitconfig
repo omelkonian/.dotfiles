@@ -98,7 +98,8 @@
   # Undoing
   rsh = reset --hard
   rss = reset --soft
-  unstage = reset HEAD .
+  unstage = restore --staged
+  undoStage = reset HEAD .
   undoCommit = reset HEAD^
   undoLastCommit = reset --soft HEAD~
   undoamend = !git reset --soft HEAD@{1} && git commit -s
