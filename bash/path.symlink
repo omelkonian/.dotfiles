@@ -37,4 +37,4 @@ add_to_path /opt/Isabelle2020/bin
 add_to_LD_path /lib/x86_64-linux-gnu/
 
 # spicetify
-add_to_path /home/omelkonian/.spicetify
+add_to_path $MEHOME/.spicetify
