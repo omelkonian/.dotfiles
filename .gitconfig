@@ -78,6 +78,7 @@
   stp = stash pop
   sts = stash show
   stc = stash clear
+  sta = stash apply
 
   # Clone
   cl = "!f() { git clone git@github.com:"$1"/"$2".git; }; f"
