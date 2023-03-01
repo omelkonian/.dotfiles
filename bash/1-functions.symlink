@@ -209,7 +209,7 @@ function git_check_all_folders {
 # Process handling
 function start_app {
   p_name=${1%% *}
-  if [ -z "$(pgrep $p_name)" ] ; then
+  if [ -z "$(pgrep -f $p_name)" ] ; then
     $1 &
   fi
 }
@@ -340,7 +340,6 @@ function time__add {
 }
 
 # arbtt
-ARBTT_LOGDIR=~/Dropbox/Migamake/reviews
 function arbtt__capture {
   # in=$(zenity --entry --text "Basename of logfile:")
   arbtt-capture -f "${ARBTT_LOGDIR}/$(date +'%d-%m').log" &
@@ -373,7 +372,7 @@ function arbtt__report {
   fi
 }
 
-function migamake__report {
+function miga__report {
   cd $ARBTT_LOGDIR
 
   minDay="${1%-*}"
@@ -446,7 +445,32 @@ function usb__unbind {
 }
 
 # Backup
-
 function backup {
   rsync -av $SSD/BACKUP/  $HD/BACKUP/
+}
+
+# Enable/disable Tracker in Ubuntu
+function tracker__disable {
+  systemctl --user mask tracker-store.service tracker-miner-fs.service \
+                        tracker-miner-rss.service tracker-extract.service \
+                        tracker-miner-apps.service tracker-writeback.service
+  tracker reset --hard
+  echo "REBOOT for changes to take effect"
+}
+
+function tracker__enable {
+  systemctl --user unmask tracker-store.service tracker-miner-fs.service \
+                          tracker-miner-rss.service tracker-extract.service \
+                          tracker-miner-apps.service tracker-writeback.service
+  echo "REBOOT for changes to take effect"
+}
+
+# Re-compiling essential packages
+function recompile-xmobar {
+  cd ~/git/xmonad/xmobar
+  cabal install --flags="all_extensions" --overwrite-policy=always
+}
+function recompile-xmonad {
+  cd ~/.xmonad
+  ./xmonad-x86_64-linux --recompile
 }
