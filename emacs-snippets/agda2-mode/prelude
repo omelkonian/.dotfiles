@@ -1,0 +1,3 @@
+# key: prelude
+# --
+open import Prelude.Init; open SetAsType
