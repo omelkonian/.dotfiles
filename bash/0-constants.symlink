@@ -1,4 +1,3 @@
-USER_ID=$(id -u $USER)
 EDITOR='subl'
 VIEWER='evince'
 DROPBOX_BACKUP_FOLDER=~/Dropbox/Backup/
@@ -11,4 +10,4 @@ MUSIC_ROOT="$HD/Music/"
 LOCAL_MUSIC_ROOT="$SSD/Music"
 TEMP_MUSIC_ROOT="$SSD/Music/\$Temp"
 GIT_ROOT="$MEHOME/git"
-CPU_CORES=`nproc --all`
+ARBTT_LOGDIR=~/Dropbox/Migamake/reviews

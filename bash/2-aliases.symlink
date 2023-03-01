@@ -1,5 +1,8 @@
 source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
 
+USER_ID=$(id -u $USER)
+CPU_CORES=`nproc --all`
+
 # General
 alias lt="ll -tr"
 alias s=subl
@@ -136,4 +139,5 @@ alias grepTs="grepOn ts"
 alias grepElm="grepOn elm"
 alias grepPurs="grepOn purs"
 alias grepCoq="grepOn v"
+alias grepIdris="grepOn idr"
 

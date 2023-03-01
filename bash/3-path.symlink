@@ -6,23 +6,27 @@ add_to_path /usr/sbin
 add_to_path /usr/bin
 add_to_path /sbin
 add_to_path /bin
-add_to_path /opt/ros/indigo/bin
 add_to_path $MEHOME/bin
+add_to_path $MEHOME/.local/bin
 
 # Haskell
-add_to_path $MEHOME/.local/bin
+add_to_path $MEHOME/.ghcup/bin
 add_to_path $MEHOME/.cabal/bin
 # for d in ~/.cabal/store/*/*/lib/; do
 #   add_to_LD_path $d
 # done
-
-#GHC
 add_to_path /opt/ghc/bin
-add_to_path $MEHOME/.ghcup/bin
+
+# Idris
+add_to_path $MEHOME/.idris2/bin
+add_to_LD_path $MEHOME/.idris2/lib
 
 # GCC
 add_to_LD_path /usr/lib32
 add_to_LD_path /usr/lib
+
+# ROS
+add_to_path /opt/ros/indigo/bin
 
 # idris
 add_to_path $MEHOME/Idris/.cabal-sandbox/bin

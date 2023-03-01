@@ -1,4 +1,5 @@
 source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+source /home/omelkonian/git/.dotfiles/bash/2-aliases.symlink
 
 alias restartPulse='pulseaudio -k && pulseaudio --start'
 alias restartAlsa='sudo alsa force-reload'
