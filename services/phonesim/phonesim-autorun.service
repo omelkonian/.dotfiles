@@ -1,0 +1,11 @@
+[Unit]
+Description=Ofono Phonesim Autorun Service
+After=ofono.service
+
+[Service]
+Type=simple
+User=omelkonian
+ExecStart=/home/omelkonian/git/.dotfiles/services/phonesim/phonesim-autorun.sh
+
+[Install]
+WantedBy=multi-user.target
