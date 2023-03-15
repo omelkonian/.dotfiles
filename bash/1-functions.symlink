@@ -113,23 +113,35 @@ function makeTex {
 }
 
 # cd + make + view PDFs
+function viewPDF {
+  evince --class='TeX' "$1" &
+}
+
 function viewMostRecentPDF {
   pdf=$(ls -la | grep .pdf | awk '{print $NF}' | head -n1)
-  evince --class='TeX' "$pdf" &
+  viewPDF "$pdf"
 }
 
 function makeAt {
   set -exo pipefail
+  echo "1: $1"
   builtin cd "$1"
+  echo "2: $2"
+  base="$2"
   curDir=$(basename "$(pwd)")
+  echo "curDir: $curDir"
 
   # Build and view output
   if [ -f ./Makefile ]; then
-    make
-    viewMostRecentPDF
+    if [ -f ./${base}.tex ]; then
+      make "$base".pdf && viewPDF "$base".pdf
+    else
+      make && viewMostRecentPDF
+    fi
+  elif [ -f ./${base}.tex ]; then
+    makeTex $base && viewPDF "$base".pdf
   elif [ -f ./${curDir}.tex ]; then
-    makeTex $curDir
-    viewMostRecentPDF
+    makeTex $curDir && viewPDF "$curDir".pdf
   else
     echo "Cannot detect mode"
   fi
