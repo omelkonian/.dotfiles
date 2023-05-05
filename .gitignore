@@ -18,6 +18,7 @@
 **/ghc/test*.out
 **/ghc/test
 **/libiserv/GNUmakefile
+**/.ghci
 
 # Cabal
 **/.ghc.environment.*
