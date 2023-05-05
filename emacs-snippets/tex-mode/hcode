@@ -1,0 +1,8 @@
+# key: hcode
+# --
+\begin{code}[hide]
+$1
+\end{code}
+\begin{code}
+$2
+\end{code}
