@@ -12,12 +12,10 @@ EXE_NAME=xmonad-config
 ################################################################################
 # This script will be given a single argument, the path to the
 # executable it should produce.
-output_file=$1; shift
+OUT_FILE=~/.cabal/bin/xmonad
 
 ################################################################################
 cd $SRC_DIR
-
 cabal build
-
 find dist-newstyle -type f -executable -name $EXE_NAME \
-     -exec mv -u '{}' $output_file ';'
+     -exec mv -u '{}' $OUT_FILE ';'

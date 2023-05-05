@@ -5,8 +5,11 @@
 {-# OPTIONS_GHC -fno-warn-unused-imports #-}
 
 import Data.Default (def)
+import Data.List (isInfixOf)
 import qualified Data.Map  as M
 import qualified Data.Char as C
+import Control.Applicative ( (<|>) )
+import Control.Monad (liftM)
 
 import XMonad
   ( X
@@ -42,7 +45,7 @@ import XMonad.Layout.Fullscreen       (fullscreenEventHook)
 import XMonad.Layout.PerWorkspace     (onWorkspace, onWorkspaces)
 import XMonad.Layout.PerScreen        (ifWider, PerScreen)
 
-import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, appName, liftX)
+import XMonad.ManageHook              (composeAll, doIgnore, doFloat, doF, appName, className, appName, liftX, (<||>), (<&&>))
 import XMonad.Hooks.DynamicLog        (PP (..), wrap, shorten, dynamicLogWithPP, xmobarPP, xmobarColor)
 import XMonad.Hooks.EwmhDesktops      (ewmh)
 import XMonad.Hooks.ManageDocks       (manageDocks, docks, avoidStruts, AvoidStruts, ToggleStruts (..))
@@ -245,32 +248,47 @@ hideXmobar = sendMessage ToggleStruts
 -- ProTip: Use xprop to get class names
 myManagementHooks :: [ManageHook]
 myManagementHooks = let goto = doF . W.shift . ws in
-  map (\i -> appName =? ("at" ++ show i) --> goto i) [0..9] ++
-  [ isFullscreen                   --> doFullFloat <* liftX hideXmobar
-  , isDialog                       --> doCenterFloat
-  , appName   =? "synapse"         --> doIgnore
-  , appName   =? "stalonetray"     --> doIgnore
-  , appName   =? "zenity"          --> doFloat
-  , appName   =? "Extract archive" --> doFloat
-  , appName   =? "Transmission"    --> goto 9
-  , appName   =? "Transmission-gtk" --> goto 9
-  , className =? "Pdfpc"           --> doFloat
-  , className =? "thunderbird"     --> goto 1
+  map (\i -> classOrAppName ["at" ++ show i] --> goto i) [0..9] ++
+  [ isFullscreen --> doFullFloat <* liftX hideXmobar
+  , isDialog     --> doCenterFloat
+  , ignor --> doIgnore
   -- , className =? "org.gnome.Nautilus" --> goto 2
-  , className =? "Atom"            --> goto 5
-  , className =? "TeX"             --> goto 5
+  , float --> doFloat
+  , mail  --> goto 1
+  , net   --> goto 6
+  , dev   --> goto 5
   -- , className =? "Google-chrome"   --> goto 6
-  , className =? "Firefox"         --> goto 6
-  , className =? "vlc"             --> goto 8
-  , className =? "totem"           --> goto 8
-  , className =? "Spotify"         --> goto 9
-  , className =? "Slack"           --> goto 9
-  , className =? "Zulip"           --> goto 9
-  -- , className =? "pcloud"          --> goto 9
+  , video --> goto 8
+  , tor   --> goto 9
+  , music --> goto 9
+  , msg   --> goto 9
   -- , className =? "pCloud"          --> goto 9
-  , className =? "Evince"          --> goto 10
-  , className =? "Eog"             --> goto 10
+  , doc   --> goto 10
   ]
+  where
+    lowInfixOf :: String -> String -> Bool
+    lowInfixOf x y = map C.toLower x `isInfixOf` map C.toLower y
+
+    containsAnyOf :: X.Query String -> [String] -> X.Query Bool
+    containsAnyOf _ [] = return False
+    containsAnyOf q (x:xs) = fmap (x `lowInfixOf`) q <||> containsAnyOf q xs
+
+    classOrAppName :: [String] -> X.Query Bool
+    classOrAppName xs =  containsAnyOf className xs
+                    <||> containsAnyOf appName   xs
+
+    ignor, float, mail, dev, net, video, music, doc  :: X.Query Bool
+    ignor = classOrAppName ["synapse", "stalonetray"]
+    float = classOrAppName ["zenity", "Extract archive", "Pdfpc"]
+    mail  = classOrAppName ["thunderbird"]
+    dev   = classOrAppName ["Atom", "TeX"]
+    net   = classOrAppName ["Firefox"]
+    video = classOrAppName ["vlc", "totem"]
+    music = classOrAppName ["spotify", "rhythmbox"]
+    msg   = classOrAppName ["Slack", "Zulip"]
+    tor   = classOrAppName ["Transmission", "Transmission-gtk"]
+    doc   = classOrAppName ["Evince", "Eog"]
+            <&&> liftM not (classOrAppName ["at5", "TeX"])
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook
