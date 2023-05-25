@@ -28,10 +28,4 @@ unalias gr
 autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
-# Imports
-for file in /home/omelkonian/git/.dotfiles/bash/*.symlink; do
-    if [[ $file != *"controls"* ]]; then
-      . $file
-    fi
-done
-
+source ~/git/.dotfiles/.initrc
