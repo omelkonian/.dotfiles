@@ -1,0 +1,16 @@
+# UoE Printing
+function print_bw {
+  for f in $@
+  do
+    lpr -P Cloud-Mono $f
+  done
+}
+
+function print_cl {
+  for f in $@
+  do
+    lpr -P Cloud-Colour $f
+  done
+}
+
+

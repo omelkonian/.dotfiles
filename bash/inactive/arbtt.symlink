@@ -1,0 +1,78 @@
+IMPORT /home/omelkonian/git/.dotfiles/bash/1-functions.symlink
+IMPORT /home/omelkonian/git/.dotfiles/bash/time.symlink
+
+# arbtt
+function arbtt__capture {
+  # in=$(zenity --entry --text "Basename of logfile:")
+  arbtt-capture -f "${ARBTT_LOGDIR}/$(date +'%d-%m').log" &
+}
+
+alias arbtt__stop='pkill arbtt-capture'
+
+function arbtt__getTotalTime {
+  arbtt-stats --logfile "$1" -i &>/dev/null | grep 'Total time recorded' |\
+    cut -d '|' -f2 | tr -d ' ' | sed 's/00s//g'
+}
+
+function arbtt__getTotalTimes {
+  for f in $ARBTT_LOGDIR/**/*.log; do
+    echo -n "${f#$ARBTT_LOGDIR}:"
+    arbtt__getTotalTime $f
+  done
+}
+
+function arbtt__report {
+  fname="${1%.*}"
+  ext="${1##*.}"
+  if [ $ext != 'log' ]; then
+    echo "$1 is not a .log file produced by arbtt"
+  else
+    arbtt-dump -f "$1" \
+    | grep -E -v 'slack|zulip|Current Desktop|Spotify|spotify|rhythm|Rhythm|Tech Talk|agda|personal-pract|sisterity|Downloads|transmission|Transmission' \
+    | sed 's/terminator:.*/terminator/g' \
+    > "$fname.log.report"
+  fi
+}
+
+function miga__report {
+  cd $ARBTT_LOGDIR
+
+  minDay="${1%-*}"
+  minMonth="${1##*-}"
+
+  outDir="\$REPORTS/$1 until $(date +'%d-%m')"
+  mkdir -p $outDir
+
+  totalTime=0h0m0s
+  toInclude=()
+  for project in */; do
+    [ $project != '$REPORTS/' ] && echo "$project"
+    # create curated logs
+    setopt nullglob
+    for log in "$project"/*.log; do
+      dayMonth=$(echo $log | grep -o '[0-9][0-9]-[0-9][0-9]')
+      day="${dayMonth%-*}"
+      month="${dayMonth##*-}"
+      if [[ ($minMonth -lt $month) || (($minMonth -eq $month) && ($minDay -le $day)) ]]; then
+        arbtt__report $log
+        time=$(arbtt__getTotalTime $log)
+        echo "\t$dayMonth: $time"
+        totalTime=$(time__add $totalTime $time)
+        mkdir -p "$outDir/$(dirname "$log")" \
+          && cp "$log.report" "$outDir/$log.report" \
+          && mv "$log" "$log.done"
+      fi
+    done
+    setopt nonullglob
+    # paste *.reportLog > report.log
+  done
+  echo "Total time: $(time__normalize $totalTime)"
+
+  # move them to report directory
+  # rsync -ar --exclude '$REPORTS/' --exclude '*.log' --exclude '*.done' ./ $outDir
+
+  # cleanup generated reports
+  # find -type f -name '*.report' -not -path '\$REPORTS' -exec rm '{}' ';'
+}
+
+

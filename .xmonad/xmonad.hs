@@ -256,7 +256,6 @@ myManagementHooks = let goto = doF . W.shift . ws in
   , float --> doFloat
   , mail  --> goto 1
   , net   --> goto 6
-  , dev   --> goto 5
   -- , className =? "Google-chrome"   --> goto 6
   , video --> goto 8
   , tor   --> goto 9
@@ -277,18 +276,17 @@ myManagementHooks = let goto = doF . W.shift . ws in
     classOrAppName xs =  containsAnyOf className xs
                     <||> containsAnyOf appName   xs
 
-    ignor, float, mail, dev, net, video, music, doc  :: X.Query Bool
+    ignor, float, mail, net, video, music, doc  :: X.Query Bool
     ignor = classOrAppName ["synapse", "stalonetray"]
     float = classOrAppName ["zenity", "Extract archive", "Pdfpc"]
     mail  = classOrAppName ["thunderbird"]
-    dev   = classOrAppName ["Atom", "TeX"]
     net   = classOrAppName ["Firefox"]
     video = classOrAppName ["vlc", "totem"]
     music = classOrAppName ["spotify", "rhythmbox"]
     msg   = classOrAppName ["Slack", "Zulip"]
     tor   = classOrAppName ["Transmission", "Transmission-gtk"]
     doc   = classOrAppName ["Evince", "Eog"]
-            <&&> liftM not (classOrAppName ["at5", "TeX"])
+            <&&> liftM not (classOrAppName ["at5"])
 
 -- Notifications
 myUrgencyHook = NoUrgencyHook

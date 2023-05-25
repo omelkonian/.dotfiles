@@ -1,0 +1,131 @@
+IMPORT /home/omelkonian/git/.dotfiles/bash/1-functions.symlink
+IMPORT /home/omelkonian/git/.dotfiles/bash/time.symlink
+
+alias agdaLarge='agda +RTS -K256M -H1G -M8G -A128M -S/var/tmp/agda/AgdaRTS.log -RTS'
+
+# alias agda='GHC_ENVIRONMENT=agda agda'
+
+function agdac {
+  fname="${1%.*}"
+  GHC_ENVIRONMENT=agda agda --compile-dir=target -c $1 \
+   && ./$fname
+}
+
+function agdaViz {
+  agda --dependency-graph=dependencies.dot $1
+  dot -Tpng dependencies.dot > dependencies.png
+}
+
+function agdaInterfaceTimes {
+  main=$1
+  echo "Typechecking from scratch..."
+  out='typecheck.time'
+  start=$(date +%s)
+  agda --ignore-interfaces $main > /dev/null
+  echo "...done!"
+  end=$(date +%s)
+  echo "Writing individual times to: $out..."
+  echo "TOTAL: $(displayTimeDiff $end $start)" > $out
+  is=`ls -hltr --full-time _build/**/*.agdai | awk '{
+    printf("%s>%s %s\n", $9, $6, $7)
+  }'`
+  cur=$start
+  while IFS= read -r i; do
+    f=`echo $i | cut -d'>' -f1 | cut -d'/' -f4- | cut -d'.' -f1`
+    tv=`echo $i | cut -d'>' -f2`
+    t=`date "+%s" -d "$tv"`
+    echo "$f: $(displayTimeDiff $t $cur)" >> $out
+    cur=$t
+  done <<< "$is"
+  echo "...done!"
+}
+
+# Build PLFA website locally
+function plfa {
+  cd $HOME/git/plfa.github.io-master
+  bundle exec jekyll serve
+}
+
+# Convert a file to a literate version for integrating within a TeX project.
+function agda__literate {
+  # Create a matching literate version for each Agda file under the current folder.
+  mkdir lit/
+  cp *.agda-lib lit/main.agda-lib # Copy .agda-lib file
+  cp $(agda --print-agda-dir)/latex/agda.sty lit/ # Copy agda.sty file
+  fs=()
+  for f in **/*.agda; do
+    fname="${f%.*}"
+    fbody=$(cat $f)
+    lf=lit/"$fname".lagda
+    echo "Generating $lf..."
+    # mkfile $lf
+    mkdir -p $(dirname $lf)
+    cat << EOF > $lf
+\documentclass[main]{subfiles}
+\begin{document}
+\section*{$f}
+\begin{code}
+${fbody}
+\end{code}
+\end{document}
+EOF
+    fs+=("$fname".tex)
+  done
+  # Main entry point
+  main=lit/main.tex
+  echo "Generating $main..."
+  # rm -f $main; mkfile $main
+  mkdir -p $(dirname $main)
+  cat << EOF > $main
+\documentclass{article}
+\usepackage{subfiles}
+\usepackage{agda}
+\usepackage{fontspec}
+\newcommand\agdaFont{%
+JuliaMono%
+%% DejaVuSansMono%
+%% mononoki%
+}
+\AtBeginEnvironment{code}{\fontsize{9}{12}\selectfont}
+\newfontfamily{\AgdaSerifFont}{\agdaFont}
+\newfontfamily{\AgdaSansSerifFont}{\agdaFont}
+\newfontfamily{\AgdaTypewriterFont}{\agdaFont}
+\renewcommand{\AgdaFontStyle}[1]{{\AgdaSansSerifFont{}#1}}
+\renewcommand{\AgdaKeywordFontStyle}[1]{{\AgdaSansSerifFont{}#1}}
+\renewcommand{\AgdaStringFontStyle}[1]{{\AgdaTypewriterFont{}#1}}
+\renewcommand{\AgdaCommentFontStyle}[1]{{\AgdaTypewriterFont{}#1}}
+\renewcommand{\AgdaBoundFontStyle}[1]{\textit{\AgdaSerifFont{}#1}}
+\begin{document}
+$(
+  for f in ${fs[*]}; do
+    echo "\subfile{$f}"
+  done
+)
+\end{document}
+EOF
+  # Generate Makefile
+  echo "Generating lit/Makefile..."
+  cat << EOF > lit/Makefile
+.RECIPEPREFIX = >
+PRE=agda.sty
+LATEX=xelatex -shell-escape -halt-on-error # -interaction=batchmode
+AGDA=agda +RTS -K256M -H1G -M12G -A128M -RTS -i. --latex --latex-dir=. --only-scope-checking
+MAIN=main
+
+.PHONY: default all clean
+default: all
+all: \$(MAIN).pdf
+
+%.tex : %.lagda
+> \$(AGDA) $<
+
+%.pdf: %.tex \$(PRE)
+> \$(LATEX) -output-directory=\$(dir \$@) $<
+
+\$(MAIN).pdf: ${fs[*]}
+EOF
+  # Check that it works
+  make -C lit/ && evince main.pdf &
+}
+
+

@@ -1,0 +1,6 @@
+function dyckdot {
+  for wo in $@
+  do
+    dot -Tpng $wo.dot > $wo.png && eog $wo.png &
+  done
+}

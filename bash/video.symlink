@@ -1,5 +1,5 @@
-source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
-source $MEHOME/git/.dotfiles/bash/1-functions.symlink
+IMPORT /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+IMPORT $MEHOME/git/.dotfiles/bash/1-functions.symlink
 
 alias restart_xserver="sudo service lightdm.service restart"
  

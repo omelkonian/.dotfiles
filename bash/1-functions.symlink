@@ -1,4 +1,4 @@
-source /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+IMPORT /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
 
 function cd {
   builtin cd "$@" && ls
@@ -19,6 +19,16 @@ function untar {
 function mkcdir {
   mkdir -p -- "$1" &&
   cd -P -- "$1"
+}
+
+function mkfile {
+  dir=$(dirname $1)
+  fn=$(basename $1)
+  mkdir -p "$dir" && touch "$dir"/"$fn"
+}
+
+function toAbsolutePath {
+  echo "$(builtin cd $(dirname "$1"); pwd)/$(basename "$1")"
 }
 
 function add_to_path {
@@ -88,69 +98,6 @@ function grepOnSubfolder {
   grep -nr $@ **/$d**/**/**.$ext
 }
 
-# Dyck
-function dyckdot {
-  for wo in $@
-  do
-    dot -Tpng $wo.dot > $wo.png && eog $wo.png &
-  done
-}
-
-# Build PLFA website locally
-function plfa {
-  cd $HOME/git/plfa.github.io-master
-  bundle exec jekyll serve
-}
-
-# Build TeX with references + view rendered PDF
-function makeTex {
-  set -eo pipefail
-  xelatex $1.tex
-  if [ -f $1.bib ]; then
-    bibtex $1.aux &> /dev/null
-  fi
-  viewPDF "$1.pdf"
-}
-
-# cd + make + view PDFs
-function viewPDF {
-  nohup evince --class='at5' "$1" > /dev/null &
-  sleep 1
-}
-
-function viewMostRecentPDF {
-  pdf=$(ls -la | grep .pdf | awk '{print $NF}' | head -n1)
-  viewPDF "$pdf"
-}
-
-function makeAt {
-  set -eo pipefail
-  builtin cd "$1"
-  base="$2"
-  curDir=$(basename "$(pwd)")
-
-  # Build and view output
-  if [ -f ./Makefile ]; then
-    if [ -f ./${base}.tex ]; then
-      make "$base".pdf && viewPDF "$base".pdf
-    else
-      make && viewMostRecentPDF
-    fi
-  elif [ -f ../Makefile ]; then
-    builtin cd ..
-    f=$curDir/$base.pdf
-    make $f && viewPDF $f
-  elif [ -f ./${base}.tex ]; then
-    makeTex $base && viewPDF "$base".pdf
-  elif [ -f ./${curDir}.tex ]; then
-    makeTex $curDir && viewPDF "$curDir".pdf
-  else
-    echo "Cannot detect mode"
-  fi
-}
-
-alias makeHere='makeAt .'
-
 function list_repositories {
   grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
   cut -f2- -d: |\
@@ -174,21 +121,6 @@ function list_ppa {
 #    $ sudo rm etc/apt/trusted.gpg.d/<repo>.gpg/asc
 # 3. Sources list
 #    $ vim /etc/apt/sources.list
-
-# UoE Printing
-function print_bw {
-  for f in $@
-  do
-    lpr -P Cloud-Mono $f
-  done
-}
-
-function print_cl {
-  for f in $@
-  do
-    lpr -P Cloud-Colour $f
-  done
-}
 
 # Checking all GIT repositories
 function git_check_all_folders {
@@ -326,111 +258,6 @@ function turbo__toggle {
   fi
 }
 
-# time: format used as in 1h25m30s
-
-function time__getUnit {
-  local units
-  units=$(echo "$2" | grep -o "[0-9]*$1" | tr -d "$1")
-  echo ${units:-0}
-}
-
-function time__normalize {
-  local h m s
-  h=$(time__getUnit 'h' $1)
-  m=$(time__getUnit 'm' $1)
-  s=$(time__getUnit 's' $1)
-  echo "$(( $h + ($m / 60) ))h$(( ($m % 60) + ($s / 60) ))m$(($s % 60))s"
-}
-
-function time__add {
-  local h1 h2 m1 m2 s1 s2
-  h1=$(time__getUnit 'h' $1)
-  h2=$(time__getUnit 'h' $2)
-  m1=$(time__getUnit 'm' $1)
-  m2=$(time__getUnit 'm' $2)
-  s1=$(time__getUnit 's' $1)
-  s2=$(time__getUnit 's' $2)
-  echo "$(($h1 + $h2))h$(($m1 + $m2))m$(($s1 + $s2))s"
-}
-
-# arbtt
-function arbtt__capture {
-  # in=$(zenity --entry --text "Basename of logfile:")
-  arbtt-capture -f "${ARBTT_LOGDIR}/$(date +'%d-%m').log" &
-}
-
-alias arbtt__stop='pkill arbtt-capture'
-
-function arbtt__getTotalTime {
-  arbtt-stats --logfile "$1" -i &>/dev/null | grep 'Total time recorded' |\
-    cut -d '|' -f2 | tr -d ' ' | sed 's/00s//g'
-}
-
-function arbtt__getTotalTimes {
-  for f in $ARBTT_LOGDIR/**/*.log; do
-    echo -n "${f#$ARBTT_LOGDIR}:"
-    arbtt__getTotalTime $f
-  done
-}
-
-function arbtt__report {
-  fname="${1%.*}"
-  ext="${1##*.}"
-  if [ $ext != 'log' ]; then
-    echo "$1 is not a .log file produced by arbtt"
-  else
-    arbtt-dump -f "$1" \
-    | grep -E -v 'slack|zulip|Current Desktop|Spotify|spotify|rhythm|Rhythm|Tech Talk|agda|personal-pract|sisterity|Downloads|transmission|Transmission' \
-    | sed 's/terminator:.*/terminator/g' \
-    > "$fname.log.report"
-  fi
-}
-
-function miga__report {
-  cd $ARBTT_LOGDIR
-
-  minDay="${1%-*}"
-  minMonth="${1##*-}"
-
-  outDir="\$REPORTS/$1 until $(date +'%d-%m')"
-  mkdir -p $outDir
-
-  totalTime=0h0m0s
-  toInclude=()
-  for project in */; do
-    [ $project != '$REPORTS/' ] && echo "$project"
-    # create curated logs
-    setopt nullglob
-    for log in "$project"/*.log; do
-      dayMonth=$(echo $log | grep -o '[0-9][0-9]-[0-9][0-9]')
-      day="${dayMonth%-*}"
-      month="${dayMonth##*-}"
-      if [[ ($minMonth -lt $month) || (($minMonth -eq $month) && ($minDay -le $day)) ]]; then
-        arbtt__report $log
-        time=$(arbtt__getTotalTime $log)
-        echo "\t$dayMonth: $time"
-        totalTime=$(time__add $totalTime $time)
-        mkdir -p "$outDir/$(dirname "$log")" \
-          && cp "$log.report" "$outDir/$log.report" \
-          && mv "$log" "$log.done"
-      fi
-    done
-    setopt nonullglob
-    # paste *.reportLog > report.log
-  done
-  echo "Total time: $(time__normalize $totalTime)"
-
-  # move them to report directory
-  # rsync -ar --exclude '$REPORTS/' --exclude '*.log' --exclude '*.done' ./ $outDir
-
-  # cleanup generated reports
-  # find -type f -name '*.report' -not -path '\$REPORTS' -exec rm '{}' ';'
-}
-
-function toAbsolutePath {
-  echo "$(builtin cd $(dirname "$1"); pwd)/$(basename "$1")"
-}
-
 function callFun {
   script=$(toAbsolutePath "$1") && shift
   cmd-center $script
@@ -488,3 +315,4 @@ function recompile-xmonad {
   cd ~/.xmonad
   ./xmonad-x86_64-linux --recompile
 }
+

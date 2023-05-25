@@ -7,3 +7,35 @@ alias est_time="sudo timedatectl set-timezone EST"
 alias torontro_time="sudo timedatectl set-timezone America/Toronto"
 alias pdt_time="sudo timedatectl set-timezone PDT"
 alias la_time="sudo timedatectl set-timezone America/Los_Angeles"
+
+function displayTimeDiff {
+  diff=$(($1 - $2))
+  echo "$(($diff / 60))m$(($diff % 60))s"
+}
+
+# time: format used as in 1h25m30s
+
+function time__getUnit {
+  local units
+  units=$(echo "$2" | grep -o "[0-9]*$1" | tr -d "$1")
+  echo ${units:-0}
+}
+
+function time__normalize {
+  local h m s
+  h=$(time__getUnit 'h' $1)
+  m=$(time__getUnit 'm' $1)
+  s=$(time__getUnit 's' $1)
+  echo "$(( $h + ($m / 60) ))h$(( ($m % 60) + ($s / 60) ))m$(($s % 60))s"
+}
+
+function time__add {
+  local h1 h2 m1 m2 s1 s2
+  h1=$(time__getUnit 'h' $1)
+  h2=$(time__getUnit 'h' $2)
+  m1=$(time__getUnit 'm' $1)
+  m2=$(time__getUnit 'm' $2)
+  s1=$(time__getUnit 's' $1)
+  s2=$(time__getUnit 's' $2)
+  echo "$(($h1 + $h2))h$(($m1 + $m2))m$(($s1 + $s2))s"
+}
