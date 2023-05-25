@@ -1,0 +1,5 @@
+# key: frame
+# --
+\begin{frame}{$1}
+$2
+\end{frame}

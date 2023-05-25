@@ -24,20 +24,22 @@
      ("cross" "✖")))
  '(agda2-backend "GHC")
  '(agda2-program-args
-   '("+RTS" "-K256M" "-H1G" "-M8G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
+   '("+RTS" "-K256M" "-H1G" "-M12G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
  '(agda2-program-name "agda")
  '(company-backends '(company-dabbrev))
  '(company-dabbrev-downcase nil)
  '(coq-prog-name "/home/omelkonian/.opam/4.05.0/bin/coqtop")
  '(custom-safe-themes
    '("0daf22a3438a9c0998c777a771f23435c12a1d8844969a28f75820dd71ff64e1" "5057614f7e14de98bbc02200e2fe827ad897696bfd222d1bcab42ad8ff313e20" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "170bb47b35baa3d2439f0fd26b49f4278e9a8decf611aa33a0dad1397620ddc3" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "392395ee6e6844aec5a76ca4f5c820b97119ddc5290f4e0f58b38c9748181e8d" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default))
+ '(idris-interpreter-path "idris2")
+ '(ignored-local-variable-values '((TeX-engine . xetex)))
  '(inhibit-startup-screen t)
  '(package-archives
    '(("gnu" . "http://elpa.gnu.org/packages/")
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -123,7 +125,9 @@
 
 
 ;; Set font
-(defun set-font (family fallback height)
+(defun set-font-family (font bfont height)
+  (setq family font)
+  (setq fallback bfont)
   (set-face-attribute 'default nil
     :family family
     :height height
@@ -131,14 +135,20 @@
     :width  'normal)
   (dolist (ft (fontset-list))
     (set-fontset-font ft 'unicode (font-spec :name family))
-    (set-fontset-font ft 'unicode (font-spec :name fallback) nil 'append))
-  )
+    (set-fontset-font ft 'unicode (font-spec :name fallback) nil 'append)))
+(defun set-font (height)
+  (set-font-family
+    ; MAIN FONT ;
+    ; "DejaVu Sans Mono"
+    ; "mononoki"
+    ; "Asanb Math monospacified for DejaVu Sans Mono"
+    ; "Everson Mono Bold"
+    "Julia Mono"
+    ; BACKUP FONT ;
+    "DejaVu Sans Mono"
+    height))
+; default font size
 (set-font
-  ; "Everson Mono Bold"
-  "DejaVu Sans Mono" ; main font family
-  "Julia Mono"
-  ; "Asanb Math monospacified for DejaVu Sans Mono" ; fallback font family
-  ; default font size
   ; 80
   ; 90
   ; 100
@@ -189,9 +199,11 @@
 ;; Vertical column rule
 ; (setq fci-rule-column 80)
 ; (fci-mode)
-(add-hook 'prog-mode-hook (lambda ()
+(defun rule-hook ()
   (display-fill-column-indicator-mode)
-  (setq display-fill-column-indicator-column 85)))
+  (setq display-fill-column-indicator-column 85))
+(add-hook 'prog-mode-hook 'rule-hook)
+(add-hook 'text-mode-hook 'rule-hook)
 
 ;; Color theme
 ; (load-theme
@@ -272,10 +284,8 @@
 
 (global-set-key (kbd "s-d y") 'yafolding-discover)
 
-(add-hook 'prog-mode-hook
-          (lambda () (yafolding-mode)))
-(add-hook 'latex-mode-hook
-          (lambda () (yafolding-mode)))
+(add-hook 'prog-mode-hook  (lambda () (yafolding-mode)))
+(add-hook 'latex-mode-hook (lambda () (yafolding-mode)))
 
 (define-key yafolding-mode-map (kbd "<C-S-return>") 'yafolding-hide-parent-element)
 (define-key yafolding-mode-map (kbd "<C-M-return>") 'yafolding-toggle-all)
@@ -380,25 +390,27 @@
   (defun-bind tex/build "C-c l" ()
     (save-buffer)
     (async-shell-command
-      (concat "makeAt '" (file-name-directory buffer-file-name) "'")))
+      (concat "makeAt '" (file-name-directory buffer-file-name) "'"
+                    " '" (file-name-base buffer-file-name) "'"
+                    )))
  	(defun-bind insert/textit "C-S-i" ()
- 	 	(insert "\\textit{"))
+ 	 	(insert "\\emph{"))
  	(defun-bind insert/textbf "C-S-b" ()
  	 	(insert "\\textbf{"))
  	; (defun-bind searchSection "C-c s" ()
  	;  	(evil-search-forward)
  	;  	(execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
  	; font size
- 	(set-font 80)
+ 	; (set-font 80)
 	; spelling
 	(setq ispell-program-name "aspell"
 				ispell-dictionary   "british")
 	(flyspell-mode)
 	(flyspell-buffer)
 	; unicode input
-	; (require 'agda-input)
+	(require 'agda-input)
+	(set-input-method "Agda")
   (set-input-method nil)
-	; (set-input-method "Agda")
 	; prettify symbols
 	(setq prettify-symbols-alist '())
 	(mapc (lambda (pair) (push pair prettify-symbols-alist))
@@ -415,6 +427,7 @@
 	    ("\\newline"  . "⏎")
 	    ("~"          . "␣")
 	    ("\\textit"   . "I")
+      ("\\emph"     . "I")
 	    ("\\textbf"   . "B")
 	    ))
 	(font-lock-add-keywords nil
@@ -428,6 +441,7 @@
       ; Beamer
       ("\\\\begin\[.*\]{frame}{\\(.*\\)}"  1 'my/section t)
       ("\\\\alert{\\(.*\\)}"         1 'my/alert t)
+      ("\\\\todo{\\(.*\\)}"          1 'my/alert t)
       ("\\\\alertblock{\\(.*\\)}"    1 'my/alert t)
       ; Custom macros
       ("\\\\site{\\(.*\\)}"          1 'my/site t)
@@ -502,9 +516,15 @@
 ; Raise undo-limit to 100Mb
 (setq undo-limit 100000000)
 
-; Quickstart project
-(defun quickstart (folder file)
+; quickstart project
+(defun quickAgda (folder file)
   (execute-kbd-macro (read-kbd-macro
     (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
   (execute-kbd-macro (read-kbd-macro
     "C-c C-l")))
+
+(defun quickTex (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".tex RET")))
+  (execute-kbd-macro (read-kbd-macro
+    "C-c l")))

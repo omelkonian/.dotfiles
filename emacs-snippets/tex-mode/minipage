@@ -1,0 +1,8 @@
+# key: minipage
+# --
+\begin{minipage}{.$1\textwidth}
+$2
+\end{minipage}
+\begin{minipage}{.$1\textwidth}
+$3
+\end{minipage}

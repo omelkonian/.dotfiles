@@ -1,0 +1,5 @@
+# key: frames
+# --
+\begin{frame}[standout]
+$1
+\end{frame}

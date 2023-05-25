@@ -1,0 +1,5 @@
+# key: framef
+# --
+\begin{frame}[fragile]{$1}
+$2
+\end{frame}
