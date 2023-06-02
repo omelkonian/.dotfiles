@@ -20,25 +20,48 @@ function makeTex {
 
 # cd + make + view PDFs
 function makeAt {
-  set -eo pipefail
+  set -exo pipefail
   builtin cd "$1"
   base="$2"
   curDir=$(basename "$(pwd)")
-
+  mkDir=$(print -l (../)#Makefile(:h))
   # Build and view output
-  if [ -f ./Makefile ]; then
-    ((ls ./${base}.tex || ls ./${base}.lagda) && make "$base".pdf && viewPDF "$base".pdf) #|| (make && viewMostRecentPDF)
-  elif [ -f ../Makefile ]; then
-    builtin cd ..
-    f=$curDir/$base.pdf
-    make $f && viewPDF $f
-  elif [ -f ./${base}.tex ]; then
-    makeTex $base && viewPDF "$base".pdf
-  elif [ -f ./${curDir}.tex ]; then
-    makeTex $curDir && viewPDF "$curDir".pdf
-  else
-    echo "Cannot detect mode"
+  if [ -z $mkDir ]; then # LaTeX
+    if [ -f ./${base}.tex ]; then
+      makeTex $base && viewPDF "$base".pdf
+    elif [ -f ./${curDir}.tex ]; then
+      makeTex $curDir && viewPDF "$curDir".pdf
+    else
+      echo "Cannot detect mode"
+    fi
+  else # make
+    fbase="$base.pdf"
+    mkDirF=$(print -l (../)#Makefile(:h:a))
+    fdir=$(echo $1 | sed -e "s|^$mkDirF/||")
+    f="$fdir$fbase"
+    if [[ -z $(make -C $mkDir -n $f 2>&1 | grep 'No rule to make target') ]]; then
+      make -C $mkDir $f && viewPDF $f
+    # elif [[ -z $(make -C $mkDir -n $fbase 2>&1 | grep 'No rule to make target') ]]; then
+    #   make -C $mkDir $fbase && viewPDF $fbase
+    else
+      make -C $mkDir && viewMostRecentPDF
+    fi
   fi
 }
 
+function find-up {
+  p=$(pwd)
+  while [[ "$p" != "" && ! -e "$p/$1" ]]; do
+    p=${p%/*}
+  done
+  echo "$p"
+}
+
+function makeParent {
+  parentDir=$(print -l (../)#Makefile(:h))
+  make -C $parentDir
+}
+
 alias makeHere='makeAt .'
+
+

@@ -24,7 +24,9 @@
      ("cross" "✖")))
  '(agda2-backend "GHC")
  '(agda2-program-args
-   '("+RTS" "-K256M" "-H1G" "-M12G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
+   '("+RTS" "-K256M" "-H1G" "-M12G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS"
+     "-i" "."
+     "--latex-dir=."))
  '(agda2-program-name "agda")
  '(company-backends '(company-dabbrev))
  '(company-dabbrev-downcase nil)
@@ -44,46 +46,46 @@
  '(safe-local-variable-values
    '((TeX-master . t)
      (eval let*
-	   ((Workshops-topdir
-	     (expand-file-name
-	      (locate-dominating-file buffer-file-name ".dir-locals.el")))
-	    (unimath-topdir
-	     (concat Workshops-topdir "UniMath/")))
-	   (setq fill-column 100)
-	   (make-local-variable 'coq-use-project-file)
-	   (setq coq-use-project-file nil)
-	   (make-local-variable 'coq-prog-args)
-	   (setq coq-prog-args
-		 `("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q" ,(concat unimath-topdir "UniMath")
-		   "UniMath" "-R" "." "Top"))
-	   (make-local-variable 'coq-prog-name)
-	   (setq coq-prog-name
-		 (concat unimath-topdir "sub/coq/bin/coqtop"))
-	   (make-local-variable 'before-save-hook)
-	   (add-hook 'before-save-hook 'delete-trailing-whitespace)
-	   (modify-syntax-entry 39 "w")
-	   (modify-syntax-entry 95 "w")
-	   (if
-	       (not
-		(memq 'agda-input features))
-	       (load
-		(concat unimath-topdir "emacs/agda/agda-input")))
-	   (if
-	       (not
-		(member
-		 '("chimney" "╝")
-		 agda-input-user-translations))
-	       (progn
-		 (setq agda-input-user-translations
-		       (cons
-			'("chimney" "╝")
-			agda-input-user-translations))
-		 (setq agda-input-user-translations
-		       (cons
-			'("==>" "⟹")
-			agda-input-user-translations))
-		 (agda-input-setup)))
-	   (set-input-method "Agda"))))
+     ((Workshops-topdir
+       (expand-file-name
+        (locate-dominating-file buffer-file-name ".dir-locals.el")))
+      (unimath-topdir
+       (concat Workshops-topdir "UniMath/")))
+     (setq fill-column 100)
+     (make-local-variable 'coq-use-project-file)
+     (setq coq-use-project-file nil)
+     (make-local-variable 'coq-prog-args)
+     (setq coq-prog-args
+     `("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q" ,(concat unimath-topdir "UniMath")
+       "UniMath" "-R" "." "Top"))
+     (make-local-variable 'coq-prog-name)
+     (setq coq-prog-name
+     (concat unimath-topdir "sub/coq/bin/coqtop"))
+     (make-local-variable 'before-save-hook)
+     (add-hook 'before-save-hook 'delete-trailing-whitespace)
+     (modify-syntax-entry 39 "w")
+     (modify-syntax-entry 95 "w")
+     (if
+         (not
+    (memq 'agda-input features))
+         (load
+    (concat unimath-topdir "emacs/agda/agda-input")))
+     (if
+         (not
+    (member
+     '("chimney" "╝")
+     agda-input-user-translations))
+         (progn
+     (setq agda-input-user-translations
+           (cons
+      '("chimney" "╝")
+      agda-input-user-translations))
+     (setq agda-input-user-translations
+           (cons
+      '("==>" "⟹")
+      agda-input-user-translations))
+     (agda-input-setup)))
+     (set-input-method "Agda"))))
  '(warning-suppress-log-types '((comp))))
 (package-initialize)
 
@@ -185,7 +187,7 @@
 
 ;; Cua mode (ctrl-c, ctrl-v and friends)
 ; (defun-bind cua/enable "C-c C-u C-a" ()
-; 	(cua-mode t))
+;   (cua-mode t))
 ; (cua/enable)
 
 ;; Keybindings for line indentation
@@ -207,9 +209,9 @@
 
 ;; Color theme
 ; (load-theme
-;  	'solarized-light t
-;  	leuven
-;  	espresso
+;   'solarized-light t
+;   leuven
+;   espresso
 ;   spacemacs-light
 ;   flatui
 ;   misterioso
@@ -326,6 +328,10 @@
 (require 'agda-input)
 (set-input-method "Agda")
 
+(defun-bind agda/setTexBackend "C-c t" ()
+  (setq agda2-backend "QuickLaTeX"))
+  ; (setq agda2-program-args (append agda2-program-args '("--latex-dir" "."))))
+
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
   (setq agda2-highlight-level 'interactive)
@@ -351,6 +357,17 @@
     (windmove-right)
     (switch-to-buffer "*Agda information*")
     (windmove-left))
+  (defun-bind agda/compileTex "C-c c" ()
+    (agda/setTexBackend)
+    (agda2-compile))
+  (defun-bind agda/makeTex "C-c l" ()
+    (agda/setTexBackend)
+    (agda2-compile)
+    (makeFile))
+  (defun-bind agda/make "C-c m" ()
+    (agda/setTexBackend)
+    (agda2-compile)
+    (async-shell-command "makeParent"))
   ;; also enable agda-input in command buffers
   (add-hook 'isearch-mode-hook (lambda () (set-input-method "Agda")))
   ;; fix Evil shifts
@@ -378,82 +395,90 @@
 (defface my/alert '((t (:inherit font-lock-function-name-face :foreground "dark orange")))
   "Face used for TODO command in LaTeX.")
 
+(defun makeFile ()
+  "Call `make dir/filename` at the closest Makefile."
+  (interactive)
+  (async-shell-command
+    (concat "makeAt '" (file-name-directory buffer-file-name) "'"
+                  " '" (file-name-base buffer-file-name) "'")))
+
 (add-hook 'latex-mode-hook (lambda ()
   ; remove keywords-3 (_ leading to suscript)
   (setq-local font-lock-defaults
-	  '((tex-font-lock-keywords tex-font-lock-keywords-1 tex-font-lock-keywords-2)
-	    nil nil nil nil))
- 	(setq TeX-parse-self t
-				TeX-save-query nil)
- 	; keyboard macros
+    '((tex-font-lock-keywords tex-font-lock-keywords-1 tex-font-lock-keywords-2)
+      nil nil nil nil))
+  (setq TeX-parse-self t
+        TeX-save-query nil)
+  ; keyboard macros
   (setq shell-command-switch "-ic")
   (defun-bind tex/build "C-c l" ()
     (save-buffer)
-    (async-shell-command
-      (concat "makeAt '" (file-name-directory buffer-file-name) "'"
-                    " '" (file-name-base buffer-file-name) "'"
-                    )))
- 	(defun-bind insert/textit "C-S-i" ()
- 	 	(insert "\\emph{"))
- 	(defun-bind insert/textbf "C-S-b" ()
- 	 	(insert "\\textbf{"))
- 	; (defun-bind searchSection "C-c s" ()
- 	;  	(evil-search-forward)
- 	;  	(execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
- 	; font size
- 	; (set-font 80)
-	; spelling
-	(setq ispell-program-name "aspell"
-				ispell-dictionary   "british")
-	(flyspell-mode)
-	(flyspell-buffer)
-	; unicode input
-	(require 'agda-input)
-	(set-input-method "Agda")
+    (makeFile))
+  (defun-bind tex/make "C-c m" ()
+    (save-buffer)
+    (async-shell-command "makeParent"))
+  (defun-bind insert/textit "C-S-i" ()
+    (insert "\\emph{"))
+  (defun-bind insert/textbf "C-S-b" ()
+    (insert "\\textbf{"))
+  ; (defun-bind searchSection "C-c s" ()
+  ;   (evil-search-forward)
+  ;   (execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
+  ; font size
+  ; (set-font 80)
+  ; spelling
+  (setq ispell-program-name "aspell"
+        ispell-dictionary   "british")
+  (flyspell-mode)
+  (flyspell-buffer)
+  ; unicode input
+  (require 'agda-input)
+  (set-input-method "Agda")
   (set-input-method nil)
-	; prettify symbols
-	(setq prettify-symbols-alist '())
-	(mapc (lambda (pair) (push pair prettify-symbols-alist))
-	  '(; TeX commands
-	    ("\\begin"    . "▽")
-	    ("\\end"      . "△")
-	    ("\\item"     . "＊")
-	    ("\\par"      . "¶")
-	    ("\\ref"      . "☞")
+  ; prettify symbols
+  (setq prettify-symbols-alist '())
+  (mapc (lambda (pair) (push pair prettify-symbols-alist))
+    '(; TeX commands
+      ("\\begin"    . "▽")
+      ("\\end"      . "△")
+      ("\\item"     . "＊")
+      ("\\par"      . "¶")
+      ("\\label"    . "🏷")
+      ("\\ref"      . "☞")
       ("\\cref"     . "☞")
-	    ("\\site"     . "🔗")
-	    ("\\cite"     . "†")
-	    ("\\footnote" . "‡")
-	    ("\\newline"  . "⏎")
-	    ("~"          . "␣")
-	    ("\\textit"   . "I")
+      ("\\site"     . "🔗")
+      ("\\cite"     . "†")
+      ("\\footnote" . "‡")
+      ("\\newline"  . "⏎")
+      ("~"          . "␣")
+      ("\\textit"   . "I")
       ("\\emph"     . "I")
-	    ("\\textbf"   . "B")
-	    ))
-	(font-lock-add-keywords nil
-	 	'(; Basic
-      ("\\\\title{\\(.*\\)}"         1 'my/title t)
-      ("\\\\subtitle{\\(.*\\)}"      1 'my/section t)
-	 	  ("\\\\section{\\(.*\\)}"       1 'my/section t)
-	 	  ("\\\\subsection{\\(.*\\)}"    1 'my/subsection t)
-	 	  ("\\\\subsubsection{\\(.*\\)}" 1 'my/subsubsection t)
-	 	  ("\\\\paragraph{\\(.*\\)}"     1 'my/paragraph t)
+      ("\\textbf"   . "B")
+      ))
+  (font-lock-add-keywords nil
+    '(; Basic
+      ("\\\\title{\\([^}]*?\\)}"         1 'my/title t)
+      ("\\\\subtitle{\\([^}]*?\\)}"      1 'my/section t)
+      ("\\\\section{\\([^}]*?\\)}"       1 'my/section t)
+      ("\\\\subsection{\\([^}]*?\\)}"    1 'my/subsection t)
+      ("\\\\subsubsection{\\([^}]*?\\)}" 1 'my/subsubsection t)
+      ("\\\\paragraph{\\([^}]*?\\)}"     1 'my/paragraph t)
       ; Beamer
-      ("\\\\begin\[.*\]{frame}{\\(.*\\)}"  1 'my/section t)
-      ("\\\\alert{\\(.*\\)}"         1 'my/alert t)
-      ("\\\\todo{\\(.*\\)}"          1 'my/alert t)
-      ("\\\\alertblock{\\(.*\\)}"    1 'my/alert t)
+      ("\\\\begin\[[^}]*?\]{frame}{\\([^}]*?\\)}" 1 'my/section t)
+      ("\\\\alert{\\([^}]*?\\)}"                  1 'my/alert t)
+      ("\\\\todo{\\([^}]*?\\)}"                   1 'my/alert t)
+      ("\\\\alertblock{\\([^}]*?\\)}"             1 'my/alert t)
       ; Custom macros
-      ("\\\\site{\\(.*\\)}"          1 'my/site t)
-      ("\\\\TODO{\\(.*\\)}"          1 'my/todo t)
-	 	  ))
-	(prettify-symbols-mode)))
+      ("\\\\site{\\([^}]*?\\)}" 1 'my/site t)
+      ("\\\\TODO{\\([^}]*?\\)}" 1 'my/todo t)
+      ))
+  (prettify-symbols-mode)))
 
 ;;;;;;;;;;;;;;
 ;; Polymode ;;
 ;;;;;;;;;;;;;;
 (define-hostmode poly-latex-hostmode
- 	:mode 'latex-mode)
+  :mode 'latex-mode)
 
 (define-innermode poly-agda-innermode
   :mode 'agda2-mode
@@ -480,15 +505,15 @@
 ;; Match file extensions with certain modes ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq auto-mode-alist
- 	(append
+  (append
     '(("\\.lagda.tex\\'" . poly-latex-mode)
       ("\\.lagda.md\\'"  . agda2-mode)
       ("\\.lagda\\'"     . poly-latex-mode)
       ("\\.agda\\'"      . agda2-mode)
       ("\\.lhs\\'"       . latex-mode)
       ("\\.tex\\'"       . latex-mode)
- 	 	  )
- 	 	auto-mode-alist))
+      )
+    auto-mode-alist))
 
 ;; openwith
 (require 'openwith)

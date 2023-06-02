@@ -43,7 +43,7 @@ Keywords=Text;Editor;""" > $fn
   prelude)
     callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' ;;
   thesis)
-    callEmacs '(quickTex "phd-thesis/thesis" "thesis")' '-at5' ;;
+    callEmacs '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
   bitcoin)
     callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs '(quickAgda "formal-bitcoin" "Bitcoin")' '-at5' 2 ;;
