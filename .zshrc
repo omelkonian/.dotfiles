@@ -49,4 +49,14 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=yellow, bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=green, bold'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
+# Noglobs
+alias git="noglob git"
+alias g="noglob git"
+alias pip="noglob pip"
+alias stack="noglob stack"
+
+# Init
 source ~/git/.dotfiles/.initrc
+
+# scripts with zsh-specific functionality
+IMPORT ~/git/.dotfiles/bash/make.symlink

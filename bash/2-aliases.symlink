@@ -57,12 +57,6 @@ alias gpp="gpp --std=c++11"
 # . /usr/local/bin/virtualenvwrapper.sh
 alias mkvenv="mkvirtualenv -p `which python3`"
 
-# Noglobs
-alias git="noglob git"
-alias g="noglob git"
-alias pip="noglob pip"
-alias stack="noglob stack"
-
 # Make
 alias make='make -j"${CPU_CORES}"'
 

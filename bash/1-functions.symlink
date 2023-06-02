@@ -43,6 +43,15 @@ function backup {
   cp -r "$1" "$DROPBOX_BACKUP_FOLDER"
 }
 
+function find-up {
+  fileToFind="$1"
+  p=$(pwd)
+  while [[ "$p" != "" && ! -e "$p/$fileToFind" ]]; do
+    p=${p%/*}
+  done
+  echo "$p"
+}
+
 # SED
 function find_and_replace {
   find . -maxdepth $1 -name $2 -exec sed -i -r 's/'$3'/'$4'/g' '{}' \;

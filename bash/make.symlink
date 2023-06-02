@@ -1,3 +1,4 @@
+#!/usr/bin/zsh
 function viewPDF {
   nohup evince --class='at5' "$1" > /dev/null &
   sleep 1
@@ -47,14 +48,6 @@ function makeAt {
       make -C $mkDir && viewMostRecentPDF
     fi
   fi
-}
-
-function find-up {
-  p=$(pwd)
-  while [[ "$p" != "" && ! -e "$p/$1" ]]; do
-    p=${p%/*}
-  done
-  echo "$p"
 }
 
 function makeParent {

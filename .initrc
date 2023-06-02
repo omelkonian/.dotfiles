@@ -8,7 +8,7 @@ function IMPORT {
 }
 for file in /home/omelkonian/git/.dotfiles/bash/*.symlink; do
   # echo $file # to debug startup time
-  if [[ $file != *"controls"* ]]; then
+  if [[ ($file != *"controls.symlink") && ($file != *"make.symlink") ]]; then
     IMPORT $file
   fi
 done
