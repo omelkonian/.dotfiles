@@ -99,7 +99,13 @@
 ;;;;;;;;;;;;
 ;; Macros ;;
 ;;;;;;;;;;;;
-(defmacro defun-bind (fsym keyind args &rest body)
+(defmacro def-interactive (fsym args &rest body)
+  `(progn
+    (defun ,fsym ,args
+      (interactive)
+      ,@body)))
+
+(defmacro def-bind (fsym keyind args &rest body)
   `(progn
     (defun ,fsym ,args
       (interactive)
@@ -110,8 +116,7 @@
 ;; Basic ;;
 ;;;;;;;;;;;
 
-(defun reload-emacs ()
-  (interactive)
+(def-interactive reload-emacs ()
   (load-file user-init-file))
 
 ;; Get access to $PATH
@@ -158,11 +163,11 @@
   )
 
 ;; Save command
-(defun-bind save "C-s" ()
+(def-bind save "C-s" ()
   (save-some-buffers t))
 
 ;; Spawn new Emacs instance command
-(defun-bind spawnEmacs "C-S-n" ()
+(def-bind spawnEmacs "C-S-n" ()
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
 ;; YASnippet
@@ -186,7 +191,7 @@
 ; (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 ;; Cua mode (ctrl-c, ctrl-v and friends)
-; (defun-bind cua/enable "C-c C-u C-a" ()
+; (def-bind cua/enable "C-c C-u C-a" ()
 ;   (cua-mode t))
 ; (cua/enable)
 
@@ -328,14 +333,52 @@
 (require 'agda-input)
 (set-input-method "Agda")
 
-(defun-bind agda/setTexBackend "C-c t" ()
+(def-bind agda/setTexBackend "C-c t" ()
   (setq agda2-backend "QuickLaTeX"))
   ; (setq agda2-program-args (append agda2-program-args '("--latex-dir" "."))))
+
+;; Makefiles
+
+(defun makeFile ()
+  "Call `make dir/filename` at the closest Makefile."
+  (interactive)
+  (async-shell-command
+    (concat "makeAt '" (file-name-directory buffer-file-name) "'"
+                  " '" (file-name-base buffer-file-name) "'")))
+
+(def-interactive agda/make ()
+  (agda/setTexBackend)
+  (agda2-compile)
+  (makeFile))
+(def-interactive tex/make ()
+  (save-buffer)
+  (makeFile))
+(def-interactive agda/makeParent ()
+  (agda/setTexBackend)
+  (agda2-compile)
+  (async-shell-command "makeParent"))
+(def-interactive tex/makeParent ()
+  (save-buffer)
+  (async-shell-command "makeParent"))
+
+(def-bind make "C-c l" ()
+  (setq ext (file-name-extension buffer-file-name))
+  (cond
+    ((string= ext "tex")   (tex/make))
+    ((string= ext "lagda") (agda/make))
+    ))
+
+(def-bind makeParent "C-c m" ()
+  (setq ext (file-name-extension buffer-file-name))
+  (cond
+    ((string= ext "tex")   (tex/makeParent))
+    ((string= ext "lagda") (agda/makeParent))
+    ))
 
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
   (setq agda2-highlight-level 'interactive)
-  (defun-bind agda/run "C-c C-x C-x" ()
+  (def-bind agda/run "C-c C-x C-x" ()
     ;; run compiled GHC file
     (save-buffer)
     (async-shell-command (concat "./" (file-name-base buffer-file-name))))
@@ -344,30 +387,22 @@
   ;     (concat "\./" (file-name-base buffer-file-name))))
   ;   (agda2-goto-definition-keyboard))
   ;; set navigation keys
-  (defun-bind agda/go-to-definition "C-c g" ()
+  (def-bind agda/go-to-definition "C-c g" ()
     ;; Go to definition
     (agda2-goto-definition-keyboard))
-  (defun-bind agda/go-back "C-c b" ()
+  (def-bind agda/go-back "C-c b" ()
     ;; Go to definition
     (agda2-go-back))
-  (defun-bind agda/frame "C-c r" ()
+  (def-bind agda/frame "C-c r" ()
     ;; Move AgdaInfo frame to the right
     (delete-other-windows)
     (split-window-right)
     (windmove-right)
     (switch-to-buffer "*Agda information*")
     (windmove-left))
-  (defun-bind agda/compileTex "C-c c" ()
+  (def-bind agda/compileTex "C-c c" ()
     (agda/setTexBackend)
     (agda2-compile))
-  (defun-bind agda/makeTex "C-c l" ()
-    (agda/setTexBackend)
-    (agda2-compile)
-    (makeFile))
-  (defun-bind agda/make "C-c m" ()
-    (agda/setTexBackend)
-    (agda2-compile)
-    (async-shell-command "makeParent"))
   ;; also enable agda-input in command buffers
   (add-hook 'isearch-mode-hook (lambda () (set-input-method "Agda")))
   ;; fix Evil shifts
@@ -395,13 +430,6 @@
 (defface my/alert '((t (:inherit font-lock-function-name-face :foreground "dark orange")))
   "Face used for TODO command in LaTeX.")
 
-(defun makeFile ()
-  "Call `make dir/filename` at the closest Makefile."
-  (interactive)
-  (async-shell-command
-    (concat "makeAt '" (file-name-directory buffer-file-name) "'"
-                  " '" (file-name-base buffer-file-name) "'")))
-
 (add-hook 'latex-mode-hook (lambda ()
   ; remove keywords-3 (_ leading to suscript)
   (setq-local font-lock-defaults
@@ -411,17 +439,11 @@
         TeX-save-query nil)
   ; keyboard macros
   (setq shell-command-switch "-ic")
-  (defun-bind tex/build "C-c l" ()
-    (save-buffer)
-    (makeFile))
-  (defun-bind tex/make "C-c m" ()
-    (save-buffer)
-    (async-shell-command "makeParent"))
-  (defun-bind insert/textit "C-S-i" ()
+  (def-bind insert/textit "C-S-i" ()
     (insert "\\emph{"))
-  (defun-bind insert/textbf "C-S-b" ()
+  (def-bind insert/textbf "C-S-b" ()
     (insert "\\textbf{"))
-  ; (defun-bind searchSection "C-c s" ()
+  ; (def-bind searchSection "C-c s" ()
   ;   (evil-search-forward)
   ;   (execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
   ; font size

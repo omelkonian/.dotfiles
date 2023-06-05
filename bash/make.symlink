@@ -1,5 +1,6 @@
 #!/usr/bin/zsh
 function viewPDF {
+  echo "Viewing $1..."
   nohup evince --class='at5' "$1" > /dev/null &
   sleep 1
 }
@@ -21,6 +22,7 @@ function makeTex {
 
 # cd + make + view PDFs
 function makeAt {
+  notify-send "Making $1 $2"
   set -exo pipefail
   builtin cd "$1"
   base="$2"
@@ -40,10 +42,9 @@ function makeAt {
     mkDirF=$(print -l (../)#Makefile(:h:a))
     fdir=$(echo $1 | sed -e "s|^$mkDirF/||")
     f="$fdir$fbase"
+    echo "Making $f (in directory: $mkDir)..."
     if [[ -z $(make -C $mkDir -n $f 2>&1 | grep 'No rule to make target') ]]; then
       make -C $mkDir $f && viewPDF $f
-    # elif [[ -z $(make -C $mkDir -n $fbase 2>&1 | grep 'No rule to make target') ]]; then
-    #   make -C $mkDir $fbase && viewPDF $fbase
     else
       make -C $mkDir && viewMostRecentPDF
     fi
@@ -52,9 +53,7 @@ function makeAt {
 
 function makeParent {
   parentDir=$(print -l (../)#Makefile(:h))
-  make -C $parentDir
+  make -C $parentDir && viewMostRecentPDF
 }
 
 alias makeHere='makeAt .'
-
-
