@@ -2,10 +2,15 @@
 s=$(echo $1 | tr "[:upper:]" "[:lower:]")
 
 function callEmacs {
-  if [ -z "$(wmctrl -l | cut -d' ' -f5 | grep $s)" ] ; then
-    sleep ${3:-0} && emacs --name=$s$2 --eval "$1" &
+  local id=$1
+  local cmd=$2
+  local suffix=$3
+  local sleepDur=${4:-0}
+  local wid=$id$suffix
+  if [ -z "$(wmctrl -l | cut -d' ' -f5 | grep "^$id\(-at.\)\?$")" ] ; then
+    sleep $sleepDur && emacs --name=$wid --eval "$cmd" &
   else
-    notify-send "QuickStart" "$s already open"
+    notify-send "QuickStart" "$id[-at_] already open"
   fi
 }
 
@@ -35,44 +40,44 @@ Keywords=Text;Editor;""" > $fn
     done
     ;;
   repl)
-    callEmacs '(quickAgda "personal-practice/agda" "REPL")' ;;
+    callEmacs $s '(quickAgda "personal-practice/agda" "REPL")' ;;
   stdlib)
-    callEmacs '(quickAgda "agda-stdlib" "Everything")' ;;
+    callEmacs $s '(quickAgda "agda-stdlib" "Everything")' ;;
   stdlib-fork)
-    callEmacs '(quickAgda "agda-stdlib-fork" "Everything")' ;;
+    callEmacs $s '(quickAgda "agda-stdlib-fork" "Everything")' ;;
   prelude)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' ;;
+    callEmacs $s '(quickAgda "formal-prelude" "Prelude/Main")' ;;
   thesis)
-    callEmacs '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
+    callEmacs $s '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
   bitcoin)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs '(quickAgda "formal-bitcoin" "Bitcoin")' '-at5' 2 ;;
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
+    callEmacs $s '(quickAgda "formal-bitcoin" "Bitcoin")' '-at5' 2 ;;
   bitml)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs '(quickAgda "formal-bitml" "BitML")' '-at5' 2 ;;
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
+    callEmacs $s '(quickAgda "formal-bitml" "BitML")' '-at5' 2 ;;
   bitml-to-bitcoin)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs '(quickAgda "formal-bitcoin" "Bitcoin")' '-at8' 2
-    callEmacs '(quickAgda "formal-bitml" "BitML")' '-at8' 2
-    callEmacs '(quickAgda "formal-bitml-to-bitcoin" "SecureCompilation/Coherence")' '-at5' 2 ;;
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
+    callEmacs bitcoin '(quickAgda "formal-bitcoin" "Bitcoin")' '-at8' 2
+    callEmacs bitml '(quickAgda "formal-bitml" "BitML")' '-at8' 2
+    callEmacs $s '(quickAgda "formal-bitml-to-bitcoin" "SecureCompilation/Coherence")' '-at5' 2 ;;
   hoare)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs '(quickAgda "hoare-ledgers" "Main")' '-at5' 2 ;;
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
+    callEmacs $s '(quickAgda "hoare-ledgers" "Main")' '-at5' 2 ;;
   nom)
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs '(quickAgda "nominal-agda" "Main")' '-at5' 2 ;;
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
+    callEmacs $s '(quickAgda "nominal-agda" "Main")' '-at5' 2 ;;
   iliagda)
-    callEmacs '(quickAgda "agda-stdlib" "Everything")' '-at8'
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
-    callEmacs '(quickAgda "iliagda" "Main")' '-at5' 2 ;;
+    callEmacs stdlib '(quickAgda "agda-stdlib" "Everything")' '-at8'
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
+    callEmacs $s '(quickAgda "iliagda" "Main")' '-at5' 2 ;;
   mtg)
-    callEmacs '(quickAgda "agda-stdlib" "Everything")' '-at8'
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
-    callEmacs '(quickAgda "formal-mtg" "Main")' '-at5' 2 ;;
+    callEmacs stdlib '(quickAgda "agda-stdlib" "Everything")' '-at8'
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
+    callEmacs $s '(quickAgda "formal-mtg" "Main")' '-at5' 2 ;;
   utxo)
-    callEmacs '(quickAgda "agda-stdlib" "Everything")' '-at8'
-    callEmacs '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
-    callEmacs '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
+    callEmacs stdlib '(quickAgda "agda-stdlib" "Everything")' '-at8'
+    callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
+    callEmacs $s '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
   agda2train)
-    callEmacs '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
+    callEmacs $s '(quickAgda "agda2train/test" "All")' '-at5' 2 ;;
 esac
