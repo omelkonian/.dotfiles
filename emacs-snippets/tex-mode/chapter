@@ -1,0 +1,4 @@
+# key: chapter
+# --
+\chapter{$1}
+\label{chapter:$2}
