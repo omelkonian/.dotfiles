@@ -24,9 +24,7 @@
      ("cross" "✖")))
  '(agda2-backend "GHC")
  '(agda2-program-args
-   '("+RTS" "-K256M" "-H1G" "-M12G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS"
-     "-i" "."
-     "--latex-dir=."))
+   '("+RTS" "-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "." "--latex-dir=."))
  '(agda2-program-name "agda")
  '(company-backends '(company-dabbrev))
  '(company-dabbrev-downcase nil)
@@ -41,51 +39,51 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
      (eval let*
-     ((Workshops-topdir
-       (expand-file-name
-        (locate-dominating-file buffer-file-name ".dir-locals.el")))
-      (unimath-topdir
-       (concat Workshops-topdir "UniMath/")))
-     (setq fill-column 100)
-     (make-local-variable 'coq-use-project-file)
-     (setq coq-use-project-file nil)
-     (make-local-variable 'coq-prog-args)
-     (setq coq-prog-args
-     `("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q" ,(concat unimath-topdir "UniMath")
-       "UniMath" "-R" "." "Top"))
-     (make-local-variable 'coq-prog-name)
-     (setq coq-prog-name
-     (concat unimath-topdir "sub/coq/bin/coqtop"))
-     (make-local-variable 'before-save-hook)
-     (add-hook 'before-save-hook 'delete-trailing-whitespace)
-     (modify-syntax-entry 39 "w")
-     (modify-syntax-entry 95 "w")
-     (if
-         (not
-    (memq 'agda-input features))
-         (load
-    (concat unimath-topdir "emacs/agda/agda-input")))
-     (if
-         (not
-    (member
-     '("chimney" "╝")
-     agda-input-user-translations))
-         (progn
-     (setq agda-input-user-translations
-           (cons
-      '("chimney" "╝")
-      agda-input-user-translations))
-     (setq agda-input-user-translations
-           (cons
-      '("==>" "⟹")
-      agda-input-user-translations))
-     (agda-input-setup)))
-     (set-input-method "Agda"))))
+	   ((Workshops-topdir
+	     (expand-file-name
+	      (locate-dominating-file buffer-file-name ".dir-locals.el")))
+	    (unimath-topdir
+	     (concat Workshops-topdir "UniMath/")))
+	   (setq fill-column 100)
+	   (make-local-variable 'coq-use-project-file)
+	   (setq coq-use-project-file nil)
+	   (make-local-variable 'coq-prog-args)
+	   (setq coq-prog-args
+		 `("-emacs" "-noinit" "-indices-matter" "-type-in-type" "-w" "-notation-overridden,-local-declaration,+uniform-inheritance,-deprecated-option" "-Q" ,(concat unimath-topdir "UniMath")
+		   "UniMath" "-R" "." "Top"))
+	   (make-local-variable 'coq-prog-name)
+	   (setq coq-prog-name
+		 (concat unimath-topdir "sub/coq/bin/coqtop"))
+	   (make-local-variable 'before-save-hook)
+	   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+	   (modify-syntax-entry 39 "w")
+	   (modify-syntax-entry 95 "w")
+	   (if
+	       (not
+		(memq 'agda-input features))
+	       (load
+		(concat unimath-topdir "emacs/agda/agda-input")))
+	   (if
+	       (not
+		(member
+		 '("chimney" "╝")
+		 agda-input-user-translations))
+	       (progn
+		 (setq agda-input-user-translations
+		       (cons
+			'("chimney" "╝")
+			agda-input-user-translations))
+		 (setq agda-input-user-translations
+		       (cons
+			'("==>" "⟹")
+			agda-input-user-translations))
+		 (agda-input-setup)))
+	   (set-input-method "Agda"))))
  '(warning-suppress-log-types '((comp))))
 (package-initialize)
 
@@ -200,7 +198,9 @@
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
 
 ;; Line/column numbering (slows down Emacs...)
-(global-linum-mode t)
+(if (version<= "26.0.50" emacs-version)
+  (global-display-line-numbers-mode)
+  (global-linum-mode))
 (column-number-mode)
 
 ;; Vertical column rule
@@ -284,7 +284,7 @@
 (setq recentf-max-saved-items 25)
 (global-set-key (kbd "C-S-t") 'recentf-open-files)
 
-;; Folding
+;; Folding (indentation-based, e.g. for Haskell & Agda)
 
 ; (require 'origami)
 (require 'yafolding)
@@ -298,6 +298,14 @@
 (define-key yafolding-mode-map (kbd "<C-M-return>") 'yafolding-toggle-all)
 (define-key yafolding-mode-map (kbd "<C-return>") 'yafolding-toggle-element)
 
+;; Folding (outline-based, e.g. for TeX environments)
+(add-to-list 'load-path "~/.emacs.d/packages/")
+(eval-after-load 'outline
+  '(progn
+    (require 'outline-magic)
+    (define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)))
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+(add-hook 'latex-mode-hook #'outline-minor-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile (project management) ;;
@@ -323,7 +331,7 @@
 ;;;;;;;;;;
 
 ;; Set custom GHC environment
-(setenv "GHC_ENVIRONMENT" "agda")
+; (setenv "GHC_ENVIRONMENT" "agda")
 
 ;; enable agda-mode
 (load-file (let ((coding-system-for-read 'utf-8))
@@ -433,6 +441,12 @@
   "Face used for \\alert command in LaTeX.")
 
 (add-hook 'latex-mode-hook (lambda ()
+  ; set sections for folding
+  (setq outline-regexp
+    (concat (substring outline-regexp 0 4)
+            "begin{code}\\|"
+            (substring outline-regexp 4)))
+
   ; remove keywords-3 (_ leading to suscript)
   (setq-local font-lock-defaults
     '((tex-font-lock-keywords tex-font-lock-keywords-1 tex-font-lock-keywords-2)
