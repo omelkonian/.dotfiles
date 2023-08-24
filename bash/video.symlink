@@ -68,7 +68,7 @@ function undockedScreens {
 function dockedScreens {
   xrandr --output $BUILTIN --off \
          --output $HDMI --primary --auto \
-         --output $DPORT --auto --rotate left --left-of $HDMI 
+         --output $DPORT --auto --rotate left --right-of $HDMI
 }
 
 # Setup screens
