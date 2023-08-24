@@ -195,7 +195,7 @@
 	"match_brackets_square": true,
 	"match_selection": true,
 	"match_tags": true,
-	"neovintageous_build_version": 12700,
+	"neovintageous_build_version": 13200,
 	"open_externally_patterns":
 	[
 		"*.jpg",
@@ -224,7 +224,7 @@
 	"use_tab_stops": true,
 	"vintage_start_in_command_mode": true,
 	"vintageous_use_ctrl_keys": null,
-	"vintageous_use_super_keys": null,
+	"vintageous_use_super_keys": false,
 	"vintageous_use_sys_clipboard": true,
 	"word_wrap": "auto",
 	// Haskell
