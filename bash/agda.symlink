@@ -2,6 +2,8 @@ IMPORT /home/omelkonian/git/.dotfiles/bash/1-functions.symlink
 IMPORT /home/omelkonian/git/.dotfiles/bash/time.symlink
 
 alias agdaLarge='agda +RTS -K256M -H1G -M8G -A128M -S/var/tmp/agda/AgdaRTS.log -RTS'
+alias agdaVeryLarge='agda +RTS -K512M -H2G -M12G -A256M -RTS'
+alias agdaHuge='agda +RTS -K1024M -H2G -M18G -A512M -RTS'
 
 # alias agda='GHC_ENVIRONMENT=agda agda'
 
@@ -122,7 +124,7 @@ all: \$(MAIN).pdf
 %.pdf: %.tex \$(PRE)
 > \$(LATEX) -output-directory=\$(dir \$@) $<
 
-\$(MAIN).pdf: ${fs[*]}
+\$(MAIN).pdf: \$(patsubst %.lagda, %.tex, \$(shell find Prelude/ -type f -name '*.lagda'))
 EOF
   # Check that it works
   make -C lit/ && evince main.pdf &

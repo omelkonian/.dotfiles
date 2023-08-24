@@ -48,10 +48,10 @@ Keywords=Text;Editor;""" > $fn
   prelude)
     callEmacs $s '(quickAgda "formal-prelude" "Prelude/Main")' ;;
   thesis)
-    callEmacs $s '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
+    callEmacs $s '(quickTex "phd-thesis/thesis" "coherence")' '-at5' ;;
   bitcoin)
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
-    callEmacs $s '(quickAgda "formal-bitcoin" "Bitcoin")' '-at5' 2 ;;
+    callEmacs $s '(quickAgda "formal-bitcoin" "Bitcoin/Main")' '-at5' 2 ;;
   bitml)
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs $s '(quickAgda "formal-bitml" "BitML")' '-at5' 2 ;;
@@ -59,7 +59,7 @@ Keywords=Text;Editor;""" > $fn
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs bitcoin '(quickAgda "formal-bitcoin" "Bitcoin")' '-at8' 2
     callEmacs bitml '(quickAgda "formal-bitml" "BitML")' '-at8' 2
-    callEmacs $s '(quickAgda "formal-bitml-to-bitcoin" "SecureCompilation/Coherence")' '-at5' 2 ;;
+    callEmacs $s '(quickAgda "formal-bitml-to-bitcoin" "Main")' '-at5' 2 ;;
   hoare)
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs $s '(quickAgda "hoare-ledgers" "Main")' '-at5' 2 ;;
