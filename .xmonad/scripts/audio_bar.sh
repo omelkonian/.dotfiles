@@ -18,6 +18,10 @@ echo -n "<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink toggle_HDMI>\
 echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggle $JBL_CHARGE_4>\
 <fc=$(bluetooth__connected $JBL_CHARGE_4 && echo 'green' || echo 'red')>JBL</fc></action>"
 
+# Soundbox via bluetooth
+echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggle $SKY_SOUNDBOX>\
+<fc=$(bluetooth__connected $SKY_SOUNDBOX && echo 'green' || echo 'red')>Sky</fc></action>"
+
 # MiEarphones via bluetooth
 echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggle $MI_EARPHONES>\
 <fc=$(bluetooth__connected $MI_EARPHONES && echo 'green' || echo 'red')>Mi</fc></action>"
