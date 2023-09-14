@@ -22,8 +22,8 @@ add_to_path $MEHOME/.idris2/bin
 add_to_LD_path $MEHOME/.idris2/lib
 
 # GCC
-add_to_LD_path /usr/lib32
-add_to_LD_path /usr/lib
+# add_to_LD_path /usr/lib32
+# add_to_LD_path /usr/lib
 
 # ROS
 add_to_path /opt/ros/indigo/bin
