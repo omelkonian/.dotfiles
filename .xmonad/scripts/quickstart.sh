@@ -48,7 +48,7 @@ Keywords=Text;Editor;""" > $fn
   prelude)
     callEmacs $s '(quickAgda "formal-prelude" "Prelude/Main")' ;;
   thesis)
-    callEmacs $s '(quickTex "phd-thesis/thesis" "coherence")' '-at5' ;;
+    callEmacs $s '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
   bitcoin)
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs $s '(quickAgda "formal-bitcoin" "Bitcoin/Main")' '-at5' 2 ;;
@@ -80,4 +80,6 @@ Keywords=Text;Editor;""" > $fn
     callEmacs $s '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
   agda2train)
     callEmacs $s '(quickAgda "agda2train/test" "All")' '-at5' 2 ;;
+  ledger)
+    callEmacs $s '(quickLedger "formal-ledger-specifications/src" "Ledger/PDF")' '-at5' 2 ;;
 esac

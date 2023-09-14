@@ -24,7 +24,7 @@
      ("cross" "✖")))
  '(agda2-backend "GHC")
  '(agda2-program-args
-   '("+RTS" "-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "." "--latex-dir=."))
+   '("+RTS" "-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
  '(agda2-program-name "agda")
  '(company-backends '(company-dabbrev))
  '(company-dabbrev-downcase nil)
@@ -39,7 +39,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(nix-mode outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -337,13 +337,19 @@
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+
 ;; enable agda-input everywhere ; use C-\ to toggle-input
 (require 'agda-input)
 (set-input-method "Agda")
 
 (def-bind agda/setTexBackend "C-c t" ()
-  (setq agda2-backend "QuickLaTeX"))
-  ; (setq agda2-program-args (append agda2-program-args '("--latex-dir" "."))))
+  (setq agda2-backend "QuickLaTeX")
+  (let ((agdaArgs (mapconcat 'identity agda2-program-args " ")))
+    (if (not (string-match-p "--latex-dir" agdaArgs))
+      (let ((coding-system-for-read 'utf-8)
+            (latexDir (shell-command-to-string "agda-locate-latex-dir")))
+      (setq agda2-program-args (append agda2-program-args
+        (list (concat "--latex-dir=" latexDir))))))))
 
 ;; Makefiles
 
@@ -382,6 +388,11 @@
     ((string= ext "tex")   (tex/makeParent))
     ((string= ext "lagda") (agda/makeParent))
     ))
+
+(def-bind makeRedo "C-c o" ()
+  "Call `make redo` at the current directory."
+  (interactive)
+  (async-shell-command "make redo"))
 
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
@@ -462,6 +473,17 @@
   ; (def-bind searchSection "C-c s" ()
   ;   (evil-search-forward)
   ;   (execute-kbd-macro (read-kbd-macro "/ section{ RET n")))
+  (def-bind latex/frame "C-c r" ()
+    ;; Move AsyncInfo frame to the right
+    (delete-other-windows)
+    (split-window-right)
+    (windmove-right)
+    (switch-to-buffer "*Async Shell Command*")
+    (windmove-left))
+  ; Run agda
+  (def-bind latex/loadAgda "C-c C-l" ()
+
+    )
   ; font size
   ; (set-font 80)
   ; spelling
@@ -585,6 +607,20 @@
     (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
   (execute-kbd-macro (read-kbd-macro
     "C-c C-l")))
+
+(defun quickLedger (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".lagda RET")))
+  (setq agda2-version "2.6.3"
+        agda2-program-name (concat "~/IOHK/agdaWithStdLibMeta/bin/agda"))
+  (execute-kbd-macro (read-kbd-macro
+    "M-n C-n")) ; execute `polymode-next-chunk`
+  (execute-kbd-macro (read-kbd-macro
+    "<down>")) ; go inside Agda chunk
+  (agda2-restart)
+  (execute-kbd-macro (read-kbd-macro
+    "C-c C-l"))
+  )
 
 (defun quickTex (folder file)
   (execute-kbd-macro (read-kbd-macro
