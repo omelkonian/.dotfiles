@@ -57,6 +57,3 @@ alias stack="noglob stack"
 
 # Init
 source ~/git/.dotfiles/.initrc
-
-# scripts with zsh-specific functionality
-IMPORT ~/git/.dotfiles/bash/make.symlink

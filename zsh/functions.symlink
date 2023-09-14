@@ -1,0 +1,13 @@
+#!/usr/bin/zsh
+
+function findParentRelative {
+  exec 2>/dev/null
+  local x=$(print -l (../)#$1(:h))
+  [ ! -z $x ] && echo "$x"
+}
+
+function findParentAbsolute {
+  exec 2>/dev/null
+  local x=$(print -l (../)#$1(:h:a))
+  [ ! -z $x ] && echo "$x"
+}

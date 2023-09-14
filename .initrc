@@ -8,7 +8,13 @@ function IMPORT {
 }
 for file in /home/omelkonian/git/.dotfiles/bash/*.symlink; do
   # echo $file # to debug startup time
-  if [[ ($file != *"controls.symlink") && ($file != *"make.symlink") ]]; then
+  if [[ ($file != *"controls.symlink") ]]; then
     IMPORT $file
   fi
 done
+
+if [[ -n $ZSH_NAME ]]; then # only load these under `zsh`
+  for file in /home/omelkonian/git/.dotfiles/zsh/*.symlink; do
+    IMPORT $file
+  done
+fi

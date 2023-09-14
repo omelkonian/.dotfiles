@@ -1,5 +1,7 @@
+#!/usr/bin/zsh
 IMPORT /home/omelkonian/git/.dotfiles/bash/1-functions.symlink
 IMPORT /home/omelkonian/git/.dotfiles/bash/time.symlink
+IMPORT /home/omelkonian/git/.dotfiles/zsh/functions.symlink
 
 alias agdaLarge='agda +RTS -K256M -H1G -M8G -A128M -S/var/tmp/agda/AgdaRTS.log -RTS'
 alias agdaVeryLarge='agda +RTS -K512M -H2G -M12G -A256M -RTS'
@@ -46,6 +48,20 @@ function agdaInterfaceTimes {
 function plfa {
   cd $HOME/git/plfa.github.io-master
   bundle exec jekyll serve
+}
+
+function agda-locate-latex-dir {
+  latexDir=$(findParentRelative latex)
+  if [ ! -z $latexDir ]; then
+    echo "$latexDir"
+  else;
+    latexDir=$(findParentRelative agda.sty)
+    if [ ! -z $latexDir ]; then
+      echo "$latexDir"
+    else
+      echo "."
+    fi
+  fi
 }
 
 # Convert a file to a literate version for integrating within a TeX project.

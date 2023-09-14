@@ -1,4 +1,6 @@
 #!/usr/bin/zsh
+IMPORT /home/omelkonian/git/.dotfiles/zsh/functions.symlink
+
 function viewPDF {
   nohup evince --class='at5' "$1" > /dev/null &
   sleep 1
@@ -11,7 +13,7 @@ function viewMostRecentPDF {
 
 # Build TeX with references + view rendered PDF
 function makeTex {
-  set -eo pipefail
+  set -e pipefail
   xelatex $1.tex
   if [ -f $1.bib ]; then
     bibtex $1.aux &> /dev/null
@@ -25,7 +27,7 @@ function makeAt {
   builtin cd "$1"
   base="$2"
   curDir=$(basename "$(pwd)")
-  mkDir=$(print -l (../)#Makefile(:h))
+  mkDir=$(findParentRelative Makefile)
   # Build and view output
   if [ -z $mkDir ]; then # LaTeX
     if [ -f ./${base}.tex ]; then
@@ -37,11 +39,11 @@ function makeAt {
     fi
   else # make
     fbase="$base.pdf"
-    mkDirF=$(print -l (../)#Makefile(:h:a))
+    mkDirF=$(findParentAbsolute Makefile)
     fdir=$(echo $1 | sed -e "s|^$mkDirF/||")
     f="$fdir$fbase"
-    if [[ -z $(make -C $mkDir -n $f 2>&1 | grep 'No rule to make target') ]]; then
-      make -C $mkDir $f && viewPDF $fbase
+    if [[ -z $(make -C $mkDir -n $fbase 2>&1 | grep 'No rule to make target') ]]; then
+      make -C $mkDir $fbase && viewPDF $fbase
     else
       make -C $mkDir && viewMostRecentPDF
     fi
@@ -49,8 +51,7 @@ function makeAt {
 }
 
 function makeParent {
-  parentDir=$(print -l (../)#Makefile(:h))
-  make -C $parentDir && viewMostRecentPDF
+  make -C $(findParentDir Makefile) && viewMostRecentPDF
 }
 
 alias makeHere='makeAt .'
