@@ -49,6 +49,9 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=yellow, bold'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=green, bold'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue, bold'
 
+# Hook `direnv`
+eval "$(direnv hook zsh)"
+
 # Noglobs
 alias git="noglob git"
 alias g="noglob git"

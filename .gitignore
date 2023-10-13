@@ -53,6 +53,7 @@
 **/*.run.xml
 **/*-blx.bib
 **/*.vtc
+**/*.xdv
 
 # Tex-minted
 **/_minted*/
@@ -60,7 +61,6 @@
 # Agda
 **/*.agdai
 **/*.agda~
-**/latex/
 **/_build/
 **/MAlonzo/
 **/agda/target/
@@ -97,3 +97,6 @@
 
 # agda2hs (subdir in agda-erased)
 agda2hs/
+
+# direnv
+.envrc
