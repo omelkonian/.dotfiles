@@ -1,0 +1,5 @@
+# key: foreign
+# --
+{-# FOREIGN $0
+$1
+#-}
