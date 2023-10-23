@@ -39,7 +39,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(nix-mode outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(direnv json-mode nix-mode outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -93,6 +93,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+; enable `direnv` loading of environmental variables
+(direnv-mode)
 
 ;;;;;;;;;;;;
 ;; Macros ;;
@@ -337,6 +340,9 @@
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+; ;; enable agda2hs-mode
+; (load-file (let ((coding-system-for-read 'utf-8))
+;                 (shell-command-to-string "agda2hs-mode locate")))
 
 ;; enable agda-input everywhere ; use C-\ to toggle-input
 (require 'agda-input)
@@ -602,24 +608,32 @@
 (setq undo-limit 100000000)
 
 ; quickstart project
-(defun quickAgda (folder file)
+(defun loadAgda ()
   (execute-kbd-macro (read-kbd-macro
-    (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
-  (execute-kbd-macro (read-kbd-macro
-    "C-c C-l")))
-
-(defun quickLedger (folder file)
-  (execute-kbd-macro (read-kbd-macro
-    (concat "C-x C-f ~/git/" folder "/" file ".lagda RET")))
-  (setq agda2-version "2.6.3"
-        agda2-program-name (concat "~/IOHK/agdaWithStdLibMeta/bin/agda"))
+    "C-c C-l"))
+  )
+(defun loadLagda ()
   (execute-kbd-macro (read-kbd-macro
     "M-n C-n")) ; execute `polymode-next-chunk`
   (execute-kbd-macro (read-kbd-macro
     "<down>")) ; go inside Agda chunk
-  (agda2-restart)
   (execute-kbd-macro (read-kbd-macro
     "C-c C-l"))
+  )
+
+(defun quickAgda (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
+  (loadAgda))
+
+(defun quickLedger (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
+  (setq agda2-version "2.6.3"
+        agda2-program-name (concat "~/IOHK/agdaWithStdLibMeta/bin/agda"))
+  (agda2-restart)
+  ; (loadLagda)
+  (loadAgda)
   )
 
 (defun quickTex (folder file)
