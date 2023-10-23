@@ -18,15 +18,6 @@ add_to_path $MEHOME/.npm-global/bin
 # UoE printing username
 export CUPS_USER='s2000146'
 
-# Nix
-function fixNix {
-  LD_PRELOAD=''
-  LD_LIBRARY_PATH='/usr/lib'
-}
-alias nix="fixNix && nix"
-alias nix-build="fixNix && nix-build"
-alias nix-shell="fixNix && nix-shell --pure --keep LD_LIBRARY_PATH --keep PATH"
-
 # Stack
 eval "$(stack --bash-completion-script stack)"
 

@@ -1,0 +1,16 @@
+IMPORT /home/omelkonian/git/.dotfiles/bash/0-constants.symlink
+IMPORT /home/omelkonian/git/.dotfiles/bash/3-path.symlink
+
+alias nixClean="nix-store --gc"
+
+function fixNix {
+  LD_PRELOAD=''
+  LD_LIBRARY_PATH='/usr/lib'
+}
+alias nix="fixNix && nix"
+alias nix-build="fixNix && nix-build"
+alias nix-shell="fixNix && nix-shell --pure --keep LD_LIBRARY_PATH --keep PATH"
+
+# if [ -e $MEHOME/.nix-profile/etc/profile.d/nix.sh ]; then
+#   . $MEHOME/.nix-profile/etc/profile.d/nix.sh;
+# fi # added by Nix installer
