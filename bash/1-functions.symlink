@@ -164,8 +164,12 @@ function git_check_all_folders {
 # Process handling
 function start_app {
   p_name=${1%% *}
+  p_args=${1#"$p_name"}
+  echo "p_name: $p_name"
+  echo "p_args: $p_args"
   if [ -z "$(pgrep -f $p_name)" ] ; then
-    $1 &
+    echo $1
+    $p_name $p_args &
   fi
 }
 

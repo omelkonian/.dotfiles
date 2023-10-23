@@ -81,5 +81,5 @@ Keywords=Text;Editor;""" > $fn
   agda2train)
     callEmacs $s '(quickAgda "agda2train/test" "All")' '-at5' 2 ;;
   ledger)
-    callEmacs $s '(quickLedger "formal-ledger-specifications/src" "Ledger/PDF")' '-at5' 2 ;;
+    callEmacs $s '(quickLedger "formal-ledger-specifications/src" "Everything")' '-at5' 2 ;;
 esac

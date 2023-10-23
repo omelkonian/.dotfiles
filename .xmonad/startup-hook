@@ -1,14 +1,15 @@
-#!/bin/bash
+#!/bin/zsh
 
 source ~/.zshrc
 echo "ZSH run"
 
-start_app "synapse -s"
+# start_app "synapse -s"
 start_app "nm-applet --sm-disable"
-start_app "caffeine-indicator" # "thunderbird"
+start_app "caffeine-indicator"
 start_app "birdtray" # "thunderbird"
 sleep 2 && start_app "zulip"
 # start_app "pcloud"
+# start_app "dropbox"
 echo "Apps started"
 
 setup_screens
