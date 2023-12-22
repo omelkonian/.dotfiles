@@ -14,3 +14,7 @@ alias nix-shell="fixNix && nix-shell --pure --keep LD_LIBRARY_PATH --keep PATH"
 # if [ -e $MEHOME/.nix-profile/etc/profile.d/nix.sh ]; then
 #   . $MEHOME/.nix-profile/etc/profile.d/nix.sh;
 # fi # added by Nix installer
+
+function nix__locateAgdaLibrariesFile {
+  echo $(cat `which ${AGDA:-agda}` | grep -o "/nix/store/[^/]*-libraries")
+}
