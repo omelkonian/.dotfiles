@@ -85,21 +85,14 @@ function edit {
 function grepAll {
   grep -nr "$1" **/**
 }
-
 function grepOn {
   ext=$1 && shift
   grep -nr $@ **/**.$ext
-  # T0D0 multiple extensions should be separated by '|', e.g. `grepOn hs|lhs`
-  # exts=$(echo $1 | tr '|' ' ') && shift
-  # setopt shwordsplit
-  # incl=""
-  # for ext in $exts; do
-  #   incl="$incl -name=\"*.$ext\" -or"
-  # done
-  # incl=${incl%????} # remove last `-or`
-  # unsetopt shwordsplit
-  # echo "includes: $incl"
-  # find . $incl" | xargs grep -nr $@
+}
+function grepOn2 {
+  ext1=$1 && shift
+  ext2=$1 && shift
+  grep -nr $@ **/**.{$ext1,$ext2}
 }
 function grepOnSubfolder {
   ext=$1 && shift
@@ -107,14 +100,13 @@ function grepOnSubfolder {
   grep -nr $@ **/$d**/**/**.$ext
 }
 
+# List all PPA repositories
 function list_repositories {
   grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
   cut -f2- -d: |\
   cut -f2 -d' ' |\
   sed -re 's#http://ppa\.launchpad\.net/([^/]+)/([^/]+)(.*?)$#ppa:\1/\2#g'
 }
-
-# List all PPA repositories
 function list_ppa {
   grep -E '^deb\s' /etc/apt/sources.list /etc/apt/sources.list.d/*.list |\
   cut -f2- -d: |\
@@ -122,6 +114,7 @@ function list_ppa {
   sed -re 's#http://ppa\.launchpad\.net/([^/]+)/([^/]+)(.*?)$#ppa:\1/\2#g' |\
   grep '^ppa:'
 }
+
 
 # Possible locations of repositories
 # 1. Keys embedded in /etc/apt/trusted.gpg
@@ -165,8 +158,8 @@ function git_check_all_folders {
 function start_app {
   p_name=${1%% *}
   p_args=${1#"$p_name"}
-  echo "p_name: $p_name"
-  echo "p_args: $p_args"
+  # echo "p_name: $p_name"
+  # echo "p_args: $p_args"
   if [ -z "$(pgrep -f $p_name)" ] ; then
     echo $1
     $p_name $p_args &
