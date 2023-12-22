@@ -22,7 +22,7 @@
      (".." "·")
      ("check" "✓")
      ("cross" "✖")))
- '(agda2-backend "GHC")
+ '(agda2-backend "")
  '(agda2-program-args
    '("+RTS" "-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
  '(agda2-program-name "agda")
@@ -340,10 +340,6 @@
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
-; ;; enable agda2hs-mode
-; (load-file (let ((coding-system-for-read 'utf-8))
-;                 (shell-command-to-string "agda2hs-mode locate")))
-
 ;; enable agda-input everywhere ; use C-\ to toggle-input
 (require 'agda-input)
 (set-input-method "Agda")
@@ -399,6 +395,26 @@
   "Call `make redo` at the current directory."
   (interactive)
   (async-shell-command "make redo"))
+
+; (add-hook 'before-hack-local-variables-hook #'direnv-update-environment)
+
+(setq dirset 'f)
+(def-interactive direnv-set-locals ()
+  (unless (eq dirset 't)
+    (direnv-update-environment)
+    (let ((agdaVar (getenv "AGDA"))
+          (agdaVersion (getenv "AGDA_VERSION"))
+          (getAgdaVersion "echo -n $($AGDA --version | head -n1 | cut -d' ' -f3 | cut -d'-' -f1)"))
+      (when agdaVar
+        (agda2-set-program-version (shell-command-to-string getAgdaVersion))
+        (setq agda2-program-name agdaVar)
+        (message (concat "Agda set to " agda2-program-name)))
+      (when agdaVersion
+        (agda2-set-program-version agdaVersion))
+      (message (concat "Agda version set to " agda2-version)))
+      (setq dirset 't)))
+
+(advice-add 'agda2-mode :before #'direnv-set-locals)
 
 (add-hook 'agda2-mode-hook (lambda ()
   ;; set interactive highlighting
@@ -488,8 +504,7 @@
     (windmove-left))
   ; Run agda
   (def-bind latex/loadAgda "C-c C-l" ()
-
-    )
+    (loadAgda))
   ; font size
   ; (set-font 80)
   ; spelling
@@ -610,31 +625,19 @@
 ; quickstart project
 (defun loadAgda ()
   (execute-kbd-macro (read-kbd-macro
-    "C-c C-l"))
-  )
+    "C-c C-l")))
 (defun loadLagda ()
   (execute-kbd-macro (read-kbd-macro
     "M-n C-n")) ; execute `polymode-next-chunk`
   (execute-kbd-macro (read-kbd-macro
     "<down>")) ; go inside Agda chunk
   (execute-kbd-macro (read-kbd-macro
-    "C-c C-l"))
-  )
+    "C-c C-l")))
 
 (defun quickAgda (folder file)
   (execute-kbd-macro (read-kbd-macro
     (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
   (loadAgda))
-
-(defun quickLedger (folder file)
-  (execute-kbd-macro (read-kbd-macro
-    (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
-  (setq agda2-version "2.6.3"
-        agda2-program-name (concat "~/IOHK/agdaWithStdLibMeta/bin/agda"))
-  (agda2-restart)
-  ; (loadLagda)
-  (loadAgda)
-  )
 
 (defun quickTex (folder file)
   (execute-kbd-macro (read-kbd-macro
