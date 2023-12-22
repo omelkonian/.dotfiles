@@ -45,6 +45,10 @@ Keywords=Text;Editor;""" > $fn
     callEmacs $s '(quickAgda "agda-stdlib" "Everything")' ;;
   stdlib-fork)
     callEmacs $s '(quickAgda "agda-stdlib-fork" "Everything")' ;;
+  stdlib-classes)
+    callEmacs $s '(quickAgda "agda-stdlib-classes" "Classes")' ;;
+  stdlib-meta)
+    callEmacs $s '(quickAgda "agda-stdlib-meta" "Main")' ;;
   prelude)
     callEmacs $s '(quickAgda "formal-prelude" "Prelude/Main")' ;;
   thesis)
@@ -78,8 +82,16 @@ Keywords=Text;Editor;""" > $fn
     callEmacs stdlib '(quickAgda "agda-stdlib" "Everything")' '-at8'
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
     callEmacs $s '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
+  agda2hs)
+    callEmacs $s '(quickAgda "agda2hs/test" "AllTests")' '-at5' 2 ;;
   agda2train)
     callEmacs $s '(quickAgda "agda2train/test" "All")' '-at5' 2 ;;
   ledger)
-    callEmacs $s '(quickLedger "formal-ledger-specifications/src" "Everything")' '-at5' 2 ;;
+    callEmacs $s '(quickAgda "formal-ledger-specifications/src" "Everything")' '-at5' ;;
+  midnight)
+    callEmacs $s '(quickAgda "formal-midnight" "Everything")' '-at5' ;;
+  lenses)
+    callEmacs $s '(quickAgda "agda-lenses" "Lenses")' ;;
+  verse)
+    callEmacs $s '(quickAgda "formal-verse-calculus" "Verse")' ;;
 esac
