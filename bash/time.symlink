@@ -7,6 +7,7 @@ alias est_time="sudo timedatectl set-timezone EST"
 alias torontro_time="sudo timedatectl set-timezone America/Toronto"
 alias pdt_time="sudo timedatectl set-timezone PDT"
 alias la_time="sudo timedatectl set-timezone America/Los_Angeles"
+alias cst_time="sudo timedatectl set-timezone Asia/Taipei"
 
 function displayTimeDiff {
   diff=$(($1 - $2))
