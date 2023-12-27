@@ -77,12 +77,14 @@ function toSpotifyURI {
 
 function ripAt {
   folder=$1 && shift
-  spotdl --output "$folder/{album-artist}/{album}/{track-number}-{title}.{output-ext}" download $*
+  # spotdl --output "$folder/{album-artist}/{album}/{track-number}-{title}.{output-ext}" download $*
+  python3.12 ~/git/zspotify/zspotify/__main__.py -md $folder $*
 }
 
 function ripPlaylistsAt {
   folder=$1 && shift
-  spotdl --output "$folder/\$PLAYLISTS/{list-name}/{list-position}-{title}.{output-ext}" download $*
+  # spotdl --output "$folder/\$PLAYLISTS/{list-name}/{list-position}-{title}.{output-ext}" download $*
+  python3.12 ~/git/zspotify/zspotify/__main__.py -md $folder $*
 }
 
 alias rip='ripAt $MUSIC_ROOT'
