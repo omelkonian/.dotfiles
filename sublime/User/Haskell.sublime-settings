@@ -3,7 +3,6 @@
 	[
 		"gcl",
 		".xmobarrc",
-		"agda",
 		"ag",
 		"out",
 		"hs-boot",
@@ -11,5 +10,7 @@
 		"y",
 		"2ltt",
 		".ghci",
+		"cabal",
+		"agda",
 	],
 }
