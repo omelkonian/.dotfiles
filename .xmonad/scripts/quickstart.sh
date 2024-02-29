@@ -18,6 +18,7 @@ case $s in
   gen)
     fs=$(cat ~/git/.dotfiles/.xmonad/scripts/quickstart.sh | grep -e '^  [^ ]*)' | cut -d')' -f1 | cut -d' ' -f3)
     notify-send "QuickStart (gen)" "$fs"
+    rm ~/.local/share/applications/emacs_*
     for f in $fs
     do
       fn=~/.local/share/applications/emacs_$f.desktop
@@ -39,6 +40,7 @@ Keywords=Text;Editor;""" > $fn
       fi
     done
     ;;
+  # Agda
   repl)
     callEmacs $s '(quickAgda "personal-practice/agda" "REPL")' ;;
   stdlib)
@@ -49,10 +51,10 @@ Keywords=Text;Editor;""" > $fn
     callEmacs $s '(quickAgda "agda-stdlib-classes" "Classes")' ;;
   stdlib-meta)
     callEmacs $s '(quickAgda "agda-stdlib-meta" "Main")' ;;
+  lenses)
+    callEmacs $s '(quickAgda "agda-lenses" "Lenses")' ;;
   prelude)
     callEmacs $s '(quickAgda "formal-prelude" "Prelude/Main")' ;;
-  thesis)
-    callEmacs $s '(quickTex "phd-thesis/thesis" "main")' '-at5' ;;
   bitcoin)
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8'
     callEmacs $s '(quickAgda "formal-bitcoin" "Bitcoin/Main")' '-at5' 2 ;;
@@ -82,16 +84,37 @@ Keywords=Text;Editor;""" > $fn
     callEmacs stdlib '(quickAgda "agda-stdlib" "Everything")' '-at8'
     callEmacs prelude '(quickAgda "formal-prelude" "Prelude/Main")' '-at8' 2
     callEmacs $s '(quickAgda "formal-utxo" "Main")' '-at5' 2 ;;
-  agda2hs)
-    callEmacs $s '(quickAgda "agda2hs/test" "AllTests")' '-at5' 2 ;;
-  agda2train)
-    callEmacs $s '(quickAgda "agda2train/test" "All")' '-at5' 2 ;;
-  ledger)
-    callEmacs $s '(quickAgda "formal-ledger-specifications/src" "Everything")' '-at5' ;;
-  midnight)
-    callEmacs $s '(quickAgda "formal-midnight" "Everything")' '-at5' ;;
-  lenses)
-    callEmacs $s '(quickAgda "agda-lenses" "Lenses")' ;;
   verse)
     callEmacs $s '(quickAgda "formal-verse-calculus" "Verse")' ;;
+  # Agda backends
+  agda2hs)
+    callEmacs $s '(quickAgda "agda2hs/test" "AllTests")' ;;
+  agda2rust)
+    callEmacs $s '(quickAgda "agda2rust/test" "AllTests")' ;;
+  # TeX
+  thesis)
+    callEmacs $s '(quickTex "phd-thesis/thesis" "main")' ;;
+  # IOHK
+  ledger)
+    callEmacs $s '(quickAgda "formal-ledger-specifications/src" "Everything")' ;;
+  ledger-paper)
+    callEmacs $s '(quickLagda "formal-ledger-paper/src" "Ledger/PDF")' ;;
+  structured-contracts)
+    callEmacs $s '(quickAgda "structured-contracts" "Main")' ;;
+  midnight)
+    callEmacs $s '(quickAgda "formal-midnight" "Everything")' ;;
+  fastbft)
+    callEmacs $s '(quickLagdaMd "innovation-fastbft/agda-src" "Main")' ;;
+  # NeurAgda
+  agda2train)
+    callEmacs $s '(quickAgda "agda2train/test" "All")' ;;
+  neuragda-paper)
+    callEmacs $s '(quickTex "agda2train-paper" "main")' ;;
+  # Featherweight Haskell
+  agda2hs-scope)
+    callEmacs $s '(quickAgda "agda2hs-scope/src" "Scope")' ;;
+  agda-core)
+    callEmacs $s '(quickAgda "agda-core/src" "Agda/Core/Typechecker")' ;;
+  featherweight-haskell)
+    callEmacs $s '(quickAgda "featherweight-haskell" "Main")' ;;
 esac
