@@ -21,22 +21,15 @@ function touchpad__toggle {
 }
 
 # Remote touchpad
-function remote-touchpad__disable {
-  pkill remote-touchpad
-}
-
 function remote-touchpad__enable {
   remote-touchpad -bind ":7777" -secret "8888"
 }
-
-function remote-touchpad__enabled {
-  [ -z "$(pgrep remote-touchpad)" ]
+function remote-touchpad__disable {
+  pkill remote-touchpad
 }
-
+function remote-touchpad__enabled {
+  [ -n "$(pgrep remote-touchpad)" ]
+}
 function remote-touchpad__toggle {
-  if [ -n "$(pgrep remote-touchpad)" ] ; then
-    remote-touchpad__disable
-  else
-    remote-touchpad__enable
-  fi
+  $(remote-touchpad__enabled) && remote-touchpad__disable || remote-touchpad__enable
 }

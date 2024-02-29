@@ -85,8 +85,9 @@ function setup_screens {
    trayer --edge top --align right --monitor primary --widthtype percent \
           --width 5 --height 22 --transparent true --alpha 0 --tint 0x000000 &
 
+  ##### DEPRECATED by `caffeine-indicator` #######
   # De-activate screen locking (~ enable screen inhibitor)
-  inhibitor__enable
+  # inhibitor__enable
 }
 
 # Image editing

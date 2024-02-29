@@ -1,2 +1,16 @@
 alias resetGnomeSettings='dconf reset -f /org/gnome/control-center/'
 alias resetGnomeSettings2="gsettings set org.gnome.ControlCenter last-panel ''"
+
+# Do not Disturb (DnD)
+function dnd__disable {
+  gsettings set org.gnome.desktop.notifications show-banners false
+}
+function dnd__enable {
+  gsettings set org.gnome.desktop.notifications show-banners true
+}
+function dnd__enabled {
+  [ "$(gsettings get org.gnome.desktop.notifications show-banners)" = "true" ]
+}
+function dnd__toggle {
+  $(dnd__enabled) && dnd__disable || dnd__enable
+}
