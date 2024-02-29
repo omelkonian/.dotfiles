@@ -25,6 +25,7 @@ zstyle :compinstall filename '/home/omelkonian/.zshrc'
 unalias gr
 
 # auto-completion
+fpath+=~/.zfunc
 autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
@@ -60,3 +61,5 @@ alias stack="noglob stack"
 
 # Init
 source ~/git/.dotfiles/.initrc
+
+export PATH=$PATH:/home/omelkonian/.spicetify
