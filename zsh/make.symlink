@@ -40,7 +40,7 @@ function makeAt {
   else # make
     fbase="$base.pdf"
     mkDirF=$(findParentAbsolute Makefile)
-    fdir=$(echo $1 | sed -e "s|^$mkDirF/||")
+    fdir=$(echo $1 | sed -e "s|^${mkDirF}/||")
     f="$fdir$fbase"
     if [[ -z $(make -C $mkDir -n $fbase 2>&1 | grep 'No rule to make target') ]]; then
       make -C $mkDir $fbase && viewPDF $fbase
