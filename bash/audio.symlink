@@ -244,6 +244,7 @@ JBL_CHARGE_4="98:52:3D:C4:9B:12"
 MI_EARPHONES="6C:CE:44:FC:C8:AA"
 LP_EARPHONES="90:3F:C7:8F:00:D8"
 SKY_SOUNDBOX="34:81:F4:64:2D:88"
+MARSHALL_MAJOR_IV="1C:6E:4C:97:35:0C"
 
 function bluetooth__enabled {
   # [ -n $(systemctl status bluetooth.service | grep "active (running)") ]

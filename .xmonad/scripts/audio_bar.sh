@@ -30,5 +30,13 @@ echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggl
 echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggle $LP_EARPHONES>\
 <fc=$(bluetooth__connected $LP_EARPHONES && echo 'green' || echo 'red')>LP</fc></action>"
 
+# Marshall MAJOR-IV earphones via bluetooth
+echo -n "/<action=callFun.sh ~/git/.dotfiles/bash/audio.symlink bluetooth__toggle $MARSHALL_MAJOR_IV>\
+<fc=$(bluetooth__connected $MARSHALL_MAJOR_IV && echo 'green' || echo 'red')>MJ</fc></action>"
+
+fc0=$([ bluetooth__enabled ] && echo 'green' || echo 'red')
+echo -n " <fc=$fc0><icon=bluetooth.xbm/></fc>"
+
 # Volume control
 echo " <icon=vol-hi.xbm/>"
+
