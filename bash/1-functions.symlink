@@ -92,7 +92,16 @@ function grepOn {
 function grepOn2 {
   ext1=$1 && shift
   ext2=$1 && shift
-  grep -nr $@ **/**.{$ext1,$ext2}
+  grep -nr $@ **/**.$ext1
+  grep -nr $@ **/**.$ext2
+}
+function grepOn3 {
+  ext1=$1 && shift
+  ext2=$1 && shift
+  ext3=$1 && shift
+  grep -nr $@ **/**.$ext1
+  grep -nr $@ **/**.$ext2
+  grep -nr $@ **/**.$ext3
 }
 function grepOnSubfolder {
   ext=$1 && shift
@@ -123,6 +132,7 @@ function list_ppa {
 #    $ sudo rm etc/apt/trusted.gpg.d/<repo>.gpg/asc
 # 3. Sources list
 #    $ vim /etc/apt/sources.list
+#    $ vim /var/lib/apt/lists/*
 
 # Checking all GIT repositories
 function git_check_all_folders {
