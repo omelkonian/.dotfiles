@@ -53,15 +53,21 @@ function plfa {
 function agda-locate-latex-dir {
   latexDir=$(findParentRelative latex)
   if [ ! -z $latexDir ]; then
-    echo "$latexDir"
+    echo -n "$latexDir"
   else;
     latexDir=$(findParentRelative agda.sty)
     if [ ! -z $latexDir ]; then
-      echo "$latexDir"
+      echo -n "$latexDir"
     else
-      echo "."
+      echo -n "."
     fi
   fi
+}
+
+function agda-locate-latex-dir-of {
+  builtin cd $(dirname "$1")
+  agda-locate-latex-dir
+  builtin cd - > /dev/null
 }
 
 # Convert a file to a literate version for integrating within a TeX project.

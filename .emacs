@@ -23,14 +23,14 @@
      ("check" "✓")
      ("cross" "✖")))
  '(agda2-backend "")
- '(agda2-program-args
-   '("+RTS" "-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log" "-RTS" "-i" "."))
+ '(agda2-program-args '("-i" "."))
  '(agda2-program-name "agda")
  '(company-backends '(company-dabbrev))
  '(company-dabbrev-downcase nil)
  '(coq-prog-name "/home/omelkonian/.opam/4.05.0/bin/coqtop")
  '(custom-safe-themes
    '("0daf22a3438a9c0998c777a771f23435c12a1d8844969a28f75820dd71ff64e1" "5057614f7e14de98bbc02200e2fe827ad897696bfd222d1bcab42ad8ff313e20" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "170bb47b35baa3d2439f0fd26b49f4278e9a8decf611aa33a0dad1397620ddc3" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "392395ee6e6844aec5a76ca4f5c820b97119ddc5290f4e0f58b38c9748181e8d" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" default))
+ '(exec-path-from-shell-check-startup-files nil)
  '(idris-interpreter-path "idris2")
  '(ignored-local-variable-values '((TeX-engine . xetex)))
  '(inhibit-startup-screen t)
@@ -39,7 +39,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/")
      ("melpa" . "http://melpa.org/packages/")))
  '(package-selected-packages
-   '(direnv json-mode nix-mode outline-magic idris-mode docker-tramp magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode espresso-theme leuven-theme flatui-theme spacemacs-theme solarized-theme fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
+   '(direnv json-mode outline-magic idris-mode magit dash lsp-haskell lsp-ui lsp-mode yafolding origami counsel markdown-mode helm-make gnu-elpa-keyring-update org-projectile-helm polymode fill-column-indicator shackle company company-coq proof-general projectile ivy haskell-mode github-theme github-modern-theme flx-ido evil))
  '(proof-three-window-enable t)
  '(safe-local-variable-values
    '((TeX-master . t)
@@ -94,9 +94,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-; enable `direnv` loading of environmental variables
-(direnv-mode)
-
 ;;;;;;;;;;;;
 ;; Macros ;;
 ;;;;;;;;;;;;
@@ -121,7 +118,12 @@
   (load-file user-init-file))
 
 ;; Get access to $PATH
+(setenv "ESHELL" "/bin/bash")
 (exec-path-from-shell-initialize)
+
+; enable `direnv` loading of environmental variables
+(direnv-mode)
+; (add-hook 'before-hack-local-variables-hook #'direnv-update-environment)
 
 ;; Evil mode
 (require 'evil)
@@ -130,7 +132,6 @@
 (global-unset-key (kbd "C-n"))
 (global-unset-key (kbd "C-p"))
 (global-unset-key (kbd "C-z"))
-
 
 ;; Set font
 (defun set-font-family (font bfont height)
@@ -221,7 +222,7 @@
 ;   leuven
 ;   espresso
 ;   spacemacs-light
-;   flatui
+;   tui
 ;   misterioso
 ;  )
 (set-face-attribute 'region nil :background "#fff3e6") ; #ffe6cc ; #ffdab3 ; #ffce99
@@ -344,14 +345,98 @@
 (require 'agda-input)
 (set-input-method "Agda")
 
+(defun appendSpaced (args)
+  (mapconcat 'identity args " "))
+
+(defun agda/appendArgs (args)
+  (setq agda2-program-args (append agda2-program-args args)))
+
+(defun agda/setFlag (flag value)
+  ; (agda/appendArgs (list (concat flag "=" value))))
+  (agda/appendArgs (list flag value)))
+  ; (if (not (string-match-p flag (appendSpaced agda2-program-args)))
+  ;   (agda/appendArgs (list (concat flag "=" value)))))
+
+(defun agda/setRTS (rtsFlags)
+  (if (not (string-match-p "+RTS" (appendSpaced agda2-program-args)))
+    (agda/appendArgs (flatten-tree (list "+RTS" rtsFlags "-RTS")))))
+
 (def-bind agda/setTexBackend "C-c t" ()
+  (message "Agda: setting LaTeX backend")
   (setq agda2-backend "QuickLaTeX")
-  (let ((agdaArgs (mapconcat 'identity agda2-program-args " ")))
-    (if (not (string-match-p "--latex-dir" agdaArgs))
-      (let ((coding-system-for-read 'utf-8)
-            (latexDir (shell-command-to-string "agda-locate-latex-dir")))
-      (setq agda2-program-args (append agda2-program-args
-        (list (concat "--latex-dir=" latexDir))))))))
+  (let (
+    ; (agdaLatexDir (getenv "AGDA_LATEX_DIR"))
+    (agdaLatexDir (shell-command-to-string "agda-locate-latex-dir"))
+    )
+  ;   (when agdaLatexDir
+  ;     (agda/setFlag "--latex-dir" agdaLatexDir)
+  ;     (message (concat "Agda --latex-dir set to " agdaLatexDir)))))
+  (message (concat "Agda --latex-dir located at " agdaLatexDir))
+  (agda/appendArgs (list "--latex" "--latex-dir" agdaLatexDir))
+  ; (agda/setFlag "--latex-dir" agdaLatexDir)
+    ; (let ((coding-system-for-read 'utf-8))
+    ;      (shell-command-to-string "agda-locate-latex-dir")))
+  ; (message (concat "Agda --latex-dir set to " agda2-program-args))
+  ))
+
+(setq dirset 'f)
+(def-interactive direnv-set-locals ()
+  (unless (eq dirset 't)
+    (direnv-update-environment)
+    (let ((agdaVar (getenv "AGDA"))
+          (agdaVersion (getenv "AGDA_VERSION"))
+          ; (agdaLatexDir (getenv "AGDA_LATEX_DIR"))
+          (getAgdaVersion "echo -n $($AGDA --version | head -n1 | cut -d' ' -f3 | cut -d'-' -f1)"))
+      (when agdaVar
+        (setq agda2-version (shell-command-to-string getAgdaVersion))
+        (setq agda2-program-name agdaVar)
+        (message (concat "Agda set to " agda2-program-name))
+        (message (concat "Agda version set to " agda2-version)))
+      (when (and agdaVersion (not agdaVar))
+        (agda2-set-program-version agdaVersion)
+        (message (concat "Agda version set to " agda2-version)))
+      ; (when agdaLatexDir
+      ;   (agda/setFlag "--latex-dir" agdaLatexDir)
+      ;   (message (concat "Agda --latex-dir set to " agdaLatexDir)))
+      (agda/setRTS '("-K40M" "-H1G" "-M24G" "-A128M" "-S/var/tmp/agda/AgdaRTS.log"))
+      (message "Agda RTS flags set")
+      (setq dirset 't))))
+
+(advice-add 'agda2-mode :before #'direnv-set-locals)
+
+(add-hook 'agda2-mode-hook (lambda ()
+  ;; set interactive highlighting
+  (setq agda2-highlight-level 'interactive)
+  (def-bind agda/run "C-c C-x C-x" ()
+    ;; run compiled GHC file
+    (save-buffer)
+    (async-shell-command (concat "./" (file-name-base buffer-file-name))))
+  ;   (save-buffer)
+  ;   (async-shell-command
+  ;     (concat "\./" (file-name-base buffer-file-name))))
+  ;   (agda2-goto-definition-keyboard))
+  ;; set navigation keys
+  (def-bind agda/go-to-definition "C-c g" ()
+    ;; Go to definition
+    (agda2-goto-definition-keyboard))
+  (def-bind agda/go-back "C-c b" ()
+    ;; Go to definition
+    (agda2-go-back))
+  (def-bind agda/frame "C-c r" ()
+    ;; Move AgdaInfo frame to the right
+    (delete-other-windows)
+    (split-window-right)
+    (windmove-right)
+    (switch-to-buffer "*Agda information*")
+    (windmove-left))
+  (def-bind agda/compileTex "C-c c" ()
+    (agda/setTexBackend)
+    (agda2-compile))
+  ;; also enable agda-input in command buffers
+  (add-hook 'isearch-mode-hook (lambda () (set-input-method "Agda")))
+  ;; fix Evil shifts
+  (setq evil-shift-width 2)
+  ))
 
 ;; Makefiles
 
@@ -395,60 +480,6 @@
   "Call `make redo` at the current directory."
   (interactive)
   (async-shell-command "make redo"))
-
-; (add-hook 'before-hack-local-variables-hook #'direnv-update-environment)
-
-(setq dirset 'f)
-(def-interactive direnv-set-locals ()
-  (unless (eq dirset 't)
-    (direnv-update-environment)
-    (let ((agdaVar (getenv "AGDA"))
-          (agdaVersion (getenv "AGDA_VERSION"))
-          (getAgdaVersion "echo -n $($AGDA --version | head -n1 | cut -d' ' -f3 | cut -d'-' -f1)"))
-      (when agdaVar
-        (agda2-set-program-version (shell-command-to-string getAgdaVersion))
-        (setq agda2-program-name agdaVar)
-        (message (concat "Agda set to " agda2-program-name)))
-      (when agdaVersion
-        (agda2-set-program-version agdaVersion))
-      (message (concat "Agda version set to " agda2-version)))
-      (setq dirset 't)))
-
-(advice-add 'agda2-mode :before #'direnv-set-locals)
-
-(add-hook 'agda2-mode-hook (lambda ()
-  ;; set interactive highlighting
-  (setq agda2-highlight-level 'interactive)
-  (def-bind agda/run "C-c C-x C-x" ()
-    ;; run compiled GHC file
-    (save-buffer)
-    (async-shell-command (concat "./" (file-name-base buffer-file-name))))
-  ;   (save-buffer)
-  ;   (async-shell-command
-  ;     (concat "\./" (file-name-base buffer-file-name))))
-  ;   (agda2-goto-definition-keyboard))
-  ;; set navigation keys
-  (def-bind agda/go-to-definition "C-c g" ()
-    ;; Go to definition
-    (agda2-goto-definition-keyboard))
-  (def-bind agda/go-back "C-c b" ()
-    ;; Go to definition
-    (agda2-go-back))
-  (def-bind agda/frame "C-c r" ()
-    ;; Move AgdaInfo frame to the right
-    (delete-other-windows)
-    (split-window-right)
-    (windmove-right)
-    (switch-to-buffer "*Agda information*")
-    (windmove-left))
-  (def-bind agda/compileTex "C-c c" ()
-    (agda/setTexBackend)
-    (agda2-compile))
-  ;; also enable agda-input in command buffers
-  (add-hook 'isearch-mode-hook (lambda () (set-input-method "Agda")))
-  ;; fix Evil shifts
-  (setq evil-shift-width 2)
-  ))
 
 ;;;;;;;;;;;
 ;; LaTeX ;;
@@ -508,8 +539,9 @@
   ; font size
   ; (set-font 80)
   ; spelling
+  (direnv-update-environment)
   (setq ispell-program-name "aspell"
-        ispell-dictionary   "british")
+        ispell-dictionary   (or (getenv "ISPELL_DICT") "british"))
   (flyspell-mode)
   (flyspell-buffer)
   ; unicode input
@@ -626,7 +658,7 @@
 (defun loadAgda ()
   (execute-kbd-macro (read-kbd-macro
     "C-c C-l")))
-(defun loadLagda ()
+(defun loadPolyAgda ()
   (execute-kbd-macro (read-kbd-macro
     "M-n C-n")) ; execute `polymode-next-chunk`
   (execute-kbd-macro (read-kbd-macro
@@ -638,7 +670,14 @@
   (execute-kbd-macro (read-kbd-macro
     (concat "C-x C-f ~/git/" folder "/" file ".agda RET")))
   (loadAgda))
-
+(defun quickLagdaMd (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".lagda.md RET")))
+  (loadAgda))
+(defun quickLagda (folder file)
+  (execute-kbd-macro (read-kbd-macro
+    (concat "C-x C-f ~/git/" folder "/" file ".lagda RET")))
+  (loadPolyAgda))
 (defun quickTex (folder file)
   (execute-kbd-macro (read-kbd-macro
     (concat "C-x C-f ~/git/" folder "/" file ".tex RET")))
