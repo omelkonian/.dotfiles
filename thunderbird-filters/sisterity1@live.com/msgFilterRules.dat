@@ -1,0 +1,8 @@
+version="9"
+logging="no"
+name="From contains: public.gr"
+enabled="yes"
+type="17"
+action="Move to folder"
+actionValue="imap://sisterity1%40live.com@imap-mail.outlook.com/INBOX/Orders"
+condition="AND (from,contains,public.gr)"
