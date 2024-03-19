@@ -38,7 +38,7 @@ add_to_path $MEHOME/HOL/bin
 add_to_path /opt/Isabelle2020/bin
 
 # nix
-add_to_LD_path /lib/x86_64-linux-gnu/
+# add_to_LD_path /lib/x86_64-linux-gnu/
 
 # spicetify
 add_to_path $MEHOME/.spicetify
