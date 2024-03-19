@@ -118,7 +118,7 @@
   (load-file user-init-file))
 
 ;; Get access to $PATH
-(setenv "ESHELL" "/bin/bash")
+; (setenv "ESHELL" "/bin/bash")
 (exec-path-from-shell-initialize)
 
 ; enable `direnv` loading of environmental variables
